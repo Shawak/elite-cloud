@@ -2,4 +2,4 @@
 vendor/*
 
 # PhpStorm settings
-.idea/
+.idea/*
