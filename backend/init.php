@@ -23,7 +23,7 @@ require DIR_BACKEND . 'ApiResult.php';
 
 require DIR_BACKEND . 'Database.php';
 $db = new Database($config['db']['host'], $config['db']['datb'],
-	$config['db']['user'], $config['db']['pass']);
+    $config['db']['user'], $config['db']['pass']);
 
 require DIR_BACKEND . 'LoginHandler.php';
 $loginHandler = new LoginHandler($db);

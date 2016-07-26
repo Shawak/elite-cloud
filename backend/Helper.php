@@ -1,8 +1,10 @@
 <?php
 
-class Helper {
+class Helper
+{
 
-    public static function GetInput($name, $filter = null, $input = null) {
+    public static function GetInput($name, $filter = null, $input = null)
+    {
         if (!in_array($input, array(INPUT_GET, INPUT_POST, INPUT_SERVER, INPUT_COOKIE, INPUT_ENV))) {
             die("invalid input variable passed");
         }
@@ -31,20 +33,23 @@ class Helper {
         return filter_input($input, $name, $filter);
     }
 
-    public static function copyyear($year) {
+    public static function copyyear($year)
+    {
         $nowYear = date("Y");
         return '&copy ' . ($nowYear == $year ? $nowYear : $year . ' - ' . $nowYear);
     }
 
-    public static function TryParseDouble($val) {
+    public static function TryParseDouble($val)
+    {
         $val = str_replace(',', '.', $val);
-        if(!is_numeric($val)) {
+        if (!is_numeric($val)) {
             return false;
         }
         return round(doubleval($val), 2);
     }
-    
-    public static function format($value, $clean = false) {
+
+    public static function format($value, $clean = false)
+    {
         if (is_numeric($value)) { // Number Format
             $ret = '';
             if ($clean) {
@@ -61,21 +66,24 @@ class Helper {
         return $value;
     }
 
-    private static function number_format_clean($number, $precision = 0, $dec_point = '.', $thousands_sep = ',') {
+    private static function number_format_clean($number, $precision = 0, $dec_point = '.', $thousands_sep = ',')
+    {
         $str = number_format($number, $precision, $dec_point, $thousands_sep);
         $length = strlen($str);
-        if($str[$length - 1] == '0') {
+        if ($str[$length - 1] == '0') {
             $str = substr($str, 0, $length - ($str[$length - 2] == '0' ? 3 : 1));
         }
         return $str;
     }
-    
-    public static function validate_date($dateStr) {
+
+    public static function validate_date($dateStr)
+    {
         $d = DateTime::createFromFormat('Y-m-d\TH:i', $dateStr);
         return $d && $d->format('Y-m-d\TH:i') === $dateStr;
     }
-    
-    public static function validate_date_normal($dateStr) {
+
+    public static function validate_date_normal($dateStr)
+    {
         $d = DateTime::createFromFormat('Y-m-d', $dateStr);
         return $d && $d->format('Y-m-d') === $dateStr;
     }
@@ -92,7 +100,8 @@ class Helper {
   $value = session(<name>, null);
  */
 
-function session($session, $value = '') {
+function session($session, $value = '')
+{
     if ($value === '') {
         if (isset($_SESSION[$session])) {
             return $_SESSION[$session];
@@ -116,7 +125,8 @@ function session($session, $value = '') {
   cookie(<name>, null);
  */
 
-function cookie($cookie, $value = '', $expire = null) {
+function cookie($cookie, $value = '', $expire = null)
+{
     if ($value === '') {
         $ret = Helper::GetInput($cookie, null, INPUT_COOKIE);
         if (isset($ret)) {
@@ -132,20 +142,24 @@ function cookie($cookie, $value = '', $expire = null) {
     }
 }
 
-function get($name) {
+function get($name)
+{
     return Helper::GetInput($name, null, INPUT_GET);
 }
 
-function post($name) {
+function post($name)
+{
     return Helper::GetInput($name, null, INPUT_POST);
 }
 
-function request($name) {
+function request($name)
+{
     $get = get($name);
     return !is_null($get) ? $get : post($name);
 }
 
-function dump($exp) {
+function dump($exp)
+{
     echo '<pre>';
     var_dump($exp);
     echo '</pre>';
