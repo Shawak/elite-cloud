@@ -1,3 +1,3 @@
 @echo off
-php "%~dp0composer.phar" update
+"C:/xampp/php/php.exe" "%~dp0composer.phar" update
 pause
