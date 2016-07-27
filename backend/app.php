@@ -12,7 +12,12 @@ $app->get('/', function (Request $request, Response $response) {
 /* USER */
 
 $app->post('/api/login', function (Request $request, Response $response) {
+    $username = post('username');
+    $password = post('password');
 
+    // TODO
+
+    echo new ApiResult(true, 'You have been successfully logged in');
 });
 
 $app->get('/api/user/{id}', function (Request $request, Response $response, $args) use ($db) {
@@ -39,7 +44,9 @@ $app->get('/api/userscript/list', function (Request $request, Response $response
 });
 
 $app->get('/api/userscript/{id}', function (Request $request, Response $response, $args) {
-    echo $args['id'];
+    //echo $args['id'];
+    echo $request->getAttribute('id');
+    //echo get('id', 'int');
 });
 
 $app->post('/api/userscript/create', function (Request $request, Response $response, $args) {

@@ -142,20 +142,20 @@ function cookie($cookie, $value = '', $expire = null)
     }
 }
 
-function get($name)
+function get($name, $filter = null)
 {
-    return Helper::GetInput($name, null, INPUT_GET);
+    return Helper::GetInput($name, $filter, INPUT_GET);
 }
 
-function post($name)
+function post($name, $filter = null)
 {
-    return Helper::GetInput($name, null, INPUT_POST);
+    return Helper::GetInput($name, $filter, INPUT_POST);
 }
 
-function request($name)
+function request($name, $filter = null)
 {
-    $get = get($name);
-    return !is_null($get) ? $get : post($name);
+    $get = get($name, $filter);
+    return !is_null($get) ? $get : post($name, $filter);
 }
 
 function dump($exp)
