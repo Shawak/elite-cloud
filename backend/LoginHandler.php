@@ -29,7 +29,7 @@ class LoginHandler
 			and password = :password
 		');
         $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':password', $passwordHash);
         $stmt->execute();
         $ret = $stmt->fetch();
 
