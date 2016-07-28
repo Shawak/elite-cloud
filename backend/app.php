@@ -5,19 +5,23 @@ use Slim\Http\Response as Response;
 
 $app = new \Slim\App(["settings" => $config['slim']]);
 
-$app->get('/', function (Request $request, Response $response) {
+/* MAIN */
+
+$app->get('/', function (Request $request, Response $response) use ($loginHandler) {
     include DIR_FRONTEND . 'index.php';
 });
 
 /* USER */
 
-$app->post('/api/login', function (Request $request, Response $response) {
+$app->post('/api/login', function (Request $request, Response $response) use ($loginHandler) {
     $username = post('username');
     $password = post('password');
+    $remember = post('remember', 'bool');
 
-    // TODO
+    $passwordHash = $loginHandler->HashPassword($password);
+    $success = $loginHandler->Login($username, $passwordHash, $remember);
 
-    echo new ApiResult(true, 'You have been successfully logged in');
+    echo new ApiResult($success, $success ? 'You have been successfully logged in' : 'Username and/or password was wrong');
 });
 
 $app->get('/api/user/{id}', function (Request $request, Response $response, $args) use ($db) {

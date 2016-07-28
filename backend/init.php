@@ -5,7 +5,7 @@ session_cache_expire(180);
 session_start();
 
 // prevent api results from being cached,
-// coud be moved into app.php to allow caching of frontend html
+// could be moved into app.php to allow caching of frontend html
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");

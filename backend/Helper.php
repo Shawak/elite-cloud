@@ -36,7 +36,7 @@ class Helper
     public static function copyyear($year)
     {
         $nowYear = date("Y");
-        return '&copy ' . ($nowYear == $year ? $nowYear : $year . ' - ' . $nowYear);
+        return '&copy; ' . ($nowYear == $year ? $nowYear : $year . ' - ' . $nowYear);
     }
 
     public static function TryParseDouble($val)
