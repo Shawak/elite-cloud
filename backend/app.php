@@ -24,6 +24,11 @@ $app->post('/api/login', function (Request $request, Response $response) use ($l
     echo new ApiResult($success, $success ? 'You have been successfully logged in' : 'Username and/or password was wrong');
 });
 
+$app->post('/api/logout', function (Request $request, Response $response) use ($loginHandler) {
+    $loginHandler->Logout();
+    echo new ApiResult(true, 'You have been logged out');
+});
+
 $app->get('/api/user/{id}', function (Request $request, Response $response, $args) use ($db) {
     $id = $args['id'];
     $user = new User($id);

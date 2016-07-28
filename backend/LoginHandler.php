@@ -14,8 +14,11 @@ class LoginHandler
     public function getUser()
     {
         if ($this->user == null) {
-            $this->user = new User(session('userID'));
-            $this->user->update($this->db);
+            $user = new User(session('userID'));
+            $user->update($this->db);
+            if ($user->getID() != null) {
+                $this->user = $user;
+            }
         }
         return $this->user;
     }
@@ -33,13 +36,13 @@ class LoginHandler
         $stmt->execute();
         $ret = $stmt->fetch();
 
-        if ($ret && $ret['password'] == $passwordHash) {
+        if ($ret) {
             $userID = $ret['id'];
             $this->user = new User($userID);
             $this->user->consume($ret);
             session('userID', $userID);
             session('hash', $passwordHash);
-            if($remember) {
+            if ($remember) {
                 cookie('userID', $userID);
                 cookie('hash', $passwordHash);
             }
@@ -58,9 +61,10 @@ class LoginHandler
     {
         $userID = session('userID');
         $passwordHash = session('hash');
-        $this->user = new User($userID);
-        $this->user->update($this->db);
-        return $this->user->getPassword() == $passwordHash;
+        // refresh the session variables
+        session('userID', $userID);
+        session('hash', $passwordHash);
+        return $this->getUser() != null && $this->getUser()->getPassword() == $passwordHash;
     }
 
     public function Logout()
