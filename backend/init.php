@@ -30,6 +30,3 @@ $loginHandler = new LoginHandler($db);
 define('LOGGED_IN', $loginHandler->AutoLogin());
 
 require 'app.php';
-
-//dump(LOGGED_IN)
-//dump($loginHandler->Login("Shawak", $loginHandler->HashPassword("test")));

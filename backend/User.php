@@ -30,6 +30,10 @@ class User extends DBObject
         return $this->name;
     }
 
+    public function getPassword() {
+        return $this->password;
+    }
+
     public function isUser()
     {
         return $this->flag & UserFlag::USER;
