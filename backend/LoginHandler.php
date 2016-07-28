@@ -15,7 +15,7 @@ class LoginHandler
     {
         if ($this->user == null) {
             $this->user = new User(session('userID'));
-            $this->user->update();
+            $this->user->update($this->db);
         }
         return $this->user;
     }
@@ -26,8 +26,10 @@ class LoginHandler
 			select *
 			from user
 			where name = :username
+			and password = :password
 		');
         $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':password', $password);
         $stmt->execute();
         $ret = $stmt->fetch();
 
@@ -37,6 +39,10 @@ class LoginHandler
             $this->user->consume($ret);
             session('userID', $userID);
             session('hash', $passwordHash);
+            if($remember) {
+                cookie('userID', $userID);
+                cookie('hash', $passwordHash);
+            }
             return true;
         } else {
             return false;
