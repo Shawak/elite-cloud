@@ -44,7 +44,25 @@ $app->get('/api/user/{id}', function (Request $request, Response $response, $arg
 });
 
 $app->post('/api/user/create', function (Request $request, Response $response) {
-    // User::create($name, $password, $flag);
+    $username = post('username');
+    $password = post('password');
+
+    if (!preg_match('/^[a-z\d_]{5,20}$/i', $username)) {
+        echo new ApiResult(false, 'Your username may only contain letters and numbers and has to be at least 5 and maximum 20 characters long.');
+        return;
+    }
+
+    if (strlen($password) < 6) {
+        echo new ApiResult(false, 'Your password has to be at least 6 characters long.');
+        return;
+    }
+
+    $password = LoginHandler::getInstance()->hashPassword($password);
+    $user = User::create($username, $password);
+    echo new ApiResult(true, 'Your account has been created.', array(
+        'id' => $user->getId(),
+        'name' => $user->getName()
+    ));
 });
 
 /* USERSCRIPT */

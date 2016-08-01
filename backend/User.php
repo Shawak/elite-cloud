@@ -32,10 +32,7 @@ class User extends DBObject
         $stmt->bindParam(':password', $password);
         $stmt->bindParam(':flag', $flag);
         $stmt->execute();
-
-        $user = new self(Database::getInstance()->lastID());
-        $user->update();
-        return $user;
+        return new self(Database::getInstance()->lastID());
     }
 
     public function getID()
