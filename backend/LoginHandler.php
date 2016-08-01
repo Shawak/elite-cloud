@@ -2,30 +2,37 @@
 
 class LoginHandler
 {
+    private static $instance;
 
-    private $db;
     private $user;
 
-    public function __construct(Database $db)
+    public function __construct()
     {
-        $this->db = $db;
+
+    }
+
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 
     public function getUser()
     {
         if ($this->user == null) {
             $user = new User(session('userID'));
-            $user->update($this->db);
-            if ($user->getID() != null) {
+            if ($user->update()) {
                 $this->user = $user;
             }
         }
         return $this->user;
     }
 
-    public function Login($username, $passwordHash, $remember = false)
+    public function login($username, $passwordHash, $remember = false)
     {
-        $stmt = $this->db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			select *
 			from user
 			where name = :username
@@ -52,12 +59,12 @@ class LoginHandler
         }
     }
 
-    public function HashPassword($password)
+    public function hashPassword($password)
     {
         return hash('sha256', $password);
     }
 
-    public function IsLoggedIn()
+    public function isLoggedIn()
     {
         $userID = session('userID');
         $passwordHash = session('hash');
@@ -67,7 +74,7 @@ class LoginHandler
         return $this->getUser() != null && $this->getUser()->getPassword() == $passwordHash;
     }
 
-    public function Logout()
+    public function logout()
     {
         session('userID', null);
         session('hash', null);
@@ -75,7 +82,7 @@ class LoginHandler
         cookie('hash', null);
     }
 
-    public function AutoLogin()
+    public function autoLogin()
     {
         if (session('userID') == null) {
             session('userID', cookie('userID'));

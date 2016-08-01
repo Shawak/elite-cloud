@@ -2,6 +2,7 @@
 
 class Database extends PDO
 {
+    private static $instance;
 
     public function __construct($host, $datb, $user, $pass)
     {
@@ -14,6 +15,26 @@ class Database extends PDO
         } catch (PDOException $ex) {
             die($ex->GetMessage());
         }
+    }
+
+    public static function initialize($host, $datb, $user, $pass)
+    {
+        if (self::$instance) {
+            die('Database already initialized.');
+        }
+        self::$instance = new self($host, $datb, $user, $pass);
+    }
+
+    public static function getInstance()
+    {
+        if (!self::$instance) {
+            die('Database not initialized.');
+        }
+        return self::$instance;
+    }
+
+    public function lastID() {
+        return $this->lastInsertId();
     }
 
 }

@@ -7,32 +7,33 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 
 /* MAIN */
 
-$app->get('/', function (Request $request, Response $response) use ($loginHandler) {
+$app->get('/', function (Request $request, Response $response) {
     include DIR_FRONTEND . 'index.php';
 });
 
 /* USER */
 
-$app->post('/api/login', function (Request $request, Response $response) use ($loginHandler) {
+$app->post('/api/login', function (Request $request, Response $response) {
     $username = post('username');
     $password = post('password');
     $remember = post('remember', 'bool');
 
+    $loginHandler = LoginHandler::getInstance();
     $passwordHash = $loginHandler->HashPassword($password);
     $success = $loginHandler->Login($username, $passwordHash, $remember);
 
     echo new ApiResult($success, $success ? 'You have been successfully logged in' : 'Username and/or password was wrong');
 });
 
-$app->post('/api/logout', function (Request $request, Response $response) use ($loginHandler) {
-    $loginHandler->Logout();
+$app->post('/api/logout', function (Request $request, Response $response) {
+    LoginHandler::getInstance()->Logout();
     echo new ApiResult(true, 'You have been logged out');
 });
 
-$app->get('/api/user/{id}', function (Request $request, Response $response, $args) use ($db) {
+$app->get('/api/user/{id}', function (Request $request, Response $response, $args) {
     $id = $args['id'];
     $user = new User($id);
-    if ($user->update($db)) {
+    if ($user->update()) {
         echo new ApiResult(true, null, array(
             'id' => $user->getId(),
             'name' => $user->getName()
@@ -43,7 +44,7 @@ $app->get('/api/user/{id}', function (Request $request, Response $response, $arg
 });
 
 $app->post('/api/user/create', function (Request $request, Response $response) {
-
+    // User::create($name, $password, $flag);
 });
 
 /* USERSCRIPT */
@@ -53,9 +54,10 @@ $app->get('/api/userscript/list', function (Request $request, Response $response
 });
 
 $app->get('/api/userscript/{id}', function (Request $request, Response $response, $args) {
-    //echo $args['id'];
-    echo $request->getAttribute('id');
-    //echo get('id', 'int');
+    $id = $request->getAttribute('id');
+    $userscript = new Userscript($id);
+    $exists = $userscript->update();
+    echo new ApiResult($exists, $exists ? '' : 'A userscript with this id does not exists.', $userscript);
 });
 
 $app->post('/api/userscript/create', function (Request $request, Response $response, $args) {

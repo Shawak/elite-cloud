@@ -15,6 +15,6 @@
 
 <br>
 Test<br>
-Copyright <?= Helper::copyyear(2016); ?> <?= LOGGED_IN ? "Logged in as " . $loginHandler->getUser()->getName() : "Not logged in" ?>
+Copyright <?= Helper::copyYear(2016); ?> <?= LOGGED_IN ? "Logged in as " . LoginHandler::getInstance()->getUser()->getName() : "Not logged in" ?>
 </body>
 </html>

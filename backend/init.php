@@ -19,14 +19,13 @@ require DIR_APP . 'config.php';
 require DIR_BACKEND . 'Helper.php';
 require DIR_BACKEND . 'DBObject.php';
 require DIR_BACKEND . 'User.php';
+require DIR_BACKEND . 'Userscript.php';
 require DIR_BACKEND . 'ApiResult.php';
 
 require DIR_BACKEND . 'Database.php';
-$db = new Database($config['db']['host'], $config['db']['datb'],
-    $config['db']['user'], $config['db']['pass']);
+Database::initialize($config['db']['host'], $config['db']['datb'], $config['db']['user'], $config['db']['pass']);
 
 require DIR_BACKEND . 'LoginHandler.php';
-$loginHandler = new LoginHandler($db);
-define('LOGGED_IN', $loginHandler->AutoLogin());
+define('LOGGED_IN', LoginHandler::getInstance()->AutoLogin());
 
 require 'app.php';

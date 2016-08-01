@@ -11,5 +11,5 @@ $config['db']['pass'] = '';
 $config['db']['datb'] = 'elite-cloud';
 
 // overwrite $config['db']['pass'] in an external config during development
-// which wont be uploaded to prevent misstakes
+// which wont be uploaded to prevent mistakes
 @include '../config.php';

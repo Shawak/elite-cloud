@@ -3,9 +3,9 @@
 abstract class DBObject
 {
 
-    public abstract function update(Database $db);
+    public abstract function update();
 
-    public abstract function save(Database $db);
+    public abstract function save();
 
     public function consume($dbData)
     {

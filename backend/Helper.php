@@ -3,7 +3,7 @@
 class Helper
 {
 
-    public static function GetInput($name, $filter = null, $input = null)
+    public static function getInput($name, $filter = null, $input = null)
     {
         if (!in_array($input, array(INPUT_GET, INPUT_POST, INPUT_SERVER, INPUT_COOKIE, INPUT_ENV))) {
             die("invalid input variable passed");
@@ -33,13 +33,13 @@ class Helper
         return filter_input($input, $name, $filter);
     }
 
-    public static function copyyear($year)
+    public static function copyYear($year)
     {
         $nowYear = date("Y");
         return '&copy; ' . ($nowYear == $year ? $nowYear : $year . ' - ' . $nowYear);
     }
 
-    public static function TryParseDouble($val)
+    public static function tryParseDouble($val)
     {
         $val = str_replace(',', '.', $val);
         if (!is_numeric($val)) {
@@ -128,7 +128,7 @@ function session($session, $value = '')
 function cookie($cookie, $value = '', $expire = null)
 {
     if ($value === '') {
-        $ret = Helper::GetInput($cookie, null, INPUT_COOKIE);
+        $ret = Helper::getInput($cookie, null, INPUT_COOKIE);
         if (isset($ret)) {
             return $ret;
         }
@@ -144,12 +144,12 @@ function cookie($cookie, $value = '', $expire = null)
 
 function get($name, $filter = null)
 {
-    return Helper::GetInput($name, $filter, INPUT_GET);
+    return Helper::getInput($name, $filter, INPUT_GET);
 }
 
 function post($name, $filter = null)
 {
-    return Helper::GetInput($name, $filter, INPUT_POST);
+    return Helper::getInput($name, $filter, INPUT_POST);
 }
 
 function request($name, $filter = null)

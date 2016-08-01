@@ -2,14 +2,14 @@
 
 class UserFlag
 {
-    const USER = 1;
-    const MODERATOR = 2;
-    const ADMIN = 4;
+    const USER = 0;
+    const MODERATOR = 1;
+    const ADMIN = 2;
+    const BANNED = 4;
 }
 
 class User extends DBObject
 {
-
     protected $id;
     protected $name;
     protected $password;
@@ -18,6 +18,24 @@ class User extends DBObject
     public function __construct($id)
     {
         $this->id = $id;
+        $this->update();
+    }
+
+    public static function create($name, $password, $flag = 0)
+    {
+        $stmt = Database::getInstance()->prepare('
+			insert into user
+			(name, password, flag)
+			values (:name, :password, :flag)
+		');
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':flag', $flag);
+        $stmt->execute();
+
+        $user = new self(Database::getInstance()->lastID());
+        $user->update();
+        return $user;
     }
 
     public function getID()
@@ -30,7 +48,8 @@ class User extends DBObject
         return $this->name;
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->password;
     }
 
@@ -49,9 +68,9 @@ class User extends DBObject
         return $this->flag & UserFlag::ADMIN;
     }
 
-    public function update(Database $db)
+    public function update()
     {
-        $stmt = $db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			select *
 			from user
 			where id = :id
@@ -62,9 +81,9 @@ class User extends DBObject
         return $this->consume($ret);
     }
 
-    public function save(Database $db)
+    public function save()
     {
-        $stmt = $db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			update user
 			set password = :password
 			where id = :id
