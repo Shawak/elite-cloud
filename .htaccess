@@ -1,5 +1,22 @@
-# Rewrite Rules (Slim)
+# RewriteEngine
 RewriteEngine on
+
+# Rewrite Rules (Slim)
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . index.php [L]
+
+# Disallow access to backend directory
+RewriteRule ^(backend/) - [F,L,NC]
+
+# Disable indexes
+Options -Indexes
+
+# Allow access only to specific files
+<Files ~"^.*">
+  Deny from all
+</Files>
+
+<FilesMatch ".*\.(html|css|js|woff|jpe|jpg|jpeg|gif|png|bmp|ico|svg|svgz|tif|tiff|ai|drw|pct|psp|xcf|psd|raw)$">
+    Allow from all
+</FilesMatch>
