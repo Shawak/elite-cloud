@@ -11,6 +11,11 @@ $app->get('/', function (Request $request, Response $response) {
     include DIR_FRONTEND . 'index.php';
 });
 
+$app->get('/api/include', function (Request $request, Response $response) {
+    header('Content-Type: application/javascript');
+    echo file_get_contents('xx.js');
+});
+
 /* USER */
 
 $app->post('/api/login', function (Request $request, Response $response) {
