@@ -3,9 +3,9 @@
 class Userscript extends DBObject
 {
 
-    protected $id;
-    protected $name;
-    protected $author;
+    public $id;
+    public $name;
+    public $author;
     protected $file;
 
     public function __construct($id)
@@ -25,10 +25,7 @@ class Userscript extends DBObject
         $stmt->bindParam(':author', $author);
         $stmt->bindParam(':file', $file);
         $stmt->execute();
-
-        $userscript = new self(Database::getInstance()->lastID());
-        $userscript->update();
-        return $userscript;
+        return new self(Database::getInstance()->lastID());
     }
 
     public function getID()
@@ -41,11 +38,13 @@ class Userscript extends DBObject
         return $this->name;
     }
 
-    public function getAuthor() {
+    public function getAuthor()
+    {
         return $this->author;
     }
 
-    public function getFile() {
+    public function getFile()
+    {
         return $this->file;
     }
 
@@ -53,13 +52,18 @@ class Userscript extends DBObject
     {
         $stmt = Database::getInstance()->prepare('
 			select *
-			from userscript
-			where id = :id
+			from userscript as userscript
+			where userscript.id = :id
 		');
         $stmt->bindParam(':id', $this->id);
         $stmt->execute();
         $ret = $stmt->fetch();
-        return $this->consume($ret);
+        if (!$this->consume($ret)) {
+            return false;
+        }
+        $user = new User($this->author);
+        $this->author = $user->update() ? $user : null;
+        return true;
     }
 
     public function save()

@@ -3,40 +3,10 @@
 class Helper
 {
 
-    public static function getInput($name, $filter = null, $input = null)
-    {
-        if (!in_array($input, array(INPUT_GET, INPUT_POST, INPUT_SERVER, INPUT_COOKIE, INPUT_ENV))) {
-            die("invalid input variable passed");
-        }
-
-        $filters = array(
-            "bool" => FILTER_VALIDATE_BOOLEAN,
-            "email" => FILTER_VALIDATE_EMAIL,
-            "float" => FILTER_VALIDATE_FLOAT,
-            "int" => FILTER_VALIDATE_INT,
-            "ip" => FILTER_VALIDATE_IP,
-            "regexp" => FILTER_VALIDATE_REGEXP,
-            "url" => FILTER_VALIDATE_URL,
-            "string" => FILTER_SANITIZE_STRING,
-            "special" => FILTER_SANITIZE_SPECIAL_CHARS
-        );
-
-        if (isset($filter)) {
-            if (!array_key_exists($filter, $filters)) {
-                die("filter not found");
-            }
-            $filter = $filters[$filter];
-        } else {
-            $filter = $filters["string"];
-        }
-
-        return filter_input($input, $name, $filter);
-    }
-
     public static function copyYear($year)
     {
-        $nowYear = date("Y");
-        return '&copy; ' . ($nowYear == $year ? $nowYear : $year . ' - ' . $nowYear);
+        $yearNow = date("Y");
+        return '&copy; ' . ($yearNow == $year ? $yearNow : $year . ' - ' . $yearNow);
     }
 
     public static function tryParseDouble($val)
@@ -51,7 +21,6 @@ class Helper
     public static function format($value, $clean = false)
     {
         if (is_numeric($value)) { // Number Format
-            $ret = '';
             if ($clean) {
                 $ret = self::number_format_clean($value, 2, ',', '.');
             } else {
@@ -63,7 +32,6 @@ class Helper
             $value = strtotime($value);
             return date('d.m.Y' . $add, $value);
         }
-        return $value;
     }
 
     private static function number_format_clean($number, $precision = 0, $dec_point = '.', $thousands_sep = ',')
@@ -74,18 +42,6 @@ class Helper
             $str = substr($str, 0, $length - ($str[$length - 2] == '0' ? 3 : 1));
         }
         return $str;
-    }
-
-    public static function validate_date($dateStr)
-    {
-        $d = DateTime::createFromFormat('Y-m-d\TH:i', $dateStr);
-        return $d && $d->format('Y-m-d\TH:i') === $dateStr;
-    }
-
-    public static function validate_date_normal($dateStr)
-    {
-        $d = DateTime::createFromFormat('Y-m-d', $dateStr);
-        return $d && $d->format('Y-m-d') === $dateStr;
     }
 }
 
@@ -100,16 +56,16 @@ class Helper
   $value = session(<name>, null);
  */
 
-function session($session, $value = '')
+function session($name, $value = '')
 {
     if ($value === '') {
-        if (isset($_SESSION[$session])) {
-            return $_SESSION[$session];
+        if (isset($_SESSION[$name])) {
+            return $_SESSION[$name];
         }
     } else if ($value !== null) {
-        $_SESSION[$session] = $value;
+        $_SESSION[$name] = $value;
     } else {
-        $_SESSION[$session] = null;
+        $_SESSION[$name] = null;
     }
 }
 
@@ -125,12 +81,11 @@ function session($session, $value = '')
   cookie(<name>, null);
  */
 
-function cookie($cookie, $value = '', $expire = null)
+function cookie($name, $value = '', $expire = null)
 {
     if ($value === '') {
-        $ret = Helper::getInput($cookie, null, INPUT_COOKIE);
-        if (isset($ret)) {
-            return $ret;
+        if (isset($_COOKIE[$name])) {
+            return $_COOKIE[$name];
         }
     } else {
         if ($value === null) {
@@ -138,29 +93,29 @@ function cookie($cookie, $value = '', $expire = null)
         } else if ($expire === null) {
             $expire = 2147483647; // 2^31 - 1 -> January 2038
         }
-        setcookie($cookie, $value, time() + $expire);
+        setcookie($name, $value, time() + $expire);
     }
 }
 
-function get($name, $filter = null)
+function get($name, $filter = FILTER_SANITIZE_STRING)
 {
-    return Helper::getInput($name, $filter, INPUT_GET);
+    return filter_var($_GET[$name], $filter);
 }
 
-function post($name, $filter = null)
+function post($name, $filter = FILTER_SANITIZE_STRING)
 {
-    return Helper::getInput($name, $filter, INPUT_POST);
+    return filter_var($_POST[$name], $filter);
 }
 
-function request($name, $filter = null)
+function request($name, $filter = FILTER_SANITIZE_STRING)
 {
     $get = get($name, $filter);
     return !is_null($get) ? $get : post($name, $filter);
 }
 
-function dump($exp)
+function dump($object)
 {
     echo '<pre>';
-    var_dump($exp);
+    var_dump($object);
     echo '</pre>';
 }

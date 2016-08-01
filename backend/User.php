@@ -10,15 +10,14 @@ class UserFlag
 
 class User extends DBObject
 {
-    protected $id;
-    protected $name;
+    public $id;
+    public $name;
     protected $password;
-    protected $flag;
+    public $flag;
 
     public function __construct($id)
     {
         $this->id = $id;
-        $this->update();
     }
 
     public static function create($name, $password, $flag = 0)

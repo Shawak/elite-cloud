@@ -33,8 +33,31 @@ class Database extends PDO
         return self::$instance;
     }
 
-    public function lastID() {
+    public function lastID()
+    {
         return $this->lastInsertId();
+    }
+
+    public static function getUsers($offset = null, $count = null)
+    {
+        if ($offset == null) $offset = 0;
+        if ($count == null) $count = 100;
+
+        $db = Database::getInstance();
+        $stmt = $db->prepare('
+			select *
+			from user
+			limit :offset, :count
+		');
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':count', $count, PDO::PARAM_INT);
+        $stmt->execute();
+        $ret = $stmt->fetchAll();
+        array_walk($ret, function (&$e) {
+            $e = new User($e['id']);
+            $e->consume($e);
+        });
+        return $ret;
     }
 
 }

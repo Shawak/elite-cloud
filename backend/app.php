@@ -14,9 +14,9 @@ $app->get('/', function (Request $request, Response $response) {
 /* USER */
 
 $app->post('/api/login', function (Request $request, Response $response) {
-    $username = post('username');
-    $password = post('password');
-    $remember = post('remember', 'bool');
+    $username = filter_var($request->getAttribute('username'), FILTER_SANITIZE_STRING);
+    $password = filter_var($request->getAttribute('password'), FILTER_SANITIZE_STRING);
+    $remember = filter_var($request->getAttribute('remember'), FILTER_VALIDATE_BOOLEAN);
 
     $loginHandler = LoginHandler::getInstance();
     $passwordHash = $loginHandler->HashPassword($password);
@@ -30,39 +30,40 @@ $app->post('/api/logout', function (Request $request, Response $response) {
     echo new ApiResult(true, 'You have been logged out');
 });
 
-$app->get('/api/user/{id}', function (Request $request, Response $response, $args) {
-    $id = $args['id'];
+$app->get('/api/user/list[/{offset}[/{count}]]', function (Request $request, Response $response) {
+    $offset = filter_var($request->getAttribute('offset'), FILTER_VALIDATE_INT);
+    $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
+
+    echo new ApiResult(true, '', Database::getUsers($offset, $count));
+});
+
+$app->get('/api/user/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $user = new User($id);
     if ($user->update()) {
-        echo new ApiResult(true, null, array(
-            'id' => $user->getId(),
-            'name' => $user->getName()
-        ));
+        echo new ApiResult(true, '', $user);
     } else {
         echo new ApiResult(false, 'A user with this id does not exists');
     }
 });
 
 $app->post('/api/user/create', function (Request $request, Response $response) {
-    $username = post('username');
-    $password = post('password');
+    $username = filter_var($request->getAttribute('username'), FILTER_SANITIZE_STRING);
+    $password = filter_var($request->getAttribute('password'), FILTER_SANITIZE_STRING);
 
     if (!preg_match('/^[a-z\d_]{5,20}$/i', $username)) {
         echo new ApiResult(false, 'Your username may only contain letters and numbers and has to be at least 5 and maximum 20 characters long.');
         return;
     }
 
-    if (strlen($password) < 6) {
-        echo new ApiResult(false, 'Your password has to be at least 6 characters long.');
+    if (strlen($password) < 4) {
+        echo new ApiResult(false, 'Your password has to be at least 4 characters long.');
         return;
     }
 
     $password = LoginHandler::getInstance()->hashPassword($password);
     $user = User::create($username, $password);
-    echo new ApiResult(true, 'Your account has been created.', array(
-        'id' => $user->getId(),
-        'name' => $user->getName()
-    ));
+    echo new ApiResult(true, 'Your account has been created.', $user);
 });
 
 /* USERSCRIPT */
@@ -72,7 +73,7 @@ $app->get('/api/userscript/list', function (Request $request, Response $response
 });
 
 $app->get('/api/userscript/{id}', function (Request $request, Response $response, $args) {
-    $id = $request->getAttribute('id');
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
     $exists = $userscript->update();
     echo new ApiResult($exists, $exists ? '' : 'A userscript with this id does not exists.', $userscript);
