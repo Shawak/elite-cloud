@@ -10,7 +10,8 @@ class Database extends PDO
             parent::__construct('mysql:host=' . $host . ';dbname=' . $datb . ';charset=utf8', $user, $pass, array(
                 PDO::ATTR_PERSISTENT => true,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_FETCH_TABLE_NAMES => true
             ));
         } catch (PDOException $ex) {
             die($ex->GetMessage());
@@ -54,8 +55,35 @@ class Database extends PDO
         $stmt->execute();
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
-            $e = new User($e['id']);
-            $e->consume($e);
+            $v = new User($e['id']);
+            $v->consume($e);
+            $e = $v;
+        });
+        return $ret;
+    }
+
+    public static function getUserscripts($offset = null, $count = null)
+    {
+        if ($offset == null) $offset = 0;
+        if ($count == null) $count = 100;
+
+        $db = Database::getInstance();
+        $stmt = $db->prepare('
+			select userscript.*, user.*
+			from userscript, user
+			where user.id = userscript.author
+			limit :offset, :count
+		');
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':count', $count, PDO::PARAM_INT);
+        $stmt->execute();
+        $ret = $stmt->fetchAll();
+        array_walk($ret, function (&$e) {
+            $v = new Userscript($e['userscript.id']);
+            $v->consume($e);
+            $v->author = new User($e['user.id']);
+            $v->getAuthor()->consume($e);
+            $e = $v;
         });
         return $ret;
     }

@@ -11,7 +11,6 @@ class Userscript extends DBObject
     public function __construct($id)
     {
         $this->id = $id;
-        $this->update();
     }
 
     public static function create($name, $author, $file = '')
@@ -52,8 +51,9 @@ class Userscript extends DBObject
     {
         $stmt = Database::getInstance()->prepare('
 			select *
-			from userscript as userscript
+			from userscript, user
 			where userscript.id = :id
+			  and user.id = userscript.id
 		');
         $stmt->bindParam(':id', $this->id);
         $stmt->execute();
@@ -61,8 +61,9 @@ class Userscript extends DBObject
         if (!$this->consume($ret)) {
             return false;
         }
-        $user = new User($this->author);
-        $this->author = $user->update() ? $user : null;
+
+        $this->author = new User($ret['user.id']);
+        $this->author->consume($ret);
         return true;
     }
 
@@ -76,6 +77,6 @@ class Userscript extends DBObject
 		');
         $stmt->bindParam(':name', $this->id);
         $stmt->bindParam(':file', $this->file);
-        return $stmt->execute() == true;
+        return $stmt->execute();
     }
 }

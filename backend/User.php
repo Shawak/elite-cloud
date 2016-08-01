@@ -64,6 +64,11 @@ class User extends DBObject
         return $this->flag & UserFlag::ADMIN;
     }
 
+    public function isBanned()
+    {
+        return $this->flag & UserFlag::BANNED;
+    }
+
     public function update()
     {
         $stmt = Database::getInstance()->prepare('
@@ -86,6 +91,6 @@ class User extends DBObject
 		');
         $stmt->bindParam(':id', $this->id);
         $stmt->bindParam(':password', $this->password);
-        return $stmt->execute() == true;
+        return $stmt->execute();
     }
 }

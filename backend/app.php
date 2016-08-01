@@ -33,7 +33,6 @@ $app->post('/api/logout', function (Request $request, Response $response) {
 $app->get('/api/user/list[/{offset}[/{count}]]', function (Request $request, Response $response) {
     $offset = filter_var($request->getAttribute('offset'), FILTER_VALIDATE_INT);
     $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
-
     echo new ApiResult(true, '', Database::getUsers($offset, $count));
 });
 
@@ -68,22 +67,24 @@ $app->post('/api/user/create', function (Request $request, Response $response) {
 
 /* USERSCRIPT */
 
-$app->get('/api/userscript/list', function (Request $request, Response $response) {
-
+$app->get('/api/userscript/list[/{offset}[/{count}]]', function (Request $request, Response $response) {
+    $offset = filter_var($request->getAttribute('offset'), FILTER_VALIDATE_INT);
+    $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
+    echo new ApiResult(true, '', Database::getUserscripts($offset, $count));
 });
 
-$app->get('/api/userscript/{id}', function (Request $request, Response $response, $args) {
+$app->get('/api/userscript/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
     $exists = $userscript->update();
     echo new ApiResult($exists, $exists ? '' : 'A userscript with this id does not exists.', $userscript);
 });
 
-$app->post('/api/userscript/create', function (Request $request, Response $response, $args) {
+$app->post('/api/userscript/create', function (Request $request, Response $response) {
 
 });
 
-$app->post('/api/userscript/edit', function (Request $request, Response $response, $args) {
+$app->post('/api/userscript/edit', function (Request $request, Response $response) {
 
 });
 

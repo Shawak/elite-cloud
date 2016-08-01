@@ -14,6 +14,13 @@ abstract class DBObject
         }
 
         foreach ($dbData as $key => $value) {
+            if (strpos($key, '.') !== false) {
+                $t = explode('.', $key);
+                if (strtolower($t[0]) != strtolower(static::class)) {
+                    continue;
+                }
+                $key = $t[1];
+            }
             $this->$key = $value;
         }
         return true;
