@@ -11,19 +11,17 @@ $app->get('/', function (Request $request, Response $response) {
     include DIR_FRONTEND . 'index.php';
 });
 
-/* USERSCRIPT (JS) */
-
+/*  JS */
 
 $app->get('/api/include', function (Request $request, Response $response) {
     header('Content-Type: application/javascript');
-    //echo file_get_contents('loader.js');
-    include 'loader.js';
+    echo file_get_contents(DIR_USERSCRIPT . 'loader.js');
 });
 
 $app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {
     $authKey = filter_var($request->getAttribute('authKey'), FILTER_SANITIZE_STRING);
     $user = Database::getUserByAuthKey($authKey);
-    echo new ApiResult($user != null, '', $user->getSelectedUserscripts());
+    echo new ApiResult($user != null, '', $user ? $user->getSelectedUserscripts() : null);
 });
 
 /* USER */
