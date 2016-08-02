@@ -13,6 +13,32 @@ abstract class DBObject
             return false;
         }
 
+        $dbData = self::filterData($dbData);
+        foreach ($dbData as $key => $value) {
+            $this->$key = $value;
+        }
+        return true;
+    }
+
+    public static function fromData($dbData)
+    {
+        if (!$dbData) {
+            return null;
+        }
+
+        $dbData = self::filterData($dbData);
+        if (!$dbData['id']) {
+            return null;
+        }
+
+        $ret = new static($dbData['id']);
+        $ret->consume($dbData);
+        return $ret;
+    }
+
+    private static function filterData($dbData)
+    {
+        $ret = [];
         foreach ($dbData as $key => $value) {
             if (strpos($key, '.') !== false) {
                 $t = explode('.', $key);
@@ -21,9 +47,9 @@ abstract class DBObject
                 }
                 $key = $t[1];
             }
-            $this->$key = $value;
+            $ret[$key] = $value;
         }
-        return true;
+        return $ret;
     }
 
 }

@@ -21,6 +21,7 @@ require DIR_BACKEND . 'DBObject.php';
 require DIR_BACKEND . 'User.php';
 require DIR_BACKEND . 'Userscript.php';
 require DIR_BACKEND . 'ApiResult.php';
+require DIR_BACKEND . 'KeyGenerator.php';
 
 require DIR_BACKEND . 'Database.php';
 Database::initialize($config['db']['host'], $config['db']['datb'], $config['db']['user'], $config['db']['pass']);

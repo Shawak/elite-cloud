@@ -14,6 +14,7 @@ class User extends DBObject
     public $name;
     protected $password;
     public $flag;
+    protected $authKey;
 
     public function __construct($id)
     {
@@ -24,12 +25,13 @@ class User extends DBObject
     {
         $stmt = Database::getInstance()->prepare('
 			insert into user
-			(name, password, flag)
-			values (:name, :password, :flag)
+			(name, password, flag, authKey)
+			values (:name, :password, :flag, :authKey)
 		');
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':password', $password);
         $stmt->bindParam(':flag', $flag);
+        $stmt->bindParam(':authKey', KeyGenerator::generateKey());
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -47,6 +49,16 @@ class User extends DBObject
     public function getPassword()
     {
         return $this->password;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    public function renewAuthKey()
+    {
+        $this->authKey = KeyGenerator::generateKey();
     }
 
     public function isUser()
@@ -86,11 +98,17 @@ class User extends DBObject
     {
         $stmt = Database::getInstance()->prepare('
 			update user
-			set password = :password
+			set name = :name,
+			  password = :password,
+			  flag = :flag,
+			  authKey = :authKey
 			where id = :id
 		');
         $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':name', $this->name);
         $stmt->bindParam(':password', $this->password);
+        $stmt->bindParam(':flag', $this->flag);
+        $stmt->bindParam(':authKey', $this->authKey);
         return $stmt->execute();
     }
 }

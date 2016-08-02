@@ -61,9 +61,7 @@ class Userscript extends DBObject
         if (!$this->consume($ret)) {
             return false;
         }
-
-        $this->author = new User($ret['user.id']);
-        $this->author->consume($ret);
+        $this->author = User::fromData($ret);
         return true;
     }
 

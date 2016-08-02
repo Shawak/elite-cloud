@@ -14,7 +14,8 @@
 
     function main() {
         if (!checkForIFrame()) {
-            includeScript('http://localhost/elite-cloud/api/include'); // https://userscripts.elitepvpers.de/api/include
+            includeScript('https://userscripts.elitepvpers.de/api/include');
+            includeScript('http://localhost/elite-cloud/api/include');
         }
     }
 

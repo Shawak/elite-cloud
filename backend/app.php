@@ -11,9 +11,20 @@ $app->get('/', function (Request $request, Response $response) {
     include DIR_FRONTEND . 'index.php';
 });
 
+/* USERSCRIPT */
+
 $app->get('/api/include', function (Request $request, Response $response) {
     header('Content-Type: application/javascript');
     echo file_get_contents('xx.js');
+});
+
+$app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {
+    $authKey = filter_var($request->getAttribute('authKey'), FILTER_SANITIZE_STRING);
+    $user = Database::getUserByAuthKey($authKey);
+
+    // TODO: list userscripts selected by the user
+
+    echo new ApiResult($user != null, '', $user);
 });
 
 /* USER */

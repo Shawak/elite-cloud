@@ -55,9 +55,7 @@ class Database extends PDO
         $stmt->execute();
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
-            $v = new User($e['id']);
-            $v->consume($e);
-            $e = $v;
+            $e = User::fromData($e);
         });
         return $ret;
     }
@@ -79,13 +77,25 @@ class Database extends PDO
         $stmt->execute();
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
-            $v = new Userscript($e['userscript.id']);
-            $v->consume($e);
-            $v->author = new User($e['user.id']);
-            $v->getAuthor()->consume($e);
+            $v = Userscript::fromData($e);
+            $v->author = User::fromData($e);
             $e = $v;
         });
         return $ret;
+    }
+
+    public static function getUserByAuthKey($authKey)
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('
+			select *
+			from user
+			where authKey = :authKey
+		');
+        $stmt->bindParam(':authKey', $authKey, PDO::PARAM_STR);
+        $stmt->execute();
+        $ret = $stmt->fetch();
+        return User::fromData($ret);
     }
 
 }
