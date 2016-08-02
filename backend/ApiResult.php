@@ -3,9 +3,9 @@
 class ApiResult
 {
 
-    private $success;
-    private $message;
-    private $data;
+    public $success;
+    public $message;
+    public $data;
 
     public function isSuccess()
     {
@@ -41,10 +41,7 @@ class ApiResult
 
     public function __toString()
     {
-        return json_encode(array(
-            'success' => $this->success,
-            'message' => $this->message != null ? $this->message : '',
-            'data' => $this->data));
+        return json_encode($this);
     }
 
 }

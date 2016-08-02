@@ -81,6 +81,25 @@ class User extends DBObject
         return $this->flag & UserFlag::BANNED;
     }
 
+    public function getSelectedUserscripts()
+    {
+        $stmt = Database::getInstance()->prepare('
+			select user.*, userscript.*, user_userscript.*
+			from user, userscript, user_userscript
+			where user.id = :id
+			  and user_userscript.userID = :id
+		');
+        $stmt->bindParam(':id', $this->id);
+        $stmt->execute();
+        $ret = $stmt->fetchAll();
+        array_walk($ret, function (&$e) {
+            $v = Userscript::fromData($e);
+            $v->author = User::fromData($e);
+            $e = $v;
+        });
+        return $ret;
+    }
+
     public function update()
     {
         $stmt = Database::getInstance()->prepare('

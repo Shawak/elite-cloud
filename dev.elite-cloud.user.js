@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         e*pvp elite-cloud loader
+// @name         e*pvp elite-cloud loader DEV
 // @namespace    http://elitepvpers.com/
 // @version      1.0
 // @description  Used to load userscripts from elite-cloud
@@ -14,7 +14,7 @@
 
     function main() {
         if (!checkForIFrame()) {
-            includeScript('https://userscripts.elitepvpers.de/api/include');
+            includeScript('http://localhost/elite-cloud/api/include');
         }
     }
 

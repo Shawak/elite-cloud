@@ -6,7 +6,7 @@ class Userscript extends DBObject
     public $id;
     public $name;
     public $author;
-    protected $file;
+    public $file;
 
     public function __construct($id)
     {
@@ -47,6 +47,16 @@ class Userscript extends DBObject
         return $this->file;
     }
 
+    public function delete()
+    {
+        $stmt = Database::getInstance()->prepare('
+			delete from userscript
+			where id = :id
+		');
+        $stmt->bindParam(':id', $this->id);
+        return $stmt->execute();
+    }
+
     public function update()
     {
         $stmt = Database::getInstance()->prepare('
@@ -70,10 +80,12 @@ class Userscript extends DBObject
         $stmt = Database::getInstance()->prepare('
 			update userscript
 			set name = :name
+			set author = :author
 			set file = :file
 			where id = :id
 		');
         $stmt->bindParam(':name', $this->id);
+        $stmt->bindParam(':author', $this->author->getID());
         $stmt->bindParam(':file', $this->file);
         return $stmt->execute();
     }

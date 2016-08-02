@@ -13,18 +13,17 @@ $app->get('/', function (Request $request, Response $response) {
 
 /* USERSCRIPT (JS) */
 
+
 $app->get('/api/include', function (Request $request, Response $response) {
     header('Content-Type: application/javascript');
-    echo file_get_contents('xx.js');
+    //echo file_get_contents('loader.js');
+    include 'loader.js';
 });
 
 $app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {
     $authKey = filter_var($request->getAttribute('authKey'), FILTER_SANITIZE_STRING);
     $user = Database::getUserByAuthKey($authKey);
-
-    // TODO: list userscripts selected by the user
-
-    echo new ApiResult($user != null, '', $user);
+    echo new ApiResult($user != null, '', $user->getSelectedUserscripts());
 });
 
 /* USER */
@@ -38,7 +37,6 @@ $app->post('/api/login', function (Request $request, Response $response) {
     $loginHandler = LoginHandler::getInstance();
     $passwordHash = $loginHandler->HashPassword($password);
     $success = $loginHandler->Login($username, $passwordHash, $remember);
-
     echo new ApiResult($success, $success ? 'You have been successfully logged in' : 'Username and/or password was wrong');
 });
 
@@ -83,6 +81,10 @@ $app->post('/api/user/create', function (Request $request, Response $response) {
     echo new ApiResult(true, 'Your account has been created.', $user);
 });
 
+$app->post('/api/user/edit', function (Request $request, Response $response) {
+
+});
+
 /* USERSCRIPT */
 
 $app->get('/api/userscript/list[/{offset}[/{count}]]', function (Request $request, Response $response) {
@@ -99,7 +101,14 @@ $app->get('/api/userscript/{id}', function (Request $request, Response $response
 });
 
 $app->post('/api/userscript/create', function (Request $request, Response $response) {
+    $data = $request->getParsedBody();
+    $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
+    $file = filter_var($data['file'], FILTER_SANITIZE_STRING);
 
+    // TODO: upload file
+
+    $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID(), $file);
+    echo new ApiResult(true, 'The userscript has been created.', $userscript);
 });
 
 $app->post('/api/userscript/edit', function (Request $request, Response $response) {
