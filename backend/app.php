@@ -19,8 +19,9 @@ $app->get('/api/include', function (Request $request, Response $response) {
 });
 
 $app->get('/api/plugin', function (Request $request, Response $response) {
-    $script = file_get_contents(DIR_USERSCRIPT . 'plugin.html');
     // JSONP Response
+    // <callback>(json)
+    $script = file_get_contents(DIR_USERSCRIPT . 'plugin.html');
     echo get('callback') . '(' . new ApiResult(true, '', (object)['script' => $script]) . ')';
 });
 

@@ -99,12 +99,12 @@ function cookie($name, $value = '', $expire = null)
 
 function get($name, $filter = FILTER_SANITIZE_STRING)
 {
-    return filter_var($_GET[$name], $filter);
+    return filter_input(INPUT_GET, $name, $filter);
 }
 
 function post($name, $filter = FILTER_SANITIZE_STRING)
 {
-    return filter_var($_POST[$name], $filter);
+    return filter_input(INPUT_POST, $name, $filter);
 }
 
 function request($name, $filter = FILTER_SANITIZE_STRING)
