@@ -18,6 +18,12 @@ $app->get('/api/include', function (Request $request, Response $response) {
     echo file_get_contents(DIR_USERSCRIPT . 'loader.js');
 });
 
+$app->get('/api/plugin', function (Request $request, Response $response) {
+    $script = file_get_contents(DIR_USERSCRIPT . 'plugin.html');
+    // JSONP Response
+    echo get('callback') . '(' . new ApiResult(true, '', (object)['script' => $script]) . ')';
+});
+
 $app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {
     $authKey = filter_var($request->getAttribute('authKey'), FILTER_SANITIZE_STRING);
     $user = Database::getUserByAuthKey($authKey);
