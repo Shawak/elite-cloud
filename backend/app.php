@@ -11,7 +11,7 @@ $app->get('/', function (Request $request, Response $response) {
     include DIR_FRONTEND . 'index.php';
 });
 
-/* USERSCRIPT */
+/* USERSCRIPT (JS) */
 
 $app->get('/api/include', function (Request $request, Response $response) {
     header('Content-Type: application/javascript');
@@ -30,9 +30,10 @@ $app->get('/api/authenticate/{authKey}', function (Request $request, Response $r
 /* USER */
 
 $app->post('/api/login', function (Request $request, Response $response) {
-    $username = filter_var($request->getAttribute('username'), FILTER_SANITIZE_STRING);
-    $password = filter_var($request->getAttribute('password'), FILTER_SANITIZE_STRING);
-    $remember = filter_var($request->getAttribute('remember'), FILTER_VALIDATE_BOOLEAN);
+    $data = $request->getParsedBody();
+    $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
+    $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
+    $remember = filter_var($data['remember'], FILTER_VALIDATE_BOOLEAN);
 
     $loginHandler = LoginHandler::getInstance();
     $passwordHash = $loginHandler->HashPassword($password);
@@ -63,8 +64,9 @@ $app->get('/api/user/{id}', function (Request $request, Response $response) {
 });
 
 $app->post('/api/user/create', function (Request $request, Response $response) {
-    $username = filter_var($request->getAttribute('username'), FILTER_SANITIZE_STRING);
-    $password = filter_var($request->getAttribute('password'), FILTER_SANITIZE_STRING);
+    $data = $request->getParsedBody();
+    $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
+    $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
 
     if (!preg_match('/^[a-z\d_]{5,20}$/i', $username)) {
         echo new ApiResult(false, 'Your username may only contain letters and numbers and has to be at least 5 and maximum 20 characters long.');

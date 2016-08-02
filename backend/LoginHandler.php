@@ -44,13 +44,11 @@ class LoginHandler
         $ret = $stmt->fetch();
 
         if ($ret) {
-            $userID = $ret['id'];
-            $this->user = new User($userID);
-            $this->user->consume($ret);
-            session('userID', $userID);
+            $this->user = User::fromData($ret);
+            session('userID', $this->user->getID());
             session('hash', $passwordHash);
             if ($remember) {
-                cookie('userID', $userID);
+                cookie('userID', $this->user->getID());
                 cookie('hash', $passwordHash);
             }
             return true;
