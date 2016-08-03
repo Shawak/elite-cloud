@@ -19,16 +19,21 @@ $app->get('/api/include', function (Request $request, Response $response) {
 });
 
 $app->get('/api/plugin', function (Request $request, Response $response) {
-    // JSONP Response
-    // <callback>(json)
     $script = file_get_contents(DIR_USERSCRIPT . 'plugin.html');
-    echo get('callback') . '(' . new ApiResult(true, '', (object)['script' => $script]) . ')';
+    echo new ApiResult(true, '', (object)['script' => $script]);
 });
 
 $app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {
     $authKey = filter_var($request->getAttribute('authKey'), FILTER_SANITIZE_STRING);
     $user = Database::getUserByAuthKey($authKey);
-    echo new ApiResult($user != null, '', $user ? $user->getSelectedUserscripts() : null);
+    if ($user == null) {
+        echo new ApiResult(false, 'AuthKey does not belong to a user.');
+        return;
+    }
+    echo new ApiResult(true, '', (object)[
+        'user' => $user,
+        'userscripts' => $user->getSelectedUserscripts()
+    ]);
 });
 
 /* USER */

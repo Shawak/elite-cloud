@@ -41,7 +41,14 @@ class ApiResult
 
     public function __toString()
     {
-        return json_encode($this);
+        $json = json_encode($this);
+        $callback = get('callback');
+        if ($callback) {
+            // JSONP
+            return $callback . '(' . $json . ')';
+        } else {
+            return $json;
+        }
     }
 
 }
