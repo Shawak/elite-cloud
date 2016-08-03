@@ -2,10 +2,14 @@
 
     var elite_cloud = {
         keyName: 'elite-cloud_authKey',
-        /*loggedIn: false,
-        user: null,
-        userscripts: null,*/
-        message: 'Loading..',
+
+        hideForm: function () {
+            $('#ec_form').hide();
+        },
+
+        showForm: function () {
+            $('#ec_form').show();
+        },
 
         getAuthKey: function () {
             return localStorage.getItem(this.keyName);
@@ -19,10 +23,9 @@
             localStorage.removeItem(this.keyName);
         },
 
-        init: function () {
+        injectPlugin: function (after) {
             $('#userbaritems').append('<a href="/forum/profile.php?do=editoptions"><li>elite-cloud</li></a>');
 
-            var that = this;
             var elem = $('form[action="profile.php?do=updateoptions"]');
             if (elem.length) {
                 $.ajax({
@@ -30,19 +33,33 @@
                     dataType: 'jsonp',
                 }).done(function (e) {
                     elem.parent().prepend(e.data.script).append(function () {
-                        that.setMessage(that.message)
+                        after();
                     });
                 }).fail(function (e, status, err) {
                     console.log(status);
                 });
-            }
-
-            var authKey = this.getAuthKey();
-            if (authKey != null) {
-                this.login(authKey);
             } else {
-                that.setMessage('No authKey found.');
+                after();
             }
+        },
+
+        init: function () {
+            $(document).on('click', '#ec_logout', function () {
+                that.logout();
+            });
+
+            var that = this;
+            this.injectPlugin(function () {
+                $("#ec_form").submit(function (event) {
+                    event.preventDefault();
+                    that.hideForm();
+                    var authKey = $('#ec_authKey').val();
+                    $('#ec_authKey').val('');
+                    that.setAuthKey(authKey);
+                    that.login();
+                });
+                that.login();
+            });
         },
 
         includeScript: function (src) {
@@ -53,41 +70,46 @@
         },
 
         setMessage: function (str) {
-            this.message = str;
             var elem = $('#ec_message');
             if (elem.length) {
-                $('#ec_message').text(str);
+                $('#ec_message').html(str);
             }
         },
 
-        login: function (authKey) {
+        login: function () {
+            var authKey = this.getAuthKey();
+            if (authKey == null || authKey == '') {
+                this.setMessage('No authentication key found.');
+                this.showForm();
+                return;
+            }
+
             var that = this;
             $.ajax({
                 url: 'http://localhost/elite-cloud/api/authenticate/' + authKey,
                 dataType: 'jsonp',
             }).done(function (e) {
-                //that.loggedIn = e.success;
-                if (that.loggedIn) {
-                    /*that.user = e.data.user;
-                    that.userscripts = e.data.userscripts;*/
-                    that.setMessage('Logged in as ' + e.data.user.name);
+                if (e.success) {
+                    that.setMessage('Logged in as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
                     for (var i = 0; i < e.data.userscripts.length; i++) {
                         that.includeScript(e.data.userscripts[i].file)
                     }
                 } else {
                     that.setMessage(e.message);
+                    that.showForm();
                 }
                 // TODO: Load Userscripts
             }).fail(function (e, status, err) {
                 console.log('error, '.status);
             });
-        }
+        },
 
+        logout: function () {
+            this.delAuthKey();
+            location.reload();
+        },
     }
 
     elite_cloud.init();
-    // elite_cloud.setAuthKey('a0deb698e6e3827938b45a5159bd04d238d39d10c7e77c1844ead82274bddb89');
-    // elite_cloud.setAuthKey(null);
-    elite_cloud.delAuthKey();
 
 })(jQuery);

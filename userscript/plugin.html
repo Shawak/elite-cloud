@@ -20,6 +20,27 @@
         text-align: center;
     }
 
+    #elite-cloud #ec_form {
+        margin-top: 8px;
+    }
+
+    #elite-cloud input[type="text"] {
+        padding: 3px;
+    }
+
+    #elite-cloud input[type="submit"] {
+        padding: 3px;
+    }
+
+    #elite-cloud #ec_logout {
+        text-decoration: underline;
+        cursor: pointer
+    }
+
+    #elite-cloud #ec_logout:hover {
+        color: #0000CD;
+    }
+
 </style>
 
 <div id="elite-cloud">
@@ -30,8 +51,9 @@
     <div class="ec_content">
         <span id="ec_message">Loading..</span>
 
-        <!--<form method="post">
-            <input type="text" placeholder="AuthKey">
-        </form>-->
+        <form id="ec_form" style="display: none">
+            <input id="ec_authKey" type="text" placeholder="AuthKey">
+            <input type="submit" value="Submit">
+        </form>
     </div>
 </div>
