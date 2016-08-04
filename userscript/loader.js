@@ -27,37 +27,39 @@
             $('#userbaritems').append('<a href="/forum/profile.php?do=editoptions"><li>elite-cloud</li></a>');
 
             var elem = $('form[action="profile.php?do=updateoptions"]');
-            if (elem.length) {
-                $.ajax({
-                    url: 'http://localhost/elite-cloud/api/plugin',
-                    dataType: 'jsonp',
-                }).done(function (e) {
-                    elem.parent().prepend(e.data.script).append(function () {
-                        after();
-                    });
-                }).fail(function (e, status, err) {
-                    console.log(status);
-                });
-            } else {
+            if (!elem.length) {
                 after();
+                return;
             }
-        },
 
-        init: function () {
+            var that = this;
             $(document).on('click', '#ec_logout', function () {
                 that.logout();
             });
 
+            $.ajax({
+                url: 'http://localhost/elite-cloud/api/plugin',
+                dataType: 'jsonp',
+            }).done(function (e) {
+                elem.parent().prepend(e.data.script).append(function () {
+                    $("#ec_form").submit(function (event) {
+                        event.preventDefault();
+                        that.hideForm();
+                        var authKey = $('#ec_authKey').val();
+                        $('#ec_authKey').val('');
+                        that.setAuthKey(authKey);
+                        that.login();
+                    });
+                    after();
+                });
+            }).fail(function (e, status, err) {
+                console.log(status);
+            });
+        },
+
+        init: function () {
             var that = this;
             this.injectPlugin(function () {
-                $("#ec_form").submit(function (event) {
-                    event.preventDefault();
-                    that.hideForm();
-                    var authKey = $('#ec_authKey').val();
-                    $('#ec_authKey').val('');
-                    that.setAuthKey(authKey);
-                    that.login();
-                });
                 that.login();
             });
         },
@@ -98,7 +100,6 @@
                     that.setMessage(e.message);
                     that.showForm();
                 }
-                // TODO: Load Userscripts
             }).fail(function (e, status, err) {
                 console.log('error, '.status);
             });
