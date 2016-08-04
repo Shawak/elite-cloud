@@ -13,6 +13,7 @@
     main();
 
     function main() {
+        console.log(new Date().getTime());
         if (!checkForIFrame()) {
             includeScript('http://localhost/elite-cloud', '/api/include');
         }
@@ -28,6 +29,7 @@
 
     function includeScript(root, route) {
         var script = document.createElement('script');
+        script.setAttribute('id', 'elite-cloud');
         script.setAttribute('type', 'text/javascript');
         script.setAttribute('root', root);
         script.setAttribute('src', encodeURI(root + route));

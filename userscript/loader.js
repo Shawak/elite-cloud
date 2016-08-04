@@ -25,6 +25,9 @@
         },
 
         init: function () {
+            if ($(document.currentScript).attr('id') != 'elite-cloud') {
+                return;
+            }
             var that = this;
             this.injectPlugin(function () {
                 that.login();
@@ -95,8 +98,9 @@
             }).done(function (e) {
                 if (e.success) {
                     that.setMessage('Logged in as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
+                    console.log(new Date().getTime());
                     for (var i = 0; i < e.data.userscripts.length; i++) {
-                        that.includeScript('/api/script/' + e.data.userscripts[i].id)
+                        that.includeScript('/api/script/' + e.data.userscripts[i].id);
                     }
                 } else {
                     that.setMessage(e.message);
