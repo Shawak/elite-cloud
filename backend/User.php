@@ -101,6 +101,31 @@ class User extends DBObject
         return $ret;
     }
 
+    public function selectUserscript(Userscript $userscript)
+    {
+        $stmt = Database::getInstance()->prepare('
+            insert into user_userscript
+            (userID, userscriptID)
+            values (:userID, :userscriptID)
+            on duplicate key update userID = userID
+		');
+        $stmt->bindParam(':userID', $this->id);
+        $stmt->bindParam(':userscriptID', $userscript->getID());
+        $stmt->execute();
+    }
+
+    public function deselectUserscript(Userscript $userscript)
+    {
+        $stmt = Database::getInstance()->prepare('
+            delete from user_userscript
+            where userID = :userID
+              and userscriptID = :userscriptID
+		');
+        $stmt->bindParam(':userID', $this->id);
+        $stmt->bindParam(':userscriptID', $userscript->getID());
+        $stmt->execute();
+    }
+
     public function update()
     {
         $stmt = Database::getInstance()->prepare('
