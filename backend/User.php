@@ -88,6 +88,7 @@ class User extends DBObject
 			from user, userscript, user_userscript
 			where user.id = :id
 			  and user_userscript.userID = :id
+			  and user_userscript.userscriptID = userscript.id
 		');
         $stmt->bindParam(':id', $this->id);
         $stmt->execute();
