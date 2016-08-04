@@ -23,6 +23,27 @@
             localStorage.removeItem(this.keyName);
         },
 
+        init: function () {
+            var that = this;
+            this.injectPlugin(function () {
+                that.login();
+            });
+        },
+
+        includeScript: function (src) {
+            var script = document.createElement('script');
+            script.setAttribute('type', 'text/javascript');
+            script.setAttribute('src', encodeURI(src));
+            document.getElementsByTagName('head')[0].appendChild(script);
+        },
+
+        setMessage: function (str) {
+            var elem = $('#ec_message');
+            if (elem.length) {
+                $('#ec_message').html(str);
+            }
+        },
+
         injectPlugin: function (after) {
             $('#userbaritems').append('<a href="/forum/profile.php?do=editoptions"><li>elite-cloud</li></a>');
 
@@ -57,27 +78,6 @@
             });
         },
 
-        init: function () {
-            var that = this;
-            this.injectPlugin(function () {
-                that.login();
-            });
-        },
-
-        includeScript: function (src) {
-            var script = document.createElement('script');
-            script.setAttribute('type', 'text/javascript');
-            script.setAttribute('src', encodeURI(src));
-            document.getElementsByTagName('head')[0].appendChild(script);
-        },
-
-        setMessage: function (str) {
-            var elem = $('#ec_message');
-            if (elem.length) {
-                $('#ec_message').html(str);
-            }
-        },
-
         login: function () {
             var authKey = this.getAuthKey();
             if (authKey == null || authKey == '') {
@@ -101,7 +101,7 @@
                     that.showForm();
                 }
             }).fail(function (e, status, err) {
-                console.log('error, '.status);
+                console.log('error, ' + status);
             });
         },
 
