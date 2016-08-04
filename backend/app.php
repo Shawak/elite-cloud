@@ -122,8 +122,13 @@ $app->post('/api/userscript/create', function (Request $request, Response $respo
     $data = $request->getParsedBody();
     $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
 
+    if (!LOGGED_IN) {
+        echo new ApiResult(false, 'You have to be logged in to perform this action.');
+        return;
+    }
+
     $files = $request->getUploadedFiles();
-    $file = isset($files['file']) ? $files['files'] : null;
+    $file = isset($files['file']) ? $files['file'] : null;
     if ($file == null) {
         echo new ApiResult(false, 'Could not get the uploaded file.');
         return;
