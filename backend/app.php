@@ -79,6 +79,44 @@ $app->get('/api/user/{id}', function (Request $request, Response $response) {
     }
 });
 
+$app->get('/api/user/addscript/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+
+    $user = LoginHandler::getInstance()->getUser();
+    if ($user == null) {
+        echo new ApiResult(false, 'You have to be logged in to perform this action.');
+        return;
+    }
+
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A userscript with this id was not found.');
+        return;
+    }
+
+    $user->selectUserscript($userscript);
+    echo new ApiResult(true, 'Successfully added userscript "' + $userscript->getName() + '" to your profile!"');
+});
+
+$app->get('/api/user/removescript/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+
+    $user = LoginHandler::getInstance()->getUser();
+    if ($user == null) {
+        echo new ApiResult(false, 'You have to be logged in to perform this action.');
+        return;
+    }
+
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A userscript with this id was not found.');
+        return;
+    }
+
+    $user->selectUserscript($userscript);
+    echo new ApiResult(true, 'Successfully removed userscript "' + $userscript->getName() + '" from your profile!"');
+});
+
 $app->post('/api/user/create', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
