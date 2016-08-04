@@ -14,7 +14,7 @@
 
     function main() {
         if (!checkForIFrame()) {
-            includeScript('http://localhost/elite-cloud/api/include');
+            includeScript('http://localhost/elite-cloud', '/api/include');
         }
     }
 
@@ -26,10 +26,11 @@
         }
     }
 
-    function includeScript(src) {
+    function includeScript(root, route) {
         var script = document.createElement('script');
         script.setAttribute('type', 'text/javascript');
-        script.setAttribute('src', encodeURI(src));
+        script.setAttribute('root', root);
+        script.setAttribute('src', encodeURI(root + route));
         document.getElementsByTagName('head')[0].appendChild(script);
     }
 

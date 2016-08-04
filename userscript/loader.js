@@ -2,6 +2,7 @@
 
     var elite_cloud = {
         keyName: 'elite-cloud_authKey',
+        root: $(document.currentScript).attr('root'),
 
         hideForm: function () {
             $('#ec_form').hide();
@@ -30,10 +31,11 @@
             });
         },
 
-        includeScript: function (src) {
+        includeScript: function (route) {
             var script = document.createElement('script');
             script.setAttribute('type', 'text/javascript');
-            script.setAttribute('src', encodeURI(src));
+            script.setAttribute('root', this.root);
+            script.setAttribute('src', encodeURI(this.root + route));
             document.getElementsByTagName('head')[0].appendChild(script);
         },
 
@@ -59,7 +61,7 @@
             });
 
             $.ajax({
-                url: 'http://localhost/elite-cloud/api/plugin',
+                url: encodeURI(this.root + '/api/plugin'),
                 dataType: 'jsonp',
             }).done(function (e) {
                 elem.parent().prepend(e.data.script).append(function () {
@@ -88,13 +90,13 @@
 
             var that = this;
             $.ajax({
-                url: 'http://localhost/elite-cloud/api/authenticate/' + authKey,
+                url: encodeURI(this.root + '/api/authenticate/' + authKey),
                 dataType: 'jsonp',
             }).done(function (e) {
                 if (e.success) {
                     that.setMessage('Logged in as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
                     for (var i = 0; i < e.data.userscripts.length; i++) {
-                        that.includeScript(e.data.userscripts[i].file)
+                        that.includeScript('/api/script/' + e.data.userscripts[i].id)
                     }
                 } else {
                     that.setMessage(e.message);

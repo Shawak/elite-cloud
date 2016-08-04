@@ -6,23 +6,23 @@ class Userscript extends DBObject
     public $id;
     public $name;
     public $author;
-    public $file;
+    protected $script;
 
     public function __construct($id)
     {
         $this->id = $id;
     }
 
-    public static function create($name, $author, $file = '')
+    public static function create($name, $author, $script = '')
     {
         $stmt = Database::getInstance()->prepare('
 			insert into user
-			(name, author, file)
-			values (:name, :author, :file)
+			(name, author, script)
+			values (:name, :author, :script)
 		');
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':author', $author);
-        $stmt->bindParam(':file', $file);
+        $stmt->bindParam(':script', $script);
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -42,9 +42,9 @@ class Userscript extends DBObject
         return $this->author;
     }
 
-    public function getFile()
+    public function getScript()
     {
-        return $this->file;
+        return $this->script;
     }
 
     public function delete()
@@ -81,12 +81,12 @@ class Userscript extends DBObject
 			update userscript
 			set name = :name
 			set author = :author
-			set file = :file
+			set script = :script
 			where id = :id
 		');
         $stmt->bindParam(':name', $this->id);
         $stmt->bindParam(':author', $this->author->getID());
-        $stmt->bindParam(':file', $this->file);
+        $stmt->bindParam(':script', $this->script);
         return $stmt->execute();
     }
 }

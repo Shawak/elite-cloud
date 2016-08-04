@@ -1,9 +1,9 @@
--- phpMyAdmin SQL Dump
+﻿-- phpMyAdmin SQL Dump
 -- version 4.5.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 02. Aug 2016 um 07:23
+-- Erstellungszeit: 04. Aug 2016 um 04:35
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.20
 
@@ -38,7 +38,6 @@ CREATE TABLE `user` (
 -- Daten für Tabelle `user`
 --
 
--- Dummy Users Shawak/test, Shawak/test2
 INSERT INTO `user` (`id`, `name`, `password`, `flag`, `authKey`) VALUES
 (1, 'Shawak', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 0, 'a0deb698e6e3827938b45a5159bd04d238d39d10c7e77c1844ead82274bddb89'),
 (2, 'Shawak2', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 0, '');
@@ -53,16 +52,16 @@ CREATE TABLE `userscript` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `author` int(11) NOT NULL,
-  `file` text NOT NULL
+  `script` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `userscript`
 --
 
-INSERT INTO `userscript` (`id`, `name`, `author`, `file`) VALUES
-(1, 'Erster userscript', 1, ''),
-(2, 'Zweiter Userscript', 1, '');
+INSERT INTO `userscript` (`id`, `name`, `author`, `script`) VALUES
+(1, 'Erster userscript', 1, 'KGZ1bmN0aW9uKCkgew0KDQpjb25zb2xlLmxvZygiU2NyaXB0MSIpDQoNCn0pKCk7'),
+(2, 'Zweiter Userscript', 1, 'KGZ1bmN0aW9uKCkgew0KDQpjb25zb2xlLmxvZygiU2NyaXB0MiIpDQoNCn0pKCk7');
 
 -- --------------------------------------------------------
 

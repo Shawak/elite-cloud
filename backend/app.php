@@ -36,6 +36,14 @@ $app->get('/api/authenticate/{authKey}', function (Request $request, Response $r
     ]);
 });
 
+$app->get('/api/script/{id}', function (Request $request, Response $response) {
+    header('Content-Type: application/javascript');
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $userscript = new Userscript($id);
+    $userscript->update();
+    echo base64_decode($userscript->getScript());
+});
+
 /* USER */
 
 $app->post('/api/login', function (Request $request, Response $response) {
@@ -113,11 +121,17 @@ $app->get('/api/userscript/{id}', function (Request $request, Response $response
 $app->post('/api/userscript/create', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
-    $file = filter_var($data['file'], FILTER_SANITIZE_STRING);
 
-    // TODO: upload file
+    $files = $request->getUploadedFiles();
+    $file = isset($files['file']) ? $files['files'] : null;
+    if ($file == null) {
+        echo new ApiResult(false, 'Could not get the uploaded file.');
+        return;
+    }
 
-    $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID(), $file);
+    $script = file_get_contents($file);
+    $script = base64_encode($script);
+    $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID(), $script);
     echo new ApiResult(true, 'The userscript has been created.', $userscript);
 });
 
