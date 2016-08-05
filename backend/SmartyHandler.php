@@ -20,17 +20,13 @@ class SmartyHandler
     {
         if (!isset(self::$instance)) {
             $smarty = new Smarty();
-
-            $smarty->setTemplateDir(CFG_DIR_ROOT . '/templates/');
-            $smarty->setCompileDir(CFG_DIR_ROOT . '/templates_c/');
-            $smarty->setConfigDir(CFG_DIR_ROOT . '/configs/');
-            $smarty->setCacheDir(CFG_DIR_ROOT . '/cache/');
+            $smarty->setTemplateDir(DIR_FRONTEND);
+            $smarty->setCompileDir(DIR_SMARTY . 'compiled/');
+            $smarty->setConfigDir(DIR_SMARTY . 'config/');
+            $smarty->setCacheDir(DIR_SMARTY . 'cache/');
 
             $smarty->caching = Smarty::CACHING_LIFETIME_CURRENT;
-            $smarty->debugging = false;
-
-#define( 'CFG_DIR_TEMPLATES', $smarty->getTemplateDir(0) );
-
+            $smarty->debugging = SMARTY_DEBUGGING;
             self::$instance = $smarty;
         };
         return self::$instance;

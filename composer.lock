@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a7c53a40a30a51f4fff65a6b0366e487",
-    "content-hash": "c5f8369c3d721af4c68563cced11aaa9",
+    "hash": "33694fd5b816489a94220f6fa2ad0009",
+    "content-hash": "daaebbf6b5141f96796a96bb96a2cee7",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -174,16 +174,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "3.4.2",
+            "version": "3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "a132385f736063d00632b52b3f8a389fe66fe4fa"
+                "reference": "184352bc1913d7ba552ab4131d62f4730ddb0893"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/a132385f736063d00632b52b3f8a389fe66fe4fa",
-                "reference": "a132385f736063d00632b52b3f8a389fe66fe4fa",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/184352bc1913d7ba552ab4131d62f4730ddb0893",
+                "reference": "184352bc1913d7ba552ab4131d62f4730ddb0893",
                 "shasum": ""
             },
             "require": {
@@ -240,7 +240,62 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-05-25 11:23:38"
+            "time": "2016-07-26 15:12:13"
+        },
+        {
+            "name": "smarty/smarty",
+            "version": "v3.1.29",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smarty-php/smarty.git",
+                "reference": "35480f10e7ce9b0fdaf23d3799d7b79463919b1e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/35480f10e7ce9b0fdaf23d3799d7b79463919b1e",
+                "reference": "35480f10e7ce9b0fdaf23d3799d7b79463919b1e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "libs/Smarty.class.php",
+                    "libs/SmartyBC.class.php",
+                    "libs/sysplugins/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Monte Ohrt",
+                    "email": "monte@ohrt.com"
+                },
+                {
+                    "name": "Uwe Tews",
+                    "email": "uwe.tews@googlemail.com"
+                },
+                {
+                    "name": "Rodney Rehm",
+                    "email": "rodney.rehm@medialize.de"
+                }
+            ],
+            "description": "Smarty - the compiling PHP template engine",
+            "homepage": "http://www.smarty.net",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2015-12-21 01:57:06"
         }
     ],
     "packages-dev": [],

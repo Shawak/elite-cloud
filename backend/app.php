@@ -7,9 +7,11 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 
 /* MAIN */
 
-$app->get('/', function (Request $request, Response $response) {
-    include DIR_FRONTEND . 'index.php';
-});
+foreach (['', 'login'] as $key) {
+    $app->get('/' . $key, function (Request $request, Response $response) use ($key) {
+        SmartyHandler::getInstance()->display(($key != '' ? $key : 'home') . '.tpl');
+    });
+}
 
 /*  JS */
 
