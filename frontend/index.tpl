@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="elite-cloud">
 <head>
+    <base href="{URL_BASE}">
     <title>{block name="title"}{/block} - elite-cloud</title>
     <link rel="icon" href="frontend/images/favicon.png">
 
