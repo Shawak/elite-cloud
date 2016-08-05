@@ -5,4 +5,4 @@ vendor/*
 .idea/*
 
 # Smarty
-.smarty/*
+smarty/*

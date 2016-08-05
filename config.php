@@ -5,7 +5,7 @@ $config['slim']['displayErrorDetails'] = true;
 $config['slim']['addContentLengthHeader'] = false;
 
 // Smarty
-$config['smarty']['debugMode'] = true;
+$config['smarty']['debugMode'] = false;
 
 // Database
 $config['db']['host'] = 'localhost';
