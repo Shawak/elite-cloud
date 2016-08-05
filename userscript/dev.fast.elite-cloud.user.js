@@ -21,7 +21,7 @@
             script.setAttribute('root', 'http://localhost/elite-cloud');
             script.innerHTML = localStorage.getItem('test');
             document.head.appendChild(script);
-            jsonp('http://localhost/elite-cloud/api/include', function (data) {
+            jsonp('http://localhost/elite-cloud/api/loader', function (data) {
                 localStorage.setItem('test', data);
             });
         }

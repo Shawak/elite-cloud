@@ -13,7 +13,7 @@ $app->get('/', function (Request $request, Response $response) {
 
 /*  JS */
 
-$app->get('/api/include', function (Request $request, Response $response) {
+$app->get('/api/loader', function (Request $request, Response $response) {
     header('Content-Type: application/javascript');
     echo file_get_contents(DIR_USERSCRIPT . 'loader.js');
 });

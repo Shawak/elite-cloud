@@ -15,7 +15,7 @@
     function main() {
         console.log(new Date().getTime());
         if (!checkForIFrame()) {
-            includeScript('http://localhost/elite-cloud', '/api/include');
+            includeScript('http://localhost/elite-cloud', '/api/loader');
         }
     }
 

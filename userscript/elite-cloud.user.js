@@ -14,7 +14,7 @@
 
     function main() {
         if (!checkForIFrame()) {
-            includeScript('https://userscripts.elitepvpers.de', '/api/include');
+            includeScript('https://userscripts.elitepvpers.de', '/api/loader');
         }
     }
 

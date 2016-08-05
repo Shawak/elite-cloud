@@ -50,7 +50,16 @@
         },
 
         injectPlugin: function (after) {
-            $('#userbaritems').append('<a href="/forum/profile.php?do=editoptions"><li>elite-cloud</li></a>');
+            $('#userbaritems').append('' +
+                '<style>#ec_menuitem:hover img {opacity: 1 !important}</style>' +
+                '<a href="/forum/profile.php?do=editoptions">' +
+                '<li>' +
+                '<div id="ec_menuitem" style="display: inline-block">' +
+                '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + (this.root + "/frontend/images/favicon.png") + '">' +
+                'elite-cloud' +
+                '</div>' +
+                '</li>' +
+                '</a>');
 
             var elem = $('form[action="profile.php?do=updateoptions"]');
             if (!elem.length) {
@@ -97,7 +106,7 @@
                 dataType: 'jsonp',
             }).done(function (e) {
                 if (e.success) {
-                    that.setMessage('Logged in as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
+                    that.setMessage('Authenticated as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
                     console.log(new Date().getTime());
                     for (var i = 0; i < e.data.userscripts.length; i++) {
                         that.includeScript('/api/script/' + e.data.userscripts[i].id);
