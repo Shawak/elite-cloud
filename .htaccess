@@ -12,11 +12,14 @@ RewriteRule ^(backend/) - [F,L,NC]
 # Disable indexes
 Options -Indexes
 
-# Allow access only to specific files
-<Files ~"^.*">
-  Deny from all
-</Files>
+Order Deny,Allow
 
+# Allow access only to specific files
+Deny from all
 <FilesMatch ".*\.(html|css|js|woff|jpe|jpg|jpeg|gif|png|bmp|ico|svg|svgz|tif|tiff|ai|drw|pct|psp|xcf|psd|raw)$">
+    Allow from all
+</FilesMatch>
+
+<FilesMatch "^(index.php|)$">
     Allow from all
 </FilesMatch>

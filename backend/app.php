@@ -97,7 +97,7 @@ $app->get('/api/user/addscript/{id}', function (Request $request, Response $resp
     }
 
     $user->selectUserscript($userscript);
-    echo new ApiResult(true, 'Successfully added userscript "' + $userscript->getName() + '" to your profile!"');
+    echo new ApiResult(true, 'Successfully added userscript "' . $userscript->getName() . '" to your profile!"');
 });
 
 $app->get('/api/user/removescript/{id}', function (Request $request, Response $response) {
@@ -116,7 +116,7 @@ $app->get('/api/user/removescript/{id}', function (Request $request, Response $r
     }
 
     $user->selectUserscript($userscript);
-    echo new ApiResult(true, 'Successfully removed userscript "' + $userscript->getName() + '" from your profile!"');
+    echo new ApiResult(true, 'Successfully removed userscript "' . $userscript->getName() . '" from your profile!"');
 });
 
 $app->post('/api/user/create', function (Request $request, Response $response) {
