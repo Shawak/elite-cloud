@@ -15,6 +15,7 @@ class User extends DBObject
     protected $password;
     public $flag;
     protected $authKey;
+    protected $registered;
 
     public function __construct($id)
     {
@@ -54,6 +55,11 @@ class User extends DBObject
     public function getAuthKey()
     {
         return $this->authKey;
+    }
+
+    public function getRegisteredTimestamp()
+    {
+        return strtotime($this->registered);
     }
 
     public function renewAuthKey()

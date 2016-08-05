@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 04. Aug 2016 um 04:35
+-- Erstellungszeit: 05. Aug 2016 um 03:25
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.20
 
@@ -31,16 +31,18 @@ CREATE TABLE `user` (
   `name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `flag` int(11) DEFAULT NULL,
-  `authKey` varchar(255) NOT NULL
+  `authKey` varchar(255) NOT NULL,
+  `registered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Daten für Tabelle `user`
 --
 
-INSERT INTO `user` (`id`, `name`, `password`, `flag`, `authKey`) VALUES
-(1, 'Shawak', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 0, 'a0deb698e6e3827938b45a5159bd04d238d39d10c7e77c1844ead82274bddb89'),
-(2, 'Shawak2', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 0, '');
+INSERT INTO `user` (`id`, `name`, `password`, `flag`, `authKey`, `registered`) VALUES
+(1, 'Shawak', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 0, 'a0deb698e6e3827938b45a5159bd04d238d39d10c7e77c1844ead82274bddb89', '2016-08-05 01:19:31'),
+(2, 'Shawak2', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 0, '', '2016-08-05 01:19:31'),
+(3, 'Shawak3', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', 0, '0ba8d1670f6dd3e4447e7423a767314590a47bceb0bc658489dc8a7c52248274', '2016-08-05 01:20:31');
 
 -- --------------------------------------------------------
 
@@ -115,7 +117,7 @@ ALTER TABLE `user_userscript`
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT für Tabelle `userscript`
 --
