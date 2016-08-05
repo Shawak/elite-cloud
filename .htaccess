@@ -15,7 +15,10 @@ Options -Indexes
 Order Deny,Allow
 
 # Allow access only to specific files
-Deny from all
+<FilesMatch ".*\..*$">
+    Deny from all
+</FilesMatch>
+
 <FilesMatch ".*\.(html|css|js|woff|jpe|jpg|jpeg|gif|png|bmp|ico|svg|svgz|tif|tiff|ai|drw|pct|psp|xcf|psd|raw)$">
     Allow from all
 </FilesMatch>
