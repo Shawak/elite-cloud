@@ -31,7 +31,4 @@ Database::initialize($config['db']['host'], $config['db']['datb'], $config['db']
 require DIR_BACKEND . 'LoginHandler.php';
 define('LOGGED_IN', LoginHandler::getInstance()->AutoLogin());
 
-
-SmartyHandler::getInstance()->assign('test', 'str');
-
 require 'app.php';
