@@ -25,6 +25,7 @@
         },
 
         init: function () {
+            this.log('Loader init()');
             var that = this;
             this.injectPlugin(function () {
                 that.login();
@@ -36,12 +37,12 @@
             console.log('[elite-cloud ' + date.toLocaleTimeString() + '.' + date.getMilliseconds() + '] %s', msg);
         },
 
-        includeScript: function (route) {
-            var script = document.createElement('script');
-            script.setAttribute('type', 'text/javascript');
-            script.setAttribute('root', this.root);
-            script.setAttribute('src', encodeURI(this.root + route));
-            document.getElementsByTagName('head')[0].appendChild(script);
+        insertScript: function (script) {
+            var elem = document.createElement('script');
+            elem.setAttribute('type', 'text/javascript');
+            elem.setAttribute('root', this.root);
+            elem.innerHTML = script;
+            document.head.appendChild(elem);
         },
 
         setMessage: function (str) {
@@ -90,7 +91,7 @@
                     after();
                 });
             }).fail(function (e, status, err) {
-                console.log(status);
+                that.log(status);
             });
         },
 
@@ -109,16 +110,24 @@
             }).done(function (e) {
                 if (e.success) {
                     that.setMessage('Authenticated as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
-                    that.log('Loading userscripts');
+                    that.log('Loading userscripts..');
                     for (var i = 0; i < e.data.userscripts.length; i++) {
-                        that.includeScript('/api/script/' + e.data.userscripts[i].id);
+                        that.log('> ' + e.data.userscripts[i].name);
+                        $.ajax({
+                            url: encodeURI(that.root + '/api/script/' + e.data.userscripts[i].id),
+                            dataType: 'jsonp'
+                        }).done(function (e) {
+                            that.insertScript(e.data.script);
+                        }).fail(function (e, status) {
+                            that.log('error,:' + status);
+                        });
                     }
                 } else {
                     that.setMessage(e.message);
                     that.showForm();
                 }
             }).fail(function (e, status, err) {
-                console.log('error, ' + status);
+                that.log('error: ' + status);
             });
         },
 

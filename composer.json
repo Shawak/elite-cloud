@@ -1,6 +1,7 @@
 {
   "require": {
     "slim/slim": "~3.0",
-    "smarty/smarty": "~3.1"
+    "smarty/smarty": "~3.1",
+    "matthiasmullie/minify": "^1.3"
   }
 }

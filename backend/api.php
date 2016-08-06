@@ -2,6 +2,7 @@
 
 use Slim\Http\Request as Request;
 use Slim\Http\Response as Response;
+use MatthiasMullie\Minify;
 
 $app = new \Slim\App(["settings" => $config['slim']]);
 
@@ -18,13 +19,13 @@ foreach (['', 'login'] as $key) {
 /*  JS */
 
 $app->get('/api/loader', function (Request $request, Response $response) {
-    $script = file_get_contents(DIR_USERSCRIPT . 'loader.js');
-    echo new ApiResult(true, '', (object)['loader' => $script]);
+    $loader = (new Minify\JS(DIR_USERSCRIPT . 'loader.js'))->minify();
+    echo new ApiResult(true, '', (object)['loader' => $loader]);
 });
 
 $app->get('/api/plugin', function (Request $request, Response $response) {
-    $script = file_get_contents(DIR_USERSCRIPT . 'plugin.html');
-    echo new ApiResult(true, '', (object)['plugin' => $script]);
+    $plugin = (new Minify\CSS(DIR_USERSCRIPT . 'plugin.html'))->minify();
+    echo new ApiResult(true, '', (object)['plugin' => $plugin]);
 });
 
 $app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {
@@ -41,11 +42,12 @@ $app->get('/api/authenticate/{authKey}', function (Request $request, Response $r
 });
 
 $app->get('/api/script/{id}', function (Request $request, Response $response) {
-    header('Content-Type: application/javascript');
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
     $userscript->update();
-    echo base64_decode($userscript->getScript());
+    $script = base64_decode($userscript->getScript());
+    $script = (new Minify\JS($script))->minify();
+    echo new ApiResult(true, '', (object)['script' => $script]);
 });
 
 /* USER */
