@@ -25,7 +25,8 @@ class SmartyHandler
             $smarty->setConfigDir(DIR_SMARTY . 'config/');
             $smarty->setCacheDir(DIR_SMARTY . 'cache/');
 
-            $smarty->caching = Smarty::CACHING_LIFETIME_CURRENT;
+            //$smarty->caching = Smarty::CACHING_LIFETIME_CURRENT;
+            $smarty->caching = false;
             $smarty->debugging = SMARTY_DEBUGGING;
             self::$instance = $smarty;
         };

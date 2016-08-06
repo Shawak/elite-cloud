@@ -16,13 +16,14 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="frontend/css/default.css">
+    <link rel="stylesheet" type="text/css" href="frontend/css/index.css">
+    <link rel="stylesheet" type="text/css" href="frontend/css/{$css}.css">
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <!-- AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-    <script src="frontend/js/app.js"></script>
+    <script src="frontend/js/elite-cloud.js"></script>
 </head>
 <body>
 
@@ -37,13 +38,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href=".">elite-cloud</a>
+            <a class="navbar-brand" href="." onclick="window.location.href='.'">elite-cloud</a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse" ng-controller="PageController">
+        <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li ng-class="[active : page.name === activePage]" ng-click="change(page.name, true)"
-                    ng-repeat="page in pages">
-                    <a class="pointer">[[page.title]]</a>
+                <li>
+                    {if !LOGGED_IN}<a href="login" class="pointer">Login</a>{/if}
                 </li>
                 {if LOGGED_IN}
                     <li ng-controller="LogoutController">
@@ -55,15 +55,7 @@
     </div>
 </nav>
 
-{block name="body"}{/block}
-
-<br><br>
-
-{if LOGGED_IN}
-    Logged in as {LoginHandler::getInstance()->getUser()->getName()}
-{else}
-    Not logged in
-{/if}
+{block name="content"}{/block}
 
 <!-- Footer -->
 <footer>
@@ -74,8 +66,8 @@
             <a href="http://www.slimframework.com/" target="_blank">Slim</a>,
             <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>,
             <a href="https://angularjs.org/" target="_blank">AngularJS</a>,
-            <a href="https://jquery.com/" target="_blank">jQuery</a><!--,
-            <a href="http://notifyjs.com/" target="_blank">Notify.js</a>-->
+            <a href="https://jquery.com/" target="_blank">jQuery</a>,
+            <a href="http://notifyjs.com/" target="_blank">Notify.js</a>
         </div>
         <div class="right">
             <a href="http://elitepvpers.com" target="_blank">
@@ -91,6 +83,10 @@
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
         crossorigin="anonymous"></script>
 
+<!-- NotifyJs -->
+<script type="application/javascript" src="frontend/js/notify.min.js"></script>
+
+<!-- Main -->
 <script src="frontend/js/main.js"></script>
 
 </body>

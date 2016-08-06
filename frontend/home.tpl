@@ -2,6 +2,6 @@
 {block name="title"}
     Home
 {/block}
-{block name="body"}
+{block name="content"}
     Home
 {/block}

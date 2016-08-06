@@ -9,7 +9,9 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 
 foreach (['', 'login'] as $key) {
     $app->get('/' . $key, function (Request $request, Response $response) use ($key) {
-        SmartyHandler::getInstance()->display(($key != '' ? $key : 'home') . '.tpl');
+        $key = $key != '' ? $key : 'home';
+        SmartyHandler::getInstance()->assign('css', $key);
+        SmartyHandler::getInstance()->display($key . '.tpl');
     });
 }
 
@@ -61,7 +63,7 @@ $app->post('/api/login', function (Request $request, Response $response) {
 });
 
 $app->post('/api/logout', function (Request $request, Response $response) {
-    LoginHandler::getInstance()->Logout();
+    LoginHandler::getInstance()->logout();
     echo new ApiResult(true, 'You have been logged out');
 });
 
