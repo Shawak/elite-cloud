@@ -44,7 +44,10 @@ $app->get('/api/authenticate/{authKey}', function (Request $request, Response $r
 $app->get('/api/script/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
-    $userscript->update();
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A script with this id was not found.');
+        return;
+    }
     $script = base64_decode($userscript->getScript());
     $script = (new Minify\JS($script))->minify();
     echo new ApiResult(true, '', (object)['script' => $script]);
@@ -57,7 +60,6 @@ $app->post('/api/login', function (Request $request, Response $response) {
     $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
     $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
     $remember = filter_var($data['remember'], FILTER_VALIDATE_BOOLEAN);
-
     $loginHandler = LoginHandler::getInstance();
     $passwordHash = $loginHandler->HashPassword($password);
     $success = $loginHandler->Login($username, $passwordHash, $remember);
