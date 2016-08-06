@@ -25,13 +25,15 @@
         },
 
         init: function () {
-            if ($(document.currentScript).attr('id') != 'elite-cloud') {
-                return;
-            }
             var that = this;
             this.injectPlugin(function () {
                 that.login();
             });
+        },
+
+        log: function (msg) {
+            var date = new Date();
+            console.log('[elite-cloud ' + date.toLocaleTimeString() + '.' + date.getMilliseconds() + '] %s', msg);
         },
 
         includeScript: function (route) {
@@ -76,7 +78,7 @@
                 url: encodeURI(this.root + '/api/plugin'),
                 dataType: 'jsonp',
             }).done(function (e) {
-                elem.parent().prepend(e.data.script).append(function () {
+                elem.parent().prepend(e.data.plugin).append(function () {
                     $("#ec_form").submit(function (event) {
                         event.preventDefault();
                         that.hideForm();
@@ -107,7 +109,7 @@
             }).done(function (e) {
                 if (e.success) {
                     that.setMessage('Authenticated as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
-                    console.log(new Date().getTime());
+                    that.log('Loading userscripts');
                     for (var i = 0; i < e.data.userscripts.length; i++) {
                         that.includeScript('/api/script/' + e.data.userscripts[i].id);
                     }

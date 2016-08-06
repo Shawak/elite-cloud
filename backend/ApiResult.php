@@ -45,8 +45,10 @@ class ApiResult
         $callback = get('callback');
         if ($callback) {
             // JSONP
+            header('Content-Type: application/javascript');
             return $callback . '(' . $json . ')';
         } else {
+            header('Content-Type: application/json');
             return $json;
         }
     }

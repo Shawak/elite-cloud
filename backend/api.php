@@ -18,13 +18,13 @@ foreach (['', 'login'] as $key) {
 /*  JS */
 
 $app->get('/api/loader', function (Request $request, Response $response) {
-    header('Content-Type: application/javascript');
-    echo file_get_contents(DIR_USERSCRIPT . 'loader.js');
+    $script = file_get_contents(DIR_USERSCRIPT . 'loader.js');
+    echo new ApiResult(true, '', (object)['loader' => $script]);
 });
 
 $app->get('/api/plugin', function (Request $request, Response $response) {
     $script = file_get_contents(DIR_USERSCRIPT . 'plugin.html');
-    echo new ApiResult(true, '', (object)['script' => $script]);
+    echo new ApiResult(true, '', (object)['plugin' => $script]);
 });
 
 $app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {

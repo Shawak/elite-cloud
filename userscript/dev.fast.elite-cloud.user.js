@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         e*pvp elite-cloud loader DEV (Fast "loading"?!)
+// @name         e*pvp elite-cloud DEV (Fast "loading"?!)
 // @namespace    http://elitepvpers.com/
 // @version      1.0
 // @description  Used to load userscripts from elite-cloud
@@ -10,33 +10,54 @@
 
 (function () {
 
-    main();
+    var key = 'elite-cloud_loader';
+    var root = 'http://localhost/elite-cloud';
 
-    function main() {
-        console.log(new Date().getTime());
-        if (!checkForIFrame()) {
-            var script = document.createElement('script');
-            script.setAttribute('id', 'elite-cloud');
-            script.setAttribute('type', 'text/javascript');
-            script.setAttribute('root', 'http://localhost/elite-cloud');
-            script.innerHTML = localStorage.getItem('test');
-            document.head.appendChild(script);
-            jsonp('http://localhost/elite-cloud/api/loader', function (data) {
-                localStorage.setItem('test', data);
-            });
+    init();
+
+    function init() {
+        if (checkForIFrame()) {
+            return;
         }
+
+        log('Loader init()');
+        var injected = inject();
+        update(root + '/api/loader', function () {
+            log('Loader updated!');
+            if (!injected) {
+                inject();
+            }
+        });
     }
 
-    function jsonp(url, callback) {
-        var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-        window[callbackName] = function (data) {
-            delete window[callbackName];
-            document.body.removeChild(script);
-            callback(data);
-        };
+    function inject() {
+        var code = localStorage.getItem(key);
+        if (code == null) {
+            return false;
+        }
+
         var script = document.createElement('script');
-        script.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+        script.setAttribute('type', 'text/javascript');
+        script.setAttribute('root', root);
+        script.innerHTML = code;
+        document.head.appendChild(script);
+        return true;
+    }
+
+    function update(url, callback) {
+        var callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+        var script = document.createElement('script');
+        script.innerHTML = 'function ' + callbackName + '(result) { localStorage.setItem(\'' + key + '\', result.data.loader); }';
         document.body.appendChild(script);
+        script = document.createElement('script');
+        script.onload = callback;
+        script.src = encodeURI(url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName);
+        document.body.appendChild(script);
+    }
+
+    function log(msg) {
+        var date = new Date();
+        console.log('[elite-cloud ' + date.toLocaleTimeString() + '.' + date.getMilliseconds() + '] %s', msg);
     }
 
     function checkForIFrame() {
