@@ -4,6 +4,9 @@
 $config['slim']['displayErrorDetails'] = true;
 $config['slim']['addContentLengthHeader'] = false;
 
+// Smarty
+$config['smarty']['debugMode'] = false;
+
 // Database
 $config['db']['host'] = 'localhost';
 $config['db']['user'] = 'root';

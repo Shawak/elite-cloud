@@ -2,25 +2,30 @@
 
 use Slim\Http\Request as Request;
 use Slim\Http\Response as Response;
+use MatthiasMullie\Minify;
 
 $app = new \Slim\App(["settings" => $config['slim']]);
 
 /* MAIN */
 
-$app->get('/', function (Request $request, Response $response) {
-    include DIR_FRONTEND . 'index.php';
-});
+foreach (['', 'login'] as $key) {
+    $app->get('/' . $key, function (Request $request, Response $response) use ($key) {
+        $key = $key != '' ? $key : 'home';
+        SmartyHandler::getInstance()->assign('css', $key);
+        SmartyHandler::getInstance()->display($key . '.tpl');
+    });
+}
 
 /*  JS */
 
 $app->get('/api/loader', function (Request $request, Response $response) {
-    header('Content-Type: application/javascript');
-    echo file_get_contents(DIR_USERSCRIPT . 'loader.js');
+    $loader = (new Minify\JS(DIR_USERSCRIPT . 'loader.js'))->minify();
+    echo new ApiResult(true, '', (object)['loader' => $loader]);
 });
 
 $app->get('/api/plugin', function (Request $request, Response $response) {
-    $script = file_get_contents(DIR_USERSCRIPT . 'plugin.html');
-    echo new ApiResult(true, '', (object)['script' => $script]);
+    $plugin = (new Minify\CSS(DIR_USERSCRIPT . 'plugin.html'))->minify();
+    echo new ApiResult(true, '', (object)['plugin' => $plugin]);
 });
 
 $app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {
@@ -37,11 +42,15 @@ $app->get('/api/authenticate/{authKey}', function (Request $request, Response $r
 });
 
 $app->get('/api/script/{id}', function (Request $request, Response $response) {
-    header('Content-Type: application/javascript');
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
-    $userscript->update();
-    echo base64_decode($userscript->getScript());
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A script with this id was not found.');
+        return;
+    }
+    $script = base64_decode($userscript->getScript());
+    $script = (new Minify\JS($script))->minify();
+    echo new ApiResult(true, '', (object)['script' => $script]);
 });
 
 /* USER */
@@ -51,7 +60,6 @@ $app->post('/api/login', function (Request $request, Response $response) {
     $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
     $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
     $remember = filter_var($data['remember'], FILTER_VALIDATE_BOOLEAN);
-
     $loginHandler = LoginHandler::getInstance();
     $passwordHash = $loginHandler->HashPassword($password);
     $success = $loginHandler->Login($username, $passwordHash, $remember);
@@ -59,7 +67,7 @@ $app->post('/api/login', function (Request $request, Response $response) {
 });
 
 $app->post('/api/logout', function (Request $request, Response $response) {
-    LoginHandler::getInstance()->Logout();
+    LoginHandler::getInstance()->logout();
     echo new ApiResult(true, 'You have been logged out');
 });
 
@@ -95,7 +103,7 @@ $app->get('/api/user/addscript/{id}', function (Request $request, Response $resp
     }
 
     $user->selectUserscript($userscript);
-    echo new ApiResult(true, 'Successfully added userscript "' + $userscript->getName() + '" to your profile!"');
+    echo new ApiResult(true, 'Successfully added userscript "' . $userscript->getName() . '" to your profile!"');
 });
 
 $app->get('/api/user/removescript/{id}', function (Request $request, Response $response) {
@@ -114,7 +122,7 @@ $app->get('/api/user/removescript/{id}', function (Request $request, Response $r
     }
 
     $user->selectUserscript($userscript);
-    echo new ApiResult(true, 'Successfully removed userscript "' + $userscript->getName() + '" from your profile!"');
+    echo new ApiResult(true, 'Successfully removed userscript "' . $userscript->getName() . '" from your profile!"');
 });
 
 $app->post('/api/user/create', function (Request $request, Response $response) {

@@ -3,3 +3,6 @@ vendor/*
 
 # PhpStorm settings
 .idea/*
+
+# Smarty
+smarty/*

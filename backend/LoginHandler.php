@@ -88,7 +88,7 @@ class LoginHandler
         if (session('hash') == null) {
             session('hash', cookie('hash'));
         }
-        return $this->IsLoggedIn();
+        return $this->isLoggedIn();
     }
 
 }
