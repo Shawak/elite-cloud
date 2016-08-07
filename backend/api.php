@@ -8,11 +8,11 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 
 /* MAIN */
 
-foreach (['', 'login'] as $key) {
-    $app->get('/' . $key, function (Request $request, Response $response) use ($key) {
-        $key = $key != '' ? $key : 'home';
-        SmartyHandler::getInstance()->assign('css', $key);
-        SmartyHandler::getInstance()->display($key . '.tpl');
+foreach (['', 'login', 'userscripts', 'profile'] as $page) {
+    $app->get('/' . $page, function (Request $request, Response $response) use ($page) {
+        $page = $page != '' ? $page : 'home';
+        SmartyHandler::getInstance()->assign('css', $page);
+        SmartyHandler::getInstance()->display($page . '.tpl');
     });
 }
 

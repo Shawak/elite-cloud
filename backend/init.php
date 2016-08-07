@@ -4,6 +4,10 @@ session_cache_limiter('private');
 session_cache_expire(180);
 session_start();
 
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
 date_default_timezone_set('Europe/Berlin');
 
 require DIR_VENDOR . 'autoload.php';

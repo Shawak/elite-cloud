@@ -38,14 +38,15 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="." onclick="window.location.href='.'">elite-cloud</a>
+            <a class="navbar-brand" href="."">elite-cloud</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li>
-                    {if !LOGGED_IN}<a href="login" class="pointer">Login</a>{/if}
-                </li>
-                {if LOGGED_IN}
+                {if !LOGGED_IN}
+                    <li class="{($page=='login')?'active':''}"><a href="login" class="pointer">Login</a></li>
+                {else}
+                    <li class="{($page=='userscripts')?'active':''}"><a href="userscripts" class="pointer">Userscirpts</a></li>
+                    <li class="{($page=='profile')?'active':''}"><a href="profile" class="pointer">Profile</a></li>
                     <li ng-controller="LogoutController">
                         <a class="pointer" ng-click="logout()">Logout</a>
                     </li>
@@ -55,7 +56,9 @@
     </div>
 </nav>
 
-{block name="content"}{/block}
+<div id="content">
+    {block name="content"}{/block}
+</div>
 
 <!-- Footer -->
 <footer>

@@ -6,10 +6,6 @@ app.config(['$interpolateProvider', function ($interpolateProvider) {
     $interpolateProvider.endSymbol(']]');
 }]);
 
-app.config(['$locationProvider', function ($locationProvider) {
-    $locationProvider.html5Mode(true);
-}]);
-
 // UserController (Example for now)
 app.controller('Controller', ['$scope', '$http', function ($scope, $http) {
     $scope.user = {};
@@ -39,7 +35,7 @@ app.controller('LoginController', ['$scope', '$http', '$location', function ($sc
             if (data.success) {
                 $.notify(data.message, 'success');
                 setTimeout(function () {
-                    index($location);
+                    window.location.href = 'userscripts';
                 }, 500);
             }
             else {
@@ -58,9 +54,33 @@ app.controller('LogoutController', ['$scope', '$http', '$location', function ($s
             if (data.success) {
                 $.notify(data.message, 'success');
                 setTimeout(function () {
-                    index($location);
+                    window.location.href = '.';
                 }, 500);
             }
         });
     };
+}]);
+
+
+app.controller('UserscriptsController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+    $scope.userscripts = [];
+
+    $scope.init = function () {
+        var response = $http.get('api/userscript/list');
+        response.success(function (e, status, headers, config) {
+            $scope.userscripts = e.data;
+            //self.userscripts = e.data;
+            dump(e);
+        });
+        self.userscripts =  [
+            {name: "test", author: 1},
+            {name: "test", author: 1},
+        ];
+    };
+
+    $scope.click = function (userscript) {
+        window.location.href = 'userscript/' + userscript.id;
+    };
+
+    $scope.init();
 }]);

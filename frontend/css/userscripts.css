@@ -1,0 +1,9 @@
+.table-responsive tbody tr:hover {
+    background-color: rgb(230, 230, 230) !important;
+    cursor: pointer;
+}
+
+form input[type="text"] {
+    width: 200px;
+    margin-bottom: 10px;
+}
