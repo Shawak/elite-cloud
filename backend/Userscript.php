@@ -22,7 +22,7 @@ class Userscript extends DBObject
 		');
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':author', $author);
-        $stmt->bindParam(':script', $script);
+        $stmt->bindParam(':script', base64_encode($script));
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -44,7 +44,7 @@ class Userscript extends DBObject
 
     public function getScript()
     {
-        return $this->script;
+        return base64_decode($this->script);
     }
 
     public function delete()

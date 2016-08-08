@@ -1,6 +1,6 @@
 {extends file="index.tpl"}
 {block name="title"}
-    Home
+    Userscripts
 {/block}
 {block name="content"}
     <form>

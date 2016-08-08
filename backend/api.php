@@ -8,13 +8,29 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 
 /* MAIN */
 
-foreach (['', 'login', 'userscripts', 'profile'] as $page) {
+foreach (['', 'login', 'userscripts'] as $page) {
     $app->get('/' . $page, function (Request $request, Response $response) use ($page) {
         $page = $page != '' ? $page : 'home';
         SmartyHandler::getInstance()->assign('css', $page);
         SmartyHandler::getInstance()->display($page . '.tpl');
     });
 }
+
+$app->get('/profile/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $user = new User($id);
+    SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
+    SmartyHandler::getInstance()->assign('css', 'user');
+    SmartyHandler::getInstance()->display('user.tpl');
+});
+
+$app->get('/userscript/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $userscript = new Userscript($id);
+    SmartyHandler::getInstance()->assign('userscript', $userscript->update() ? $userscript : null);
+    SmartyHandler::getInstance()->assign('css', 'userscript');
+    SmartyHandler::getInstance()->display('userscript.tpl');
+});
 
 /*  JS */
 
@@ -48,7 +64,7 @@ $app->get('/api/script/{id}', function (Request $request, Response $response) {
         echo new ApiResult(false, 'A script with this id was not found.');
         return;
     }
-    $script = base64_decode($userscript->getScript());
+    $script = $userscript->getScript();
     $script = (new Minify\JS($script))->minify();
     echo new ApiResult(true, '', (object)['script' => $script]);
 });
@@ -181,7 +197,6 @@ $app->post('/api/userscript/create', function (Request $request, Response $respo
     }
 
     $script = file_get_contents($file);
-    $script = base64_encode($script);
     $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID(), $script);
     echo new ApiResult(true, 'The userscript has been created.', $userscript);
 });

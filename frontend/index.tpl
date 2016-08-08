@@ -46,7 +46,7 @@
                     <li class="{($page=='login')?'active':''}"><a href="login" class="pointer">Login</a></li>
                 {else}
                     <li class="{($page=='userscripts')?'active':''}"><a href="userscripts" class="pointer">Userscirpts</a></li>
-                    <li class="{($page=='profile')?'active':''}"><a href="profile" class="pointer">Profile</a></li>
+                    <li class="{($page=='user')?'active':''}"><a href="profile/{LoginHandler::getInstance()->getUser()->getID()}" class="pointer">Profile</a></li>
                     <li ng-controller="LogoutController">
                         <a class="pointer" ng-click="logout()">Logout</a>
                     </li>

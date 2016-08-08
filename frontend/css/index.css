@@ -16,12 +16,12 @@ html { position: relative; min-height: 100%; }
 body {
     background-color: white;
     color: rgb(51, 51, 51);
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 18px;
     overflow-y: scroll;
     padding-top: 50px; /* total navi height here */
-    margin-bottom: 100px; /* total footer height nere */
+    margin-bottom: 100px; /* total footer height here */
 }
 
 a,a:hover,a:visited,a:active {
