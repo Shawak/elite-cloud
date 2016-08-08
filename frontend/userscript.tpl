@@ -1,7 +1,7 @@
 {extends file="index.tpl"}
 {block name="title"}
     {if $userscript}
-        {$userscript->getName()}
+        {$userscript->getName()} - {PROJECT_NAME}
     {else}
         Not found
     {/if}

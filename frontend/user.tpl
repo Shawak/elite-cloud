@@ -1,7 +1,7 @@
 {extends file="index.tpl"}
 {block name="title"}
     {if $user}
-        {$user->getName()}
+        {$user->getName()} - {PROJECT_NAME}
     {else}
         Not found
     {/if}

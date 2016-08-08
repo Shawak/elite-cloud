@@ -13,7 +13,6 @@ date_default_timezone_set('Europe/Berlin');
 require DIR_VENDOR . 'autoload.php';
 
 require DIR_APP . 'config.php';
-define('SMARTY_DEBUGGING', $config['smarty']['debugMode']);
 
 require DIR_BACKEND . 'Helper.php';
 require DIR_BACKEND . 'DBObject.php';

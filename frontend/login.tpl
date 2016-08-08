@@ -1,6 +1,6 @@
 {extends file="index.tpl"}
 {block name="title"}
-    Login
+    Login - {PROJECT_NAME}
 {/block}
 {block name="content"}
     <form class="centerTable form-signin" ng-controller="LoginController" ng-submit="login()">

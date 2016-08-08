@@ -1,6 +1,6 @@
 {extends file="index.tpl"}
 {block name="title"}
-    Home
+    {PROJECT_NAME}
 {/block}
 {block name="content"}
     Home

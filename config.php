@@ -1,11 +1,14 @@
 <?php
 
+// Project
+define('PROJECT_NAME', 'elite-cloud');
+
 // Slim
 $config['slim']['displayErrorDetails'] = true;
 $config['slim']['addContentLengthHeader'] = false;
 
 // Smarty
-$config['smarty']['debugMode'] = false;
+define('SMARTY_DEBUGGING', false);
 
 // Database
 $config['db']['host'] = 'localhost';
