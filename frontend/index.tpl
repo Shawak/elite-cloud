@@ -17,7 +17,7 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="frontend/css/index.css">
-    <link rel="stylesheet" type="text/css" href="frontend/css/{$css}.css">
+    <link rel="stylesheet" type="text/css" href="frontend/css/{$page}.css">
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>

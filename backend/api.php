@@ -11,7 +11,7 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 foreach (['', 'login', 'userscripts'] as $page) {
     $app->get('/' . $page, function (Request $request, Response $response) use ($page) {
         $page = $page != '' ? $page : 'home';
-        SmartyHandler::getInstance()->assign('css', $page);
+        SmartyHandler::getInstance()->assign('page', $page);
         SmartyHandler::getInstance()->display($page . '.tpl');
     });
 }
@@ -20,7 +20,7 @@ $app->get('/profile/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $user = new User($id);
     SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
-    SmartyHandler::getInstance()->assign('css', 'user');
+    SmartyHandler::getInstance()->assign('page', 'user');
     SmartyHandler::getInstance()->display('user.tpl');
 });
 
@@ -28,7 +28,7 @@ $app->get('/userscript/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
     SmartyHandler::getInstance()->assign('userscript', $userscript->update() ? $userscript : null);
-    SmartyHandler::getInstance()->assign('css', 'userscript');
+    SmartyHandler::getInstance()->assign('page', 'userscript');
     SmartyHandler::getInstance()->display('userscript.tpl');
 });
 
