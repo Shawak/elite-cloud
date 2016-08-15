@@ -1,4 +1,4 @@
-{extends file="index.tpl"}
+{extends file="page-wrapper.tpl"}
 {block name="title"}
     {if $user}
         {$user->getName()} - {PROJECT_NAME}
@@ -6,7 +6,7 @@
         Not found
     {/if}
 {/block}
-{block name="content"}
+{block name="page"}
     {if $user}
         <h3>{$user->getName()}</h3>
     {else}

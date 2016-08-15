@@ -8,7 +8,7 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 
 /* MAIN */
 
-foreach (['', 'login', 'userscripts'] as $page) {
+foreach (['', 'login', 'userscripts', 'test'] as $page) {
     $app->get('/' . $page, function (Request $request, Response $response) use ($page) {
         $page = $page != '' ? $page : 'home';
         SmartyHandler::getInstance()->assign('page', $page);

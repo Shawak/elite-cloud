@@ -1,8 +1,8 @@
-{extends file="index.tpl"}
+{extends file="page-wrapper.tpl"}
 {block name="title"}
     Login - {PROJECT_NAME}
 {/block}
-{block name="content"}
+{block name="page"}
     <form class="centerTable form-signin" ng-controller="LoginController" ng-submit="login()">
         <h2 class="form-signin-heading">Please sign in</h2>
         <label for="inputEmail" class="sr-only">Username</label>
