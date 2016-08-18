@@ -7,8 +7,9 @@
     apt-get install unzip
     git clone -b <branch> https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
     cd elite-cloud.de
-    chmod 777 composer.phar
+    chmod 755 composer.phar
     ./composer.phar update
+    chmod -R 777 .
   
 ### Updating
 
