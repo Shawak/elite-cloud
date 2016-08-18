@@ -4,16 +4,16 @@
  
  Go to /var/www and run the following commands:
  
-  apt-get install unzip
-  git clone -b <branch> https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
-  cd elite-cloud.de
-  chmod 777 composer.phar
-  ./composer.phar update
+    apt-get install unzip
+    git clone -b <branch> https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
+    cd elite-cloud.de
+    chmod 777 composer.phar
+    ./composer.phar update
   
 ### Updating
 
-  git pull
-  ./composer.phar update
+    git pull
+    ./composer.phar update
   
 ### License
 
