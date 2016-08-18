@@ -1,5 +1,11 @@
 # elite-cloud
 
+### Requirements
+
+* Apache2
+* MySQL
+* PHP
+
 ### Installing
  
  Go to /var/www and run the following commands:
@@ -10,6 +16,7 @@
     chmod 755 composer.phar
     ./composer.phar update
     chmod -R 777 .
+    mysql -u root -p elite-cloud < elite-cloud.sql
   
 ### Updating
 
