@@ -1,8 +1,8 @@
-{extends file="index.tpl"}
+{extends file="page-wrapper.tpl"}
 {block name="title"}
     Userscripts - {PROJECT_NAME}
 {/block}
-{block name="content"}
+{block name="page"}
     <form>
         <input type="text" class="form-control right" placeholder="Search..">
     </form>
@@ -24,5 +24,4 @@
             </tbody>
         </table>
     </div>
-
 {/block}

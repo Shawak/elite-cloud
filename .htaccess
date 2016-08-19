@@ -19,7 +19,7 @@ Order Deny,Allow
     Deny from all
 </FilesMatch>
 
-<FilesMatch ".*\.(html|css|js|woff|jpe|jpg|jpeg|gif|png|bmp|ico|svg|svgz|tif|tiff|ai|drw|pct|psp|xcf|psd|raw)$">
+<FilesMatch ".*\.(html|css|js|woff|woff2|jpe|jpg|jpeg|gif|png|bmp|ico|svg|svgz|tif|tiff|ai|drw|pct|psp|xcf|psd|raw)$">
     Allow from all
 </FilesMatch>
 

@@ -1,0 +1,289 @@
+@-webkit-keyframes hero-animation {
+    0%,
+    to {
+        background-color: #8f88f1
+    }
+    20% {
+        background-color: #88a6f1
+    }
+    40% {
+        background-color: #88c1f1
+    }
+    60% {
+        background-color: #c688f1
+    }
+    80% {
+        background-color: #a688f1
+    }
+}
+
+@keyframes hero-animation {
+    0%,
+    to {
+        background-color: #8f88f1
+    }
+    20% {
+        background-color: #88a6f1
+    }
+    40% {
+        background-color: #88c1f1
+    }
+    60% {
+        background-color: #c688f1
+    }
+    80% {
+        background-color: #a688f1
+    }
+}
+
+.brand-hover,
+.brand-hover:hover {
+    -webkit-transition: color .5s;
+    transition: color .5s
+}
+
+#features .container h1 {
+    text-align: center
+}
+
+:root {
+    background-color: #1c1e20
+}
+
+header {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-transition: background-color 1s;
+    transition: background-color 1s
+}
+
+header .navigation,
+header nav {
+    display: -webkit-flex!important;
+    display: -ms-flexbox!important;
+    display: flex!important
+}
+
+header nav {
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center
+}
+
+header nav a {
+    margin-right: 50px;
+    color: #fff
+}
+
+.logo {
+    width: 150px;
+    visibility: hidden
+}
+
+.header-scrollspy {
+    background-color: #fff;
+    -webkit-transition: background-color 1s;
+    transition: background-color 1s
+}
+
+.header-scrollspy nav a {
+    color: #1c1e20
+}
+
+.header-scrollspy nav a:hover {
+    color: #e2ba5a
+}
+
+.header-scrollspy .logo {
+    visibility: visible
+}
+
+#hero,
+.form-group {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center
+}
+
+#hero {
+    height: 100vh;
+    -webkit-animation: hero-animation 60s infinite;
+    animation: hero-animation 60s infinite
+}
+
+#hero .container,
+#register form .col-md-12,
+.footer-content {
+    text-align: center
+}
+
+#hero .container img {
+    max-width: 600px;
+    position: relative;
+    display: block;
+    margin: 0 auto 50px
+}
+
+#hero .container h3 {
+    color: #fff
+}
+
+#features .container .feature-item,
+#statistics .container .feature-item {
+    text-align: center;
+    margin-bottom: 50px
+}
+
+#features .container .feature-item .number,
+#features .container .feature-item i,
+#statistics .container .feature-item .number,
+#statistics .container .feature-item i {
+    font-size: 50px;
+    color: #e2ba5a
+}
+
+#features .container .feature-item .number:hover,
+#features .container .feature-item i:hover,
+#statistics .container .feature-item .number:hover,
+#statistics .container .feature-item i:hover {
+    color: #1c1e20;
+    cursor: pointer
+}
+
+#features .container .feature-item .number,
+#statistics .container .feature-item .number {
+    font-weight: 700
+}
+
+#features .container .feature-item .desc,
+#statistics .container .feature-item .desc {
+    display: block;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    font-size: 25px;
+    font-weight: 700
+}
+
+#features .container .feature-item p,
+#statistics .container .feature-item p {
+    text-align: justify
+}
+
+#register form input[type=submit] {
+    margin-top: 30px;
+    margin-bottom: 100px
+}
+
+footer {
+    background-color: #1c1e20;
+    color: #e6e6e6
+}
+
+.footer-content {
+    padding-top: 20px;
+    font-size: 14px
+}
+
+.footer-content .zeile {
+    margin-bottom: 20px
+}
+
+.footer-content .copyright {
+    text-align: left
+}
+
+.footer-content .contact {
+    text-align: right
+}
+
+.navigation-main {
+    background-color: #fff
+}
+
+.navigation-main .container {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap
+}
+
+.navbar-brand-img {
+    width: 150px;
+    padding-top: 20px;
+    padding-bottom: 20px
+}
+
+.navbar {
+    padding: 0!important;
+    -webkit-box-flex: 2;
+    -webkit-flex-grow: 2;
+    -ms-flex-positive: 2;
+    flex-grow: 2;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end
+}
+
+.nav-link {
+    color: #1c1e20!important
+}
+
+.nav-link:hover {
+    color: #e2ba5a!important
+}
+
+.content {
+    height: auto;
+    min-height: 100%
+}
+
+@media (max-width:767px) {
+    .logo {
+        visibility: hidden!important
+    }
+    .contact,
+    .copyright {
+        text-align: center!important
+    }
+    header {
+        padding-right: 20px!important
+    }
+}
