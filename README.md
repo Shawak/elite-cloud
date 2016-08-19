@@ -11,7 +11,7 @@
  Go to /var/www and run the following commands:
  
     apt-get install unzip
-    git clone -b <branch> https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
+    git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
     cd elite-cloud.de
     chmod 755 composer.phar
     ./composer.phar update
