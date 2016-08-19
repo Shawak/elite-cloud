@@ -6,7 +6,7 @@ class LoginHandler
 
     private $user;
 
-    public function __construct()
+    private function __construct()
     {
 
     }

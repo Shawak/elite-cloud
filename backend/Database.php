@@ -4,7 +4,7 @@ class Database extends PDO
 {
     private static $instance;
 
-    public function __construct($host, $datb, $user, $pass)
+    private function __construct($host, $datb, $user, $pass)
     {
         try {
             parent::__construct('mysql:host=' . $host . ';dbname=' . $datb . ';charset=utf8', $user, $pass, array(
