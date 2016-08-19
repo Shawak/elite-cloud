@@ -43,18 +43,18 @@ class LoginHandler
         $stmt->execute();
         $ret = $stmt->fetch();
 
-        if ($ret) {
-            $this->user = User::fromData($ret);
-            session('userID', $this->user->getID());
-            session('hash', $passwordHash);
-            if ($remember) {
-                cookie('userID', $this->user->getID());
-                cookie('hash', $passwordHash);
-            }
-            return true;
-        } else {
-            return false;
-        }
+        if (!$ret) {
+			return false;
+		}
+		
+		$this->user = User::fromData($ret);
+		session('userID', $this->user->getID());
+		session('hash', $passwordHash);
+		if ($remember) {
+			cookie('userID', $this->user->getID());
+			cookie('hash', $passwordHash);
+		}
+		return true;
     }
 
     public function hashPassword($password)
