@@ -13,8 +13,8 @@ define('SMARTY_DEBUGGING', false);
 // Database
 $config['db']['host'] = 'localhost';
 $config['db']['user'] = 'root';
-$config['db']['pass'] = '';
-$config['db']['datb'] = 'elite-cloud';
+$config['db']['pass'] = 'php123456';
+$config['db']['datb'] = 'elite_cloud';
 
 // overwrite $config['db']['pass'] in an external config during development
 // which wont be uploaded to prevent mistakes
