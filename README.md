@@ -13,10 +13,7 @@
     apt-get install unzip
     git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
     cd elite-cloud.de
-    chmod 755 composer.phar
     ./composer.phar update
-    chmod -R 777 .
-    mysql -u root -p elite-cloud < elite-cloud.sql
   
 ### Updating
 
