@@ -14,14 +14,15 @@
     git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
     cd elite-cloud.de
     chmod 755 composer.phar
-    ./composer.phar update
+    ./composer.phar install
     chmod -R 777 .
+    mysql -u root -e "create database elite-cloud"
     mysql -u root -p elite-cloud < elite-cloud.sql
   
 ### Updating
 
     git pull
-    ./composer.phar update
+    ./composer.phar install
   
 ### License
 
