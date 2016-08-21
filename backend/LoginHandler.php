@@ -44,17 +44,17 @@ class LoginHandler
         $ret = $stmt->fetch();
 
         if (!$ret) {
-			return false;
-		}
-		
-		$this->user = User::fromData($ret);
-		session('userID', $this->user->getID());
-		session('hash', $passwordHash);
-		if ($remember) {
-			cookie('userID', $this->user->getID());
-			cookie('hash', $passwordHash);
-		}
-		return true;
+        	return false;
+        }
+
+        $this->user = User::fromData($ret);
+        session('userID', $this->user->getID());
+        session('hash', $passwordHash);
+        if ($remember) {
+        	cookie('userID', $this->user->getID());
+        	cookie('hash', $passwordHash);
+        }
+        return true;
     }
 
     public function hashPassword($password)
