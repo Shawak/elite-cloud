@@ -52,7 +52,7 @@
     <!-- Icons und Favicons -->
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="icon" href="./frontend/img/favicon.png" type="image/png">
-    <link rel="shortcut icon" href="/./frontend/img/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="./frontend/img/favicon.png" type="image/png">
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="./frontend/css/bootstrap.min.css">
@@ -126,43 +126,55 @@
     </div>
 </footer>
 
-<!-- Modal Fenster -->
-<!-- Anmelden -->
-<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h3 class="modal-title" id="login">Anmelden</h3>
-            </div>
-            <div class="modal-body">
-                <form action="">
-                    <div class="form-group row">
-                        <label for="benutzername" class="col-md-3 form-control-label">Benutzername</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="benutzername" required>
+{if !LOGGED_IN}
+    <!-- Modal Fenster -->
+    <!-- Anmelden -->
+    <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 class="modal-title" id="login">Anmelden</h3>
+                </div>
+                <div class="modal-body">
+                    <form ng-controller="LoginController" ng-submit="login()">
+                        <div class="form-group row">
+                            <label for="benutzername" class="col-md-3 form-control-label">Benutzername</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="benutzername" ng-model="form.username"
+                                       required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="passwort" class="col-md-3 form-control-label">Passwort</label>
-                        <div class="col-md-4">
-                            <input type="password" class="form-control" id="passwort" required>
+                        <div class="form-group row">
+                            <label for="passwort" class="col-md-3 form-control-label">Passwort</label>
+                            <div class="col-md-4">
+                                <input type="password" class="form-control" id="passwort" ng-model="form.password"
+                                       required>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input type="submit" class="btn btn-primary" name="submit" value="Anmelden">
+                        <div class="form-group row">
+                            <label for="remember" class="col-md-3 form-control-label">Remember</label>
+                            <div class="col-md-4">
+                                <label>
+                                    <input type="checkbox" value="remember-me" ng-model="form.remember"> Stay logged in
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                </form>
-                <p></p>
-                <p>Noch keinen Account? <a href="#register" target="_blank">Hier registrieren!</a></p>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="submit" class="btn btn-primary" name="submit" value="Anmelden">
+                            </div>
+                        </div>
+                    </form>
+                    <p></p>
+                    <p>Noch keinen Account? <a href="#register" target="_blank">Hier registrieren!</a></p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+{/if}
 
 <!-- Skripte -->
 <script src="./frontend/vendor/wow.min.js"></script>

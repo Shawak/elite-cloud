@@ -11,11 +11,17 @@
             <nav>
                 <a href="#features" class="hidden-sm-down">Features</a>
                 <a href="#statistics" class="hidden-sm-down">Statistiken</a>
-                <a href="#login" data-toggle="modal" data-target="#login">Anmelden</a>
+                {if !LOGGED_IN}
+                    <a href="#login" data-toggle="modal" data-target="#login"">Anmelden</a
+                {else}
+                    <a href="#logout" ng-controller="LogoutController" ng-click="logout()">Logout</a>
+                {/if}
             </nav>
-            <a href="#register">
-                <button type="button" class="btn-primary btn">Registrieren</button>
-            </a>
+            {if !LOGGED_IN}
+                <a href="#register">
+                    <button type="button" class="btn-primary btn">Registrieren</button>
+                </a>
+            {/if}
         </div>
     </header>
     <section id="hero">
@@ -86,55 +92,60 @@
             </div>
         </div>
     </section>
-    <section id="register">
-        <div class="container">
-            <h1>Registrieren</h1>
-            <form action="">
-                <div class="form-group row wow fadeIn">
-                    <label for="benutzername" class="col-lg-3 offset-lg-2 form-control-label">Benutzername</label>
-                    <div class="col-lg-4">
-                        <input type="text" class="form-control" id="benutzername" placeholder="mind. 3 Zeichen" required
-                               pattern=".{ldelim} 3,{rdelim} ">
+    {if !LOGGED_IN}
+        <section id="register">
+            <div class="container">
+                <h1>Registrieren</h1>
+                <form action="">
+                    <div class="form-group row wow fadeIn">
+                        <label for="benutzername" class="col-lg-3 offset-lg-2 form-control-label">Benutzername</label>
+                        <div class="col-lg-4">
+                            <input type="text" class="form-control" id="benutzername" placeholder="mind. 3 Zeichen"
+                                   required
+                                   pattern=".{ldelim} 3,{rdelim} ">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row wow fadeIn">
-                    <label for="passwort" class="col-lg-3 offset-lg-2 form-control-label">Passwort</label>
-                    <div class="col-lg-4">
-                        <input type="password" class="form-control" id="passwort" required placeholder="mind. 8 Zeichen"
-                               pattern=".{ldelim} 8,{rdelim} ">
+                    <div class="form-group row wow fadeIn">
+                        <label for="passwort" class="col-lg-3 offset-lg-2 form-control-label">Passwort</label>
+                        <div class="col-lg-4">
+                            <input type="password" class="form-control" id="passwort" required
+                                   placeholder="mind. 8 Zeichen"
+                                   pattern=".{ldelim} 8,{rdelim} ">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row wow fadeIn">
-                    <label for="passwort2" class="col-lg-3 offset-lg-2 form-control-label">Passwort wiederholen</label>
-                    <div class="col-lg-4">
-                        <input type="password" class="form-control" id="passwort2" required
-                               pattern=".{ldelim} 8,{rdelim} ">
+                    <div class="form-group row wow fadeIn">
+                        <label for="passwort2" class="col-lg-3 offset-lg-2 form-control-label">Passwort
+                            wiederholen</label>
+                        <div class="col-lg-4">
+                            <input type="password" class="form-control" id="passwort2" required
+                                   pattern=".{ldelim} 8,{rdelim} ">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row wow fadeIn">
-                    <label for="email" class="col-lg-3 offset-lg-2 form-control-label">E-Mail</label>
-                    <div class="col-lg-4">
-                        <input type="email" class="form-control" id="email" required>
+                    <div class="form-group row wow fadeIn">
+                        <label for="email" class="col-lg-3 offset-lg-2 form-control-label">E-Mail</label>
+                        <div class="col-lg-4">
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row wow fadeIn">
-                    <label for="email2" class="col-lg-3 offset-lg-2 form-control-label">E-Mail wiederholen</label>
-                    <div class="col-lg-4">
-                        <input type="email" class="form-control" id="email2" required>
+                    <div class="form-group row wow fadeIn">
+                        <label for="email2" class="col-lg-3 offset-lg-2 form-control-label">E-Mail wiederholen</label>
+                        <div class="col-lg-4">
+                            <input type="email" class="form-control" id="email2" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row wow fadeIn">
-                    <label for="captcha" class="col-lg-3 offset-lg-2 form-control-label">Captcha</label>
-                    <div class="col-lg-4">
-                        // CAPTCHA
+                    <div class="form-group row wow fadeIn">
+                        <label for="captcha" class="col-lg-3 offset-lg-2 form-control-label">Captcha</label>
+                        <div class="col-lg-4">
+                            // CAPTCHA
+                        </div>
                     </div>
-                </div>
-                <div class="row wow bounceIn">
-                    <div class="col-md-12">
-                        <input type="submit" class="btn btn-lg btn-primary" name="submit" value="Registrieren">
+                    <div class="row wow bounceIn">
+                        <div class="col-md-12">
+                            <input type="submit" class="btn btn-lg btn-primary" name="submit" value="Registrieren">
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
-    </section>
+                </form>
+            </div>
+        </section>
+    {/if}
 {/block}
