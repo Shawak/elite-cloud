@@ -17,6 +17,8 @@
     chmod -R 777 .
     ./composer.phar install
     mysql -u root -p < elitecloud.sql
+    
+Now enter your mysql root passwort and you are done!
   
 ### Updating
 
