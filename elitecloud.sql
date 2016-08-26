@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 26. Aug 2016 um 18:32
+-- Erstellungszeit: 26. Aug 2016 um 18:35
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.20
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Datenbank: `elitecloud`
 --
+CREATE DATABASE IF NOT EXISTS `elitecloud` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `elitecloud`;
 
 -- --------------------------------------------------------
 

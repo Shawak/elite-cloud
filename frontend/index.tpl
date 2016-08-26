@@ -12,7 +12,7 @@
     <!--
     *******************
 
-   {PROJECT_NAME}
+    {PROJECT_NAME}
 
     Autor: LeKoArts (https://www.lekoarts.de), Shawak
     (c) Copyright 2016
@@ -41,7 +41,7 @@
     <meta property="og:type" content="article">
     <meta property="og:title" content="{PROJECT_NAME}">
     <meta property="og:description" content="Deine Online-Verwaltung für Userskripte auf elitepvpers">
-    <meta property="og:image" content="http://www.elite-cloud.de/./frontend/img/facebook.jpg">
+    <meta property="og:image" content="http://www.elite-cloud.de/frontend/img/facebook.jpg">
 
     <!-- Mobile -->
     <meta name="MobileOptimized" content="320">
@@ -59,13 +59,13 @@
     <link rel="stylesheet" href="./frontend/css/style.css">
     <link rel="stylesheet" href="./frontend/css/animate.min.css">
     <link rel="stylesheet" href="./frontend/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="frontend/css/{$page}.css">
+    <link rel="stylesheet" href="./frontend/css/default.css">
+    <link rel="stylesheet" href="./frontend/css/page-{$page}.css">
 
     <!-- Schriftarten -->
     <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville:700" rel="stylesheet" type="text/css">
     <!-- Überschriften -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-    <!-- Fließtext -->
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -103,7 +103,7 @@
             <div class="col-md-12 footer-content">
                 <div class="row zeile">
                     <div class="copyright col-md-4">
-                        &copy; 2016 <a href="http:///www.elite-cloud.de">elite-cloud</a>. <a
+                        {Helper::copyYear(2016)} <a href=".">elite-cloud</a>. <a
                                 href="https://www.elitepvpers.com" target="_blank">Elitepvpers</a>.
                     </div>
                     <div class="people col-md-4">

@@ -16,7 +16,7 @@ foreach (['', 'login', 'userscripts', 'test'] as $page) {
     });
 }
 
-$app->get('/profile/{id}', function (Request $request, Response $response) {
+$app->get('/user/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $user = new User($id);
     SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);

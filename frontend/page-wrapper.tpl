@@ -11,13 +11,13 @@
             <nav class="navbar" role="navigation">
                 <ul class="nav navbar-nav">
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Dashboard</a>
+                        <a href="userscripts" class="nav-link">Userscripts</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Profil</a>
+                        <a href="user/{LoginHandler::getInstance()->getUser()->getID()}" class="nav-link">Profile</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">Userscripts</a>
+                        <a href="#" class="nav-link" ng-controller="LogoutController" ng-click="logout()">Logout</a>
                     </li>
                 </ul>
             </nav>

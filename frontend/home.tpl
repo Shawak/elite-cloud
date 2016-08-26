@@ -14,6 +14,8 @@
                 {if !LOGGED_IN}
                     <a href="#login" data-toggle="modal" data-target="#login"">Anmelden</a
                 {else}
+                    <a href="userscripts">Userscripts</a>
+                    <a href="user/{LoginHandler::getInstance()->getUser()->getID()}">Profile</a>
                     <a href="#logout" ng-controller="LogoutController" ng-click="logout()">Logout</a>
                 {/if}
             </nav>
