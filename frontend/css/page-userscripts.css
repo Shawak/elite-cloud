@@ -1,5 +1,9 @@
+#userscriptsWrapper {
+    padding: 20px 0px;
+}
+
 .table-responsive tbody tr:hover {
-    background-color: rgb(230, 230, 230) !important;
+    background-color: rgb(210, 210, 210);
     cursor: pointer;
 }
 

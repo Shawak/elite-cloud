@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 05. Aug 2016 um 03:25
+-- Erstellungszeit: 26. Aug 2016 um 18:32
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.20
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Datenbank: `elite-cloud`
+-- Datenbank: `elitecloud`
 --
 
 -- --------------------------------------------------------
@@ -63,7 +63,8 @@ CREATE TABLE `userscript` (
 
 INSERT INTO `userscript` (`id`, `name`, `author`, `script`) VALUES
 (1, 'Erster userscript', 1, 'KGZ1bmN0aW9uKCkgew0KDQpjb25zb2xlLmxvZygiU2NyaXB0MSIpDQoNCn0pKCk7'),
-(2, 'Zweiter Userscript', 1, 'KGZ1bmN0aW9uKCkgew0KDQpjb25zb2xlLmxvZygiU2NyaXB0MiIpDQoNCn0pKCk7');
+(2, 'Zweiter Userscript', 1, 'KGZ1bmN0aW9uKCkgew0KDQpjb25zb2xlLmxvZygiU2NyaXB0MiIpDQoNCn0pKCk7'),
+(3, 'Dritter Userscript', 1, '');
 
 -- --------------------------------------------------------
 
@@ -81,7 +82,8 @@ CREATE TABLE `user_userscript` (
 --
 
 INSERT INTO `user_userscript` (`userID`, `userscriptID`) VALUES
-(1, 1);
+(1, 1),
+(1, 2);
 
 --
 -- Indizes der exportierten Tabellen
@@ -107,7 +109,7 @@ ALTER TABLE `userscript`
 -- Indizes für die Tabelle `user_userscript`
 --
 ALTER TABLE `user_userscript`
-  ADD PRIMARY KEY (`userID`);
+  ADD PRIMARY KEY (`userID`,`userscriptID`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -122,7 +124,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT für Tabelle `userscript`
 --
 ALTER TABLE `userscript`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

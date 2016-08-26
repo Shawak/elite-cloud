@@ -1,0 +1,14 @@
+/* Defaults */
+html { position: relative; min-height: 100%; }
+* {margin: 0; padding: 0; border: 0; outline: 0;}
+.left {float: left;}
+.right {float: right;}
+.clear {clear: both;}
+.center {margin: 0px auto;}
+.textcenter {text-align: center;}
+.centerTable {margin: 0px auto; display: table;}
+.textleft {text-align: left;}
+.textright {text-align: right;}
+.noflow {overflow: hidden;}
+.inline {display: inline-block;}
+.noheight {height: 0px;}
