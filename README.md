@@ -8,8 +8,9 @@
 
 ### Installing
  
- Go to /var/www and run the following commands:
+ Run the following commands:
  
+    cd /var/www
     apt-get install unzip
     git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
     cd elite-cloud.de
@@ -19,6 +20,7 @@
   
 ### Updating
 
+    cd /var/www/elite-cloud.de
     git pull
     ./composer.phar install
   
