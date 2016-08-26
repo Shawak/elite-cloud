@@ -138,7 +138,7 @@
                     <div class="form-group row wow fadeIn">
                         <label for="captcha" class="col-lg-3 offset-lg-2 form-control-label">Captcha</label>
                         <div class="col-lg-4">
-                            // CAPTCHA
+                            <div class="g-recaptcha" data-sitekey="{GOOGLE_RECAPTCHA_KEY}"></div>
                         </div>
                     </div>
                     <div class="row wow bounceIn">

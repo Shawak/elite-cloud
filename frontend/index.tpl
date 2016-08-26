@@ -181,6 +181,9 @@
 <script src="./frontend/vendor/bootstrap.min.js"></script>
 <script src="./frontend/vendor/scripts.js"></script>
 
+<!-- Google reCAPTCHA -->
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
 <!-- NotifyJs -->
 <script type="application/javascript" src="frontend/js/notify.min.js"></script>
 <!-- Main -->
