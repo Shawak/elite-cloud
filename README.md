@@ -16,7 +16,7 @@
     chmod 755 composer.phar
     ./composer.phar install
     chmod -R 777 .
-    mysql -u root -p elitecloud < elitecloud.sql
+    mysql -u root -p < elitecloud.sql
   
 ### Updating
 
