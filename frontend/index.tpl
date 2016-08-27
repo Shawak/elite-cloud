@@ -14,7 +14,7 @@
 
     {PROJECT_NAME}
 
-    Autor: LeKoArts (https://www.lekoarts.de), Shawak
+    Design: LeKoArts (https://www.lekoarts.de)
     (c) Copyright 2016
 
     ******************
@@ -25,10 +25,10 @@
     <base href="{URL_BASE}">
 
     <!-- Titel -->
-    <title>{PROJECT_NAME}</title>
+    <title>{block name="title"}{/block}</title>
 
     <!-- Beschreibung -->
-    <meta name="description" content="{PROJECT_NAME} - Deine Online-Verwaltung für Userskripte auf elitepvpers">
+    <meta name="description" content="{PROJECT_NAME} - {PROJECT_SLOGAN}">
 
     <!-- Allgemein -->
     <meta name="publisher" content="{PROJECT_NAME}">
@@ -40,7 +40,7 @@
     <meta property="og:url" content="http://www.elite-cloud.de">
     <meta property="og:type" content="article">
     <meta property="og:title" content="{PROJECT_NAME}">
-    <meta property="og:description" content="Deine Online-Verwaltung für Userskripte auf elitepvpers">
+    <meta property="og:description" content="{PROJECT_SLOGAN}">
     <meta property="og:image" content="http://www.elite-cloud.de/frontend/img/facebook.jpg">
 
     <!-- Mobile -->
@@ -83,14 +83,14 @@
 
 <body>
 <!--[if lt IE 8]>
-<span class="browserupgrade">Du nutzt einen sehr <strong>alten</strong> Browser. Bitte <a
-        href="http://browsehappy.com/">update deinen Browser</a> um diese Website in vollem Umfang genießen zu können.</span>
+<span class="browserupgrade">You are using a <strong>very old</strong> browser. Please <a
+        href="http://browsehappy.com/">update your browser</a> to use this website without any limitations.</span>
 <![endif]-->
 <noscript>
     <div>
-        <b>Um den vollen Funktionsumfang dieser Webseite zu erfahren, benötigen Sie JavaScript.</b> Eine Anleitung wie
-        Sie JavaScript in Ihrem Browser einschalten, befindet sich <a href="http://www.enable-javascript.com/de/"
-                                                                      target="_blank">hier</a>.
+        <b>To use this website without any limitations you will need javascript.</b> A guide how to enable javascript
+        can be found <a href="http://www.enable-javascript.com/de/"
+                        target="_blank">here</a>.
     </div>
 </noscript>
 </body>
@@ -107,17 +107,18 @@
                                 href="https://www.elitepvpers.com" target="_blank">Elitepvpers</a>.
                     </div>
                     <div class="people col-md-4">
-                        Design: <a href="https://www.lekoarts.de" target="_blank">LeKoArts</a>. Entwicklung: Shawak
+                        Developement: <a
+                                href="https://github.com/elitepvpers-community/elite-cloud/graphs/contributors">elitepvpers-community</a>
                     </div>
                     <div class="contact col-md-4">
-                        Kontakt: <a href="#discord" target="_blank">Discord</a> | <a
+                        Contact: <a href="#discord" target="_blank">Discord</a> | <a
                                 href="mailto: contact@elite-cloud.de" target="_blank">E-Mail</a>
                     </div>
                 </div>
                 <div class="row zeile">
                     <div class="col-md-12">
-                        Unterstütze das Projekt auf <a href="https://github.com/elitepvpers-community/elite-cloud"
-                                                       target="_blank"><i class="fa fa-github" aria-hidden="true"></i>
+                        Support the project on <a href="https://github.com/elitepvpers-community/elite-cloud"
+                                                  target="_blank"><i class="fa fa-github" aria-hidden="true"></i>
                             Github
                         </a></div>
                 </div>
@@ -136,21 +137,21 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h3 class="modal-title" id="login">Anmelden</h3>
+                    <h3 class="modal-title" id="login">Sign In</h3>
                 </div>
                 <div class="modal-body">
                     <form ng-controller="LoginController" ng-submit="login()">
                         <div class="form-group row">
-                            <label for="benutzername" class="col-md-3 form-control-label">Benutzername</label>
+                            <label for="username" class="col-md-3 form-control-label">Username</label>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" id="benutzername" ng-model="form.username"
+                                <input type="text" class="form-control" id="username" ng-model="form.username"
                                        required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="passwort" class="col-md-3 form-control-label">Passwort</label>
+                            <label for="password" class="col-md-3 form-control-label">Password</label>
                             <div class="col-md-4">
-                                <input type="password" class="form-control" id="passwort" ng-model="form.password"
+                                <input type="password" class="form-control" id="password" ng-model="form.password"
                                        required>
                             </div>
                         </div>
@@ -164,12 +165,12 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="submit" class="btn btn-primary" name="submit" value="Anmelden">
+                                <input type="submit" class="btn btn-primary" name="submit" value="Login">
                             </div>
                         </div>
                     </form>
                     <p></p>
-                    <p>Noch keinen Account? <a href="#register" target="_blank">Hier registrieren!</a></p>
+                    <p>Not registered? <a href="#register" target="_blank">Register!</a></p>
                 </div>
             </div>
         </div>

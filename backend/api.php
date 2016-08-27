@@ -156,6 +156,12 @@ $app->post('/api/user/create', function (Request $request, Response $response) {
         return;
     }
 
+    $tmpUser = Database::getUserByName($username);
+    if ($tmpUser) {
+        echo new ApiResult(false, 'A user with this username already exists.');
+        return;
+    }
+
     $password = LoginHandler::getInstance()->hashPassword($password);
     $user = User::create($username, $password);
     echo new ApiResult(true, 'Your account has been created.', $user);

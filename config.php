@@ -2,6 +2,7 @@
 
 // Project
 define('PROJECT_NAME', 'elite-cloud');
+define('PROJECT_SLOGAN', 'Your online management for userscripts on elitepvpers');
 
 // Slim
 $config['slim']['displayErrorDetails'] = true;
