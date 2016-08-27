@@ -6,7 +6,7 @@ function dump(object) {
 
     $('a[href=#login]').click(function () {
         setTimeout(function () {
-            $('form[ng-controller="LoginController"] #benutzername').focus();
+            $('form[ng-controller="LoginController"] #username').focus();
         }, 500);
     });
 

@@ -7,10 +7,12 @@
     {/if}
 {/block}
 {block name="page"}
-    {if $userscript}
-        <h3>{$userscript->getName()}</h3>
-        <textarea spellcheck="false" readonly="readonly">{$userscript->getScript()}</textarea>
-    {else}
-        A userscript with this id does not exists.
-    {/if}
+    <div id="userscriptWrapper">
+        {if $userscript}
+            <h3>{$userscript->getName()}</h3>
+            <textarea spellcheck="false" readonly="readonly">{$userscript->getScript()}</textarea>
+        {else}
+            A userscript with this id does not exists.
+        {/if}
+    </div>
 {/block}

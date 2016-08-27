@@ -102,7 +102,7 @@
                     <div class="form-group row wow fadeIn">
                         <label for="username" class="col-lg-3 offset-lg-2 form-control-label">Username</label>
                         <div class="col-lg-4">
-                            <input type="text" class="form-control" id="username" placeholder="atleast. 3 characters"
+                            <input type="text" class="form-control" id="username" placeholder="atleast 3 characters"
                                    required
                                    pattern=".{ldelim} 3,{rdelim} ">
                         </div>
@@ -111,7 +111,7 @@
                         <label for="passwort" class="col-lg-3 offset-lg-2 form-control-label">Password</label>
                         <div class="col-lg-4">
                             <input type="password" class="form-control" id="password" required
-                                   placeholder="atleast. 8 characters"
+                                   placeholder="atleast 8 characters"
                                    pattern=".{ldelim} 8,{rdelim} ">
                         </div>
                     </div>
