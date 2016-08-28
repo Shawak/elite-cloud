@@ -10,13 +10,12 @@
  
  Run the following commands:
  
-    cd /var/www
     apt-get install unzip
+    cd /var/www
     git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud.de
+    chmod -R 777 elite-cloud.de
     cd elite-cloud.de
-    chmod 755 composer.phar
     ./composer.phar install
-    chmod -R 777 .
     mysql -u root -p < elitecloud.sql
     
 Now enter your mysql root passwort and you are done!
@@ -26,6 +25,7 @@ Now enter your mysql root passwort and you are done!
     cd /var/www/elite-cloud.de
     git reset --hard
     git pull
+    chmod -R 777 /var/www/elite-cloud.de
     ./composer.phar install
   
 ### License
