@@ -11,7 +11,16 @@
 (function () {
 
     var main = function () {
-        var elite_cloud = {};
+
+        var elite_cloud = {
+
+            root: 'http://localhost/elite-cloud',
+
+            keyLoader: 'elite-cloud_loader',
+            keyAuthKey: 'elite-cloud_authKey'
+
+        };
+
         window.elite_cloud = elite_cloud;
 
         elite_cloud.extend = function (obj) {
@@ -49,9 +58,7 @@
 
                     var elem = document.createElement('script');
                     elem.type = 'text/javascript';
-                    elem.async = true;
                     elem.src = encodeURI(src + (src.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callback_name);
-
                     document.head.appendChild(elem);
                 };
 
@@ -71,8 +78,6 @@
             },
 
             loader: {
-                key: 'elite-cloud_loader',
-                root: 'http://localhost/elite-cloud',
 
                 init: function () {
                     if (that.loader.checkForIFrame()) {
@@ -89,7 +94,7 @@
                     }
 
                     setTimeout(function () {
-                        that.$jsonp.get(that.loader.root + '/api/loader', {
+                        that.$jsonp.get(that.root + '/api/loader', {
                             onSuccess: function (result) {
                                 that.loader.setScript(result.data.loader);
                                 that.log('Loader updated!');
@@ -102,11 +107,11 @@
                 },
 
                 getScript: function () {
-                    return localStorage.getItem(that.loader.key);
+                    return localStorage.getItem(that.keyLoader);
                 },
 
                 setScript: function (script) {
-                    localStorage.setItem(that.loader.key, script);
+                    localStorage.setItem(that.keyLoader, script);
                 },
 
                 checkForIFrame: function () {
@@ -116,6 +121,7 @@
                         return true;
                     }
                 }
+
             }
         });
 
