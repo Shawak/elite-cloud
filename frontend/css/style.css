@@ -42,7 +42,7 @@
     transition: color .5s
 }
 
-#features .container h1 {
+.container h1 {
     text-align: center
 }
 

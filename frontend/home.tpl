@@ -5,7 +5,9 @@
 {block name="content"}
     <header class="container-fluid animated fadeIn" id="header">
         <div class="logo">
-            <img src="./frontend/img/elite-cloud-logo--invert.svg" alt="{PROJECT_NAME} Logo Invert">
+            <a href="">
+                <img src="./frontend/img/elite-cloud-logo--invert.svg" alt="{PROJECT_NAME} Logo Invert">
+            </a>
         </div>
         <div class="navigation">
             <nav>
@@ -105,23 +107,20 @@
                         <label for="username" class="col-lg-3 offset-lg-2 form-control-label">Username</label>
                         <div class="col-lg-4">
                             <input type="text" class="form-control" id="username" placeholder="atleast 3 characters"
-                                   required
-                                   pattern=".{ldelim} 3,{rdelim} ">
+                                   required minlength="3">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">
                         <label for="passwort" class="col-lg-3 offset-lg-2 form-control-label">Password</label>
                         <div class="col-lg-4">
                             <input type="password" class="form-control" id="password" required
-                                   placeholder="atleast 8 characters"
-                                   pattern=".{ldelim} 8,{rdelim} ">
+                                   placeholder="atleast 8 characters" minlength="8">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">
                         <label for="password2" class="col-lg-3 offset-lg-2 form-control-label">Repeat Password</label>
                         <div class="col-lg-4">
-                            <input type="password" class="form-control" id="password2" required
-                                   pattern=".{ldelim} 8,{rdelim} ">
+                            <input type="password" class="form-control" id="password2" required minlength="8">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">

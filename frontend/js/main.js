@@ -10,4 +10,8 @@ function dump(object) {
         }, 500);
     });
 
+    $('#header .logo a').click(function () {
+        $(window).scrollTop(0);
+    });
+
 })();
