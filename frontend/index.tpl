@@ -107,7 +107,7 @@
                                 href="https://www.elitepvpers.com" target="_blank">Elitepvpers</a>.
                     </div>
                     <div class="people col-md-4">
-                        Developement: <a
+                        Development: <a
                                 href="https://github.com/elitepvpers-community/elite-cloud/graphs/contributors">elitepvpers-community</a>
                     </div>
                     <div class="contact col-md-4">

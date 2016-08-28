@@ -50,7 +50,9 @@
                 <div class="col-md-4 fadeIn wow feature-item">
                     <i class="fa fa-lock bounceIn wow brand-hover" aria-hidden="true"></i>
                     <span class="desc">Safe</span>
-                    <p>All your scripts are transfered using the secure https protocol so they are fully compatible with
+                    <p>All your scripts are transfered using the secure <a
+                                href="https://en.wikipedia.org/wiki/HTTPS" target="_blank">
+                            https protocol</a> so they are fully compatible with
                         elitepvpers</p>
                 </div>
             </div>
@@ -58,7 +60,7 @@
                 <div class="col-md-4 fadeIn wow feature-item">
                     <i class="fa fa-magic bounceIn wow brand-hover" aria-hidden="true"></i>
                     <span class="desc">Up-to-date</span>
-                    <p>You don't have to care anymore about annoying updates, your userscripts are always
+                    <p>You don't have to care about annoying updates anymore, your userscripts are always
                         up-to-date.</p>
                 </div>
                 <div class="col-md-4 fadeIn wow feature-item">
