@@ -35,7 +35,11 @@ $app->get('/userscript/{id}', function (Request $request, Response $response) {
 /*  JS */
 
 $app->get('/api/loader', function (Request $request, Response $response) {
-    $loader = (new Minify\JS(DIR_USERSCRIPT . 'loader.js'))->minify();
+    if (SETTINGS_MINIFY_JS) {
+        $loader = (new Minify\JS(DIR_USERSCRIPT . 'loader.js'))->minify();
+    } else {
+        $loader = file_get_contents(DIR_USERSCRIPT . 'loader.js');
+    }
     echo new ApiResult(true, '', (object)['loader' => $loader]);
 });
 
@@ -65,7 +69,9 @@ $app->get('/api/script/{id}', function (Request $request, Response $response) {
         return;
     }
     $script = $userscript->getScript();
-    $script = (new Minify\JS($script))->minify();
+    if (SETTINGS_MINIFY_JS) {
+        $script = (new Minify\JS($script))->minify();
+    }
     echo new ApiResult(true, '', (object)['script' => $script]);
 });
 
@@ -77,8 +83,8 @@ $app->post('/api/login', function (Request $request, Response $response) {
     $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
     $remember = filter_var($data['remember'], FILTER_VALIDATE_BOOLEAN);
     $loginHandler = LoginHandler::getInstance();
-    $passwordHash = $loginHandler->HashPassword($password);
-    $success = $loginHandler->Login($username, $passwordHash, $remember);
+    $passwordHash = $loginHandler->hashPassword($password);
+    $success = $loginHandler->login($username, $passwordHash, $remember);
     echo new ApiResult($success, $success ? 'You have been successfully logged in' : 'Username and/or password was wrong');
 });
 

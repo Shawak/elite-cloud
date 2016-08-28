@@ -1,8 +1,10 @@
 (function ($) {
 
-    var elite_cloud = {
+    var elite_cloud = window.elite_cloud || {};
+
+    elite_cloud.extend({
+
         keyName: 'elite-cloud_authKey',
-        root: $(document.currentScript).attr('root'),
 
         hideForm: function () {
             $('#ec_form').hide();
@@ -13,36 +15,22 @@
         },
 
         getAuthKey: function () {
-            return localStorage.getItem(this.keyName);
+            return localStorage.getItem(that.keyName);
         },
 
         setAuthKey: function (authKey) {
-            localStorage.setItem(this.keyName, authKey);
+            localStorage.setItem(that.keyName, authKey);
         },
 
         delAuthKey: function () {
-            localStorage.removeItem(this.keyName);
+            localStorage.removeItem(that.keyName);
         },
 
         init: function () {
-            this.log('Loader init()');
-            var that = this;
-            this.injectPlugin(function () {
+            that.log('Loader init()');
+            that.injectPlugin(function () {
                 that.login();
             });
-        },
-
-        log: function (msg) {
-            var date = new Date();
-            console.log('[elite-cloud ' + date.toLocaleTimeString() + '.' + date.getMilliseconds() + '] %s', msg);
-        },
-
-        insertScript: function (script) {
-            var elem = document.createElement('script');
-            elem.setAttribute('type', 'text/javascript');
-            elem.setAttribute('root', this.root);
-            elem.innerHTML = script;
-            document.head.appendChild(elem);
         },
 
         setMessage: function (str) {
@@ -58,7 +46,7 @@
                 '<a href="/forum/profile.php?do=editoptions">' +
                 '<li>' +
                 '<div id="ec_menuitem" style="display: inline-block">' +
-                '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + (this.root + "/frontend/images/favicon.png") + '">' +
+                '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + (that.loader.root + "/frontend/images/favicon.png") + '">' +
                 'elite-cloud' +
                 '</div>' +
                 '</li>' +
@@ -70,13 +58,12 @@
                 return;
             }
 
-            var that = this;
             $(document).on('click', '#ec_logout', function () {
                 that.logout();
             });
 
             $.ajax({
-                url: encodeURI(this.root + '/api/plugin'),
+                url: encodeURI(that.loader.root + '/api/plugin'),
                 dataType: 'jsonp',
             }).done(function (e) {
                 elem.parent().prepend(e.data.plugin).append(function () {
@@ -96,16 +83,15 @@
         },
 
         login: function () {
-            var authKey = this.getAuthKey();
+            var authKey = that.getAuthKey();
             if (authKey == null || authKey == '') {
-                this.setMessage('No authentication key found.');
-                this.showForm();
+                that.setMessage('No authentication key found.');
+                that.showForm();
                 return;
             }
 
-            var that = this;
             $.ajax({
-                url: encodeURI(this.root + '/api/authenticate/' + authKey),
+                url: encodeURI(that.loader.root + '/api/authenticate/' + authKey),
                 dataType: 'jsonp',
             }).done(function (e) {
                 if (e.success) {
@@ -114,10 +100,10 @@
                     for (var i = 0; i < e.data.userscripts.length; i++) {
                         that.log('> ' + e.data.userscripts[i].name);
                         $.ajax({
-                            url: encodeURI(that.root + '/api/script/' + e.data.userscripts[i].id),
+                            url: encodeURI(that.loader.root + '/api/script/' + e.data.userscripts[i].id),
                             dataType: 'jsonp'
                         }).done(function (e) {
-                            that.insertScript(e.data.script);
+                            that.injectScript(e.data.script);
                         }).fail(function (e, status) {
                             that.log('error,:' + status);
                         });
@@ -132,11 +118,12 @@
         },
 
         logout: function () {
-            this.delAuthKey();
+            that.delAuthKey();
             location.reload();
         },
-    }
+    });
 
+    var that = elite_cloud;
     elite_cloud.init();
 
 })(jQuery);
