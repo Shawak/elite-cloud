@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "08af452eacb853c3ec3381602187d32a",
-    "content-hash": "e4aa4a4b9f0091009a555efce272c2db",
+    "hash": "f60eb3e00e345d860c48f8aa6d0e239c",
+    "content-hash": "2f929e1829da963b38b54cac4344e285",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -33,6 +33,51 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "time": "2014-12-30 15:22:37"
+        },
+        {
+            "name": "google/recaptcha",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/google/recaptcha.git",
+                "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/google/recaptcha/zipball/2b7e00566afca82a38a1d3adb8e42c118006296e",
+                "reference": "2b7e00566afca82a38a1d3adb8e42c118006296e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.5.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ReCaptcha\\": "src/ReCaptcha"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Client library for reCAPTCHA, a free service that protect websites from spam and abuse.",
+            "homepage": "http://www.google.com/recaptcha/",
+            "keywords": [
+                "Abuse",
+                "captcha",
+                "recaptcha",
+                "spam"
+            ],
+            "time": "2015-09-02 17:23:59"
         },
         {
             "name": "matthiasmullie/minify",
@@ -230,16 +275,16 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298"
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
-                "reference": "85d63699f0dbedb190bbd4b0d2b9dc707ea4c298",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
                 "shasum": ""
             },
             "require": {
@@ -267,6 +312,7 @@
                 }
             ],
             "description": "Common interface for HTTP messages",
+            "homepage": "https://github.com/php-fig/http-message",
             "keywords": [
                 "http",
                 "http-message",
@@ -275,7 +321,7 @@
                 "request",
                 "response"
             ],
-            "time": "2015-05-04 20:22:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "slim/slim",
@@ -349,16 +395,16 @@
         },
         {
             "name": "smarty/smarty",
-            "version": "v3.1.29",
+            "version": "v3.1.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smarty-php/smarty.git",
-                "reference": "35480f10e7ce9b0fdaf23d3799d7b79463919b1e"
+                "reference": "ed2b7f1146cfda13df1eea8a5f707a1b771b6e7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/35480f10e7ce9b0fdaf23d3799d7b79463919b1e",
-                "reference": "35480f10e7ce9b0fdaf23d3799d7b79463919b1e",
+                "url": "https://api.github.com/repos/smarty-php/smarty/zipball/ed2b7f1146cfda13df1eea8a5f707a1b771b6e7e",
+                "reference": "ed2b7f1146cfda13df1eea8a5f707a1b771b6e7e",
                 "shasum": ""
             },
             "require": {
@@ -400,7 +446,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-12-21 01:57:06"
+            "time": "2016-08-07 18:46:49"
         }
     ],
     "packages-dev": [],

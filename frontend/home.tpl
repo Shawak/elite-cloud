@@ -102,37 +102,37 @@
         <section id="register">
             <div class="container">
                 <h1>Register</h1>
-                <form action="">
+                <form ng-controller="RegisterController" ng-submit="register()">
                     <div class="form-group row wow fadeIn">
                         <label for="username" class="col-lg-3 offset-lg-2 form-control-label">Username</label>
                         <div class="col-lg-4">
                             <input type="text" class="form-control" id="username" placeholder="at least 3 characters"
-                                   required minlength="3">
+                                   required minlength="3" ng-model="form.username">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">
                         <label for="passwort" class="col-lg-3 offset-lg-2 form-control-label">Password</label>
                         <div class="col-lg-4">
                             <input type="password" class="form-control" id="password" required
-                                   placeholder="at least 8 characters" minlength="8">
+                                   placeholder="at least 8 characters" minlength="8" ng-model="form.password">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">
                         <label for="password2" class="col-lg-3 offset-lg-2 form-control-label">Repeat Password</label>
                         <div class="col-lg-4">
-                            <input type="password" class="form-control" id="password2" required minlength="8">
+                            <input type="password" class="form-control" id="password2" required minlength="8" ng-model="form.password2">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">
                         <label for="email" class="col-lg-3 offset-lg-2 form-control-label">E-Mail</label>
                         <div class="col-lg-4">
-                            <input type="email" class="form-control" id="email" required>
+                            <input type="email" class="form-control" id="email" required ng-model="form.email">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">
                         <label for="email2" class="col-lg-3 offset-lg-2 form-control-label">Repeat E-Mail</label>
                         <div class="col-lg-4">
-                            <input type="email" class="form-control" id="email2" required>
+                            <input type="email" class="form-control" id="email2" required ng-model="form.email2">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">

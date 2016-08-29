@@ -41,7 +41,40 @@ app.controller('LoginController', ['$scope', '$http', '$location', function ($sc
             else {
                 $.notify(data.message, 'error');
                 $scope.form.password = '';
-                $('[placeholder="Password"]').focus();
+            }
+        });
+    };
+}]);
+
+app.controller('RegisterController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+    $scope.form = {
+        username: '',
+        password: '',
+        password2: '',
+        email: '',
+        email2: ''
+    };
+
+    $scope.register = function () {
+        var response = $http.post('api/user/register', {
+            username: $scope.form.username,
+            password: $scope.form.password,
+            email: $scope.form.email,
+            captcha: grecaptcha.getResponse()
+        });
+        response.success(function (data, status, headers, config) {
+            console.log(data);
+            if (data.success) {
+                $.notify(data.message, 'success');
+                setTimeout(function () {
+                    window.location.href = '.';
+                }, 500);
+            }
+            else {
+                $.notify(data.message, 'error');
+                grecaptcha.reset();
+                $scope.form.password = '';
+                $scope.form.password2 = '';
             }
         });
     };
@@ -61,7 +94,6 @@ app.controller('LogoutController', ['$scope', '$http', '$location', function ($s
     };
 }]);
 
-
 app.controller('UserscriptsController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     $scope.userscripts = [];
 
@@ -72,7 +104,7 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
             //self.userscripts = e.data;
             dump(e);
         });
-        self.userscripts =  [
+        self.userscripts = [
             {name: "test", author: 1},
             {name: "test", author: 1},
         ];

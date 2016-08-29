@@ -147,18 +147,32 @@ $app->get('/api/user/removescript/{id}', function (Request $request, Response $r
     echo new ApiResult(true, 'Successfully removed userscript "' . $userscript->getName() . '" from your profile!"');
 });
 
-$app->post('/api/user/create', function (Request $request, Response $response) {
+$app->post('/api/user/register', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
     $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
+    $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
 
-    if (!preg_match('/^[a-z\d_]{5,20}$/i', $username)) {
-        echo new ApiResult(false, 'Your username may only contain letters and numbers and has to be at least 5 and maximum 20 characters long.');
+    $captcha = filter_var($data['captcha'], FILTER_SANITIZE_STRING);
+    $reCaptcha = new \ReCaptcha\ReCaptcha(GOOGLE_RECAPTCHA_SECRET);
+    $reCaptchaResponse = $reCaptcha->verify($captcha, filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING));
+    if (!$reCaptchaResponse->isSuccess()) {
+        echo new ApiResult(false, 'The captcha was not correct, please try again.');
+        return;
+    }
+
+    if (!preg_match('/^[a-z\d_]{3,20}$/i', $username)) {
+        echo new ApiResult(false, 'Your username may only contain letters and numbers and has to be at least 3 and maximum 20 characters long.');
         return;
     }
 
     if (strlen($password) < 4) {
         echo new ApiResult(false, 'Your password has to be at least 4 characters long.');
+        return;
+    }
+
+    if (!$email) {
+        echo new ApiResult(false, 'You have entered an invalid email address.');
         return;
     }
 
@@ -168,8 +182,14 @@ $app->post('/api/user/create', function (Request $request, Response $response) {
         return;
     }
 
+    $tmpUser = Database::getUserByEmail($email);
+    if ($tmpUser) {
+        echo new ApiResult(false, 'A user with this email already exists.');
+        return;
+    }
+
     $password = LoginHandler::getInstance()->hashPassword($password);
-    $user = User::create($username, $password);
+    $user = User::create($username, $password, $email);
     echo new ApiResult(true, 'Your account has been created.', $user);
 });
 

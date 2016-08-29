@@ -3,7 +3,6 @@
 // Project
 define('PROJECT_NAME', 'elite-cloud');
 define('PROJECT_SLOGAN', 'Your online management for userscripts on elitepvpers');
-
 define('SETTINGS_MINIFY_JS', false);
 
 // Slim

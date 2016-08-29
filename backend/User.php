@@ -22,15 +22,16 @@ class User extends DBObject
         $this->id = $id;
     }
 
-    public static function create($name, $password, $flag = 0)
+    public static function create($name, $password, $email, $flag = 0)
     {
         $stmt = Database::getInstance()->prepare('
 			insert into user
-			(name, password, flag, authKey)
-			values (:name, :password, :flag, :authKey)
+			(name, password, email, flag, authKey)
+			values (:name, :password, :email, :flag, :authKey)
 		');
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':email', $email);
         $stmt->bindParam(':flag', $flag);
         $stmt->bindParam(':authKey', KeyGenerator::generateKey());
         $stmt->execute();

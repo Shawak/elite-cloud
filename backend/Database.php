@@ -98,7 +98,8 @@ class Database extends PDO
         return User::fromData($ret);
     }
 
-    public static function getUserByName($name) {
+    public static function getUserByName($name)
+    {
         $db = Database::getInstance();
         $stmt = $db->prepare('
 			select *
@@ -106,6 +107,20 @@ class Database extends PDO
 			where name = :name
 		');
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+        $stmt->execute();
+        $ret = $stmt->fetch();
+        return User::fromData($ret);
+    }
+
+    public static function getUserByEmail($email)
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('
+			select *
+			from user
+			where email = :email
+		');
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();
         return User::fromData($ret);
