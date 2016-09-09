@@ -188,7 +188,6 @@ $app->post('/api/user/register', function (Request $request, Response $response)
     }
 
     $password = LoginHandler::getInstance()->hashPassword($password);
-    echo $password;
     $user = User::create($username, $password, $email);
     echo new ApiResult(true, 'Your account has been created.', $user);
 });
