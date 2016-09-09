@@ -4,6 +4,8 @@ class LoginHandler
 {
     private static $instance;
 
+    const PASSWORD_TYPE = PASSWORD_BCRYPT;
+
     private $user;
 
     private function __construct()
@@ -40,6 +42,12 @@ class LoginHandler
 
         if (!$this->verifyPassword($password)) {
             return false;
+        }
+
+        if (password_needs_rehash($this->getUser()->getPassword(), self::PASSWORD_TYPE)) {
+            $passwordHash = $this->hashPassword($password);
+            $this->getUser()->setPassword($passwordHash);
+            $this->getUser()->save();
         }
 
         session('user_id', $this->getUser()->getID());
@@ -85,7 +93,7 @@ class LoginHandler
         return password_hash(
             base64_encode(
                 hash('sha384', $password, true)
-            ), PASSWORD_BCRYPT
+            ), self::PASSWORD_TYPE
         );
     }
 
