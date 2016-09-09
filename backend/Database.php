@@ -98,6 +98,20 @@ class Database extends PDO
         return User::fromData($ret);
     }
 
+    public static function getAuthToken($selector)
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('
+			select *
+			from auth_token as AuthToken
+			where selector = :selector
+		');
+        $stmt->bindParam(':selector', $selector, PDO::PARAM_STR);
+        $stmt->execute();
+        $ret = $stmt->fetch();
+        return AuthToken::fromData($ret);
+    }
+
     public static function getUserByName($name)
     {
         $db = Database::getInstance();

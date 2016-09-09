@@ -89,11 +89,11 @@ function cookie($name, $value = '', $expire = null)
         }
     } else {
         if ($value === null) {
-            $expire = -3600;
+            $expire = time() + -3600;
         } else if ($expire === null) {
             $expire = 2147483647; // 2^31 - 1 -> January 2038
         }
-        setcookie($name, $value, time() + $expire);
+        setcookie($name, $value, $expire, '/');
     }
 }
 

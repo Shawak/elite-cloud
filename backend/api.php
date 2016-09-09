@@ -83,8 +83,7 @@ $app->post('/api/login', function (Request $request, Response $response) {
     $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
     $remember = filter_var($data['remember'], FILTER_VALIDATE_BOOLEAN);
     $loginHandler = LoginHandler::getInstance();
-    $passwordHash = $loginHandler->hashPassword($password);
-    $success = $loginHandler->login($username, $passwordHash, $remember);
+    $success = $loginHandler->login($username, $password, $remember);
     echo new ApiResult($success, $success ? 'You have been successfully logged in' : 'Username and/or password was wrong');
 });
 
@@ -153,13 +152,13 @@ $app->post('/api/user/register', function (Request $request, Response $response)
     $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
     $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
 
-    $captcha = filter_var($data['captcha'], FILTER_SANITIZE_STRING);
+    /*$captcha = filter_var($data['captcha'], FILTER_SANITIZE_STRING);
     $reCaptcha = new \ReCaptcha\ReCaptcha(GOOGLE_RECAPTCHA_SECRET);
     $reCaptchaResponse = $reCaptcha->verify($captcha, filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_SANITIZE_STRING));
     if (!$reCaptchaResponse->isSuccess()) {
         echo new ApiResult(false, 'The captcha was not correct, please try again.');
         return;
-    }
+    }*/
 
     if (!preg_match('/^[a-z\d_]{3,20}$/i', $username)) {
         echo new ApiResult(false, 'Your username may only contain letters and numbers and has to be at least 3 and maximum 20 characters long.');
@@ -189,6 +188,7 @@ $app->post('/api/user/register', function (Request $request, Response $response)
     }
 
     $password = LoginHandler::getInstance()->hashPassword($password);
+    echo $password;
     $user = User::create($username, $password, $email);
     echo new ApiResult(true, 'Your account has been created.', $user);
 });

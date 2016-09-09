@@ -33,7 +33,7 @@ class User extends DBObject
         $stmt->bindParam(':password', $password);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':flag', $flag);
-        $stmt->bindParam(':authKey', KeyGenerator::generateKey());
+        $stmt->bindParam(':authKey', KeyGenerator::generateAuthKey());
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -65,7 +65,7 @@ class User extends DBObject
 
     public function renewAuthKey()
     {
-        $this->authKey = KeyGenerator::generateKey();
+        $this->authKey = KeyGenerator::generateAuthKey();
     }
 
     public function isUser()
