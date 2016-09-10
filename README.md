@@ -27,6 +27,10 @@ Now enter your mysql root passwort and you are done!
     git pull
     chmod -R 777 /var/www/elite-cloud
     ./composer.phar install
+    
+### Configure
+
+You may enter personal data/passwords into a `config-update.php` file during to overwrite the `config.php` this way to prevent uploading them.
   
 ### License
 
