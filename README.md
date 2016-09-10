@@ -30,7 +30,7 @@ Now enter your mysql root passwort and you are done!
     
 ### Configure
 
-You may enter personal data/passwords into a `config-update.php` file during to overwrite the `config.php` this way to prevent uploading them.
+You may enter personal data/passwords into a `config-update.php` file to overwrite the `config.php` this way to prevent uploading them during development.
   
 ### License
 
