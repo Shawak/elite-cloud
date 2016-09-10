@@ -94,8 +94,8 @@ class User extends DBObject
 			select user.*, userscript.*, user_userscript.*
 			from user, userscript, user_userscript
 			where user.id = :id
-			  and user_userscript.userID = :id
-			  and user_userscript.userscriptID = userscript.id
+			  and user_userscript.user_id = :id
+			  and user_userscript.userscript_id = userscript.id
 		');
         $stmt->bindParam(':id', $this->id);
         $stmt->execute();
@@ -112,12 +112,12 @@ class User extends DBObject
     {
         $stmt = Database::getInstance()->prepare('
             insert into user_userscript
-            (userID, userscriptID)
-            values (:userID, :userscriptID)
-            on duplicate key update userID = userID
+            (user_id, userscript_id)
+            values (:user_id, :userscript_id)
+            on duplicate key update user_id = user_id
 		');
-        $stmt->bindParam(':userID', $this->id);
-        $stmt->bindParam(':userscriptID', $userscript->getID());
+        $stmt->bindParam(':user_id', $this->id);
+        $stmt->bindParam(':userscript_id', $userscript->getID());
         $stmt->execute();
     }
 
@@ -125,11 +125,11 @@ class User extends DBObject
     {
         $stmt = Database::getInstance()->prepare('
             delete from user_userscript
-            where userID = :userID
-              and userscriptID = :userscriptID
+            where user_id = :user_id
+              and userscript_id = :userscript_id
 		');
-        $stmt->bindParam(':userID', $this->id);
-        $stmt->bindParam(':userscriptID', $userscript->getID());
+        $stmt->bindParam(':user_id', $this->id);
+        $stmt->bindParam(':userscript_id', $userscript->getID());
         $stmt->execute();
     }
 

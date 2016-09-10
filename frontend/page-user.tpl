@@ -1,4 +1,4 @@
-{extends file="page-wrapper.tpl"}
+{extends file="wrapper.tpl"}
 {block name="title"}
     {if $user}
         {$user->getName()} - {PROJECT_NAME}

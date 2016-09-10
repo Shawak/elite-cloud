@@ -11,3 +11,47 @@ form input[type="text"] {
     width: 200px;
     margin-bottom: 10px;
 }
+
+.userscript {
+    width: 50%;
+    margin: 10px 0;
+    padding: 10px;
+    float: left;
+}
+
+.userscript img {
+    height: 64px;
+    width: 64px;
+    float: left;
+    position: relative;
+    top: 5px;
+}
+
+.userscript:hover {
+    background-color: rgb(210, 210, 210);
+    cursor: pointer;
+    position: relative;
+    top: -1px;
+    left: -1px;
+}
+
+.userscript .info {
+    float: left;
+    margin-left: 10px;
+}
+
+.userscript .info div {
+    max-width: 183px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.userscript .buttons {
+    float: right;
+}
+
+.userscript .buttons a {
+    display: block;
+    margin-bottom: 5px;
+}

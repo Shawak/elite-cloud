@@ -8,11 +8,11 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 
 /* MAIN */
 
-foreach (['', 'login', 'userscripts', 'test'] as $page) {
+foreach (['', 'page-login', 'userscripts'] as $page) {
     $app->get('/' . $page, function (Request $request, Response $response) use ($page) {
         $page = $page != '' ? $page : 'home';
         SmartyHandler::getInstance()->assign('page', $page);
-        SmartyHandler::getInstance()->display($page . '.tpl');
+        SmartyHandler::getInstance()->display('page-' . $page . '.tpl');
     });
 }
 
@@ -21,7 +21,7 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
     $user = new User($id);
     SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
     SmartyHandler::getInstance()->assign('page', 'user');
-    SmartyHandler::getInstance()->display('user.tpl');
+    SmartyHandler::getInstance()->display('page-user.tpl');
 });
 
 $app->get('/userscript/{id}', function (Request $request, Response $response) {
@@ -29,7 +29,7 @@ $app->get('/userscript/{id}', function (Request $request, Response $response) {
     $userscript = new Userscript($id);
     SmartyHandler::getInstance()->assign('userscript', $userscript->update() ? $userscript : null);
     SmartyHandler::getInstance()->assign('page', 'userscript');
-    SmartyHandler::getInstance()->display('userscript.tpl');
+    SmartyHandler::getInstance()->display('page-userscript.tpl');
 });
 
 /*  JS */
@@ -124,7 +124,7 @@ $app->get('/api/user/addscript/{id}', function (Request $request, Response $resp
     }
 
     $user->selectUserscript($userscript);
-    echo new ApiResult(true, 'Successfully added userscript "' . $userscript->getName() . '" to your profile!"');
+    echo new ApiResult(true, 'Successfully added userscript "' . $userscript->getName() . '" to your profile!');
 });
 
 $app->get('/api/user/removescript/{id}', function (Request $request, Response $response) {
@@ -142,8 +142,8 @@ $app->get('/api/user/removescript/{id}', function (Request $request, Response $r
         return;
     }
 
-    $user->selectUserscript($userscript);
-    echo new ApiResult(true, 'Successfully removed userscript "' . $userscript->getName() . '" from your profile!"');
+    $user->deselectUserscript($userscript);
+    echo new ApiResult(true, 'Successfully removed userscript "' . $userscript->getName() . '" from your profile!');
 });
 
 $app->post('/api/user/register', function (Request $request, Response $response) {
@@ -201,7 +201,16 @@ $app->post('/api/user/edit', function (Request $request, Response $response) {
 $app->get('/api/userscript/list[/{offset}[/{count}]]', function (Request $request, Response $response) {
     $offset = filter_var($request->getAttribute('offset'), FILTER_VALIDATE_INT);
     $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
-    echo new ApiResult(true, '', Database::getUserscripts($offset, $count));
+    $userscipts = Database::getUserscripts($offset, $count);
+    if (LOGGED_IN) {
+        $selected = LoginHandler::getInstance()->getUser()->getSelectedUserscripts();
+        foreach ($userscipts as &$script) {
+            if (in_array($script, $selected)) {
+                $script->selected = true;
+            }
+        }
+    }
+    echo new ApiResult(true, '', $userscipts);
 });
 
 $app->get('/api/userscript/{id}', function (Request $request, Response $response) {

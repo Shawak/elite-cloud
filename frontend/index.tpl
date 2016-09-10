@@ -56,6 +56,7 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="./frontend/css/bootstrap.min.css">
+    <!-- Optional theme -->
     <link rel="stylesheet" href="./frontend/css/style.css">
     <link rel="stylesheet" href="./frontend/css/animate.min.css">
     <link rel="stylesheet" href="./frontend/css/font-awesome.min.css">

@@ -1,22 +1,14 @@
 var app = angular.module('elite-cloud', []);
 
+function notify(data) {
+    $.notify(data.message, data.success ? 'success' : 'error');
+}
+
 // Config
 app.config(['$interpolateProvider', function ($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
 }]);
-
-// UserController (Example for now)
-app.controller('Controller', ['$scope', '$http', function ($scope, $http) {
-    $scope.user = {};
-
-    $scope.ban = function () {
-        $http.get('api/user/' + id)
-            .success(function (data, status, headers, config) {
-                $scope.user = data.user;
-            });
-    };
-}])
 
 app.controller('LoginController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     $scope.form = {
@@ -32,14 +24,13 @@ app.controller('LoginController', ['$scope', '$http', '$location', function ($sc
             remember: $scope.form.remember
         });
         response.success(function (data, status, headers, config) {
+            notify(data);
             if (data.success) {
-                $.notify(data.message, 'success');
                 setTimeout(function () {
                     window.location.href = 'userscripts';
                 }, 500);
             }
             else {
-                $.notify(data.message, 'error');
                 $scope.form.password = '';
             }
         });
@@ -63,15 +54,13 @@ app.controller('RegisterController', ['$scope', '$http', '$location', function (
             captcha: grecaptcha.getResponse()
         });
         response.success(function (data, status, headers, config) {
-            console.log(data);
+            notify(data);
             if (data.success) {
-                $.notify(data.message, 'success');
                 setTimeout(function () {
                     window.location.href = '.';
                 }, 500);
             }
             else {
-                $.notify(data.message, 'error');
                 grecaptcha.reset();
                 $scope.form.password = '';
                 $scope.form.password2 = '';
@@ -84,8 +73,8 @@ app.controller('LogoutController', ['$scope', '$http', '$location', function ($s
     $scope.logout = function () {
         var response = $http.post('api/logout');
         response.success(function (data, status, headers, config) {
+            notify(data);
             if (data.success) {
-                $.notify(data.message, 'success');
                 setTimeout(function () {
                     window.location.href = '.';
                 }, 500);
@@ -101,17 +90,31 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         var response = $http.get('api/userscript/list');
         response.success(function (e, status, headers, config) {
             $scope.userscripts = e.data;
-            //self.userscripts = e.data;
-            dump(e);
         });
-        self.userscripts = [
-            {name: "test", author: 1},
-            {name: "test", author: 1},
-        ];
     };
 
     $scope.click = function (userscript) {
         window.location.href = 'userscript/' + userscript.id;
+    };
+
+    $scope.add = function (userscript) {
+        var response = $http.get('api/user/addscript/' + userscript.id);
+        response.success(function (data, status, headers, config) {
+            notify(data);
+            if (data.success) {
+                userscript.selected = true;
+            }
+        });
+    };
+
+    $scope.remove = function (userscript) {
+        var response = $http.get('api/user/removescript/' + userscript.id);
+        response.success(function (data, status, headers, config) {
+            notify(data);
+            if (data.success) {
+                userscript.selected = false;
+            }
+        });
     };
 
     $scope.init();

@@ -1,4 +1,4 @@
-{extends file="page-wrapper.tpl"}
+{extends file="wrapper.tpl"}
 {block name="title"}
     Login - {PROJECT_NAME}
 {/block}
