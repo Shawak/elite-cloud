@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 29. Aug 2016 um 02:29
+-- Erstellungszeit: 10. Sep 2016 um 18:33
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.20
 
@@ -25,6 +25,19 @@ USE `elitecloud`;
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `auth_token`
+--
+
+CREATE TABLE `auth_token` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `selector` char(12) NOT NULL,
+  `token` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `user`
 --
 
@@ -37,16 +50,6 @@ CREATE TABLE `user` (
   `authKey` varchar(255) NOT NULL,
   `registered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Daten für Tabelle `user`
---
-
-INSERT INTO `user` (`id`, `name`, `password`, `email`, `flag`, `authKey`, `registered`) VALUES
-(1, 'Shawak', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', '', 0, 'a0deb698e6e3827938b45a5159bd04d238d39d10c7e77c1844ead82274bddb89', '2016-08-05 01:19:31'),
-(2, 'Shawak2', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', '', 0, '', '2016-08-05 01:19:31'),
-(3, 'Shawak3', '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08', '', 0, '0ba8d1670f6dd3e4447e7423a767314590a47bceb0bc658489dc8a7c52248274', '2016-08-05 01:20:31'),
-(4, 'Shawak4', '937e8d5fbb48bd4949536cd65b8d35c426b80d2f830c5c308e2cdec422ae2244', '', 0, '80f3766076b997d9db7d71b2d9f740470a7713fa54a0e632b94abd377a189a81', '2016-08-29 00:19:13');
 
 -- --------------------------------------------------------
 
@@ -61,15 +64,6 @@ CREATE TABLE `userscript` (
   `script` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Daten für Tabelle `userscript`
---
-
-INSERT INTO `userscript` (`id`, `name`, `author`, `script`) VALUES
-(1, 'Erster userscript', 1, 'KGZ1bmN0aW9uKCkgew0KDQpjb25zb2xlLmxvZygiU2NyaXB0MSIpDQoNCn0pKCk7'),
-(2, 'Zweiter Userscript', 1, 'KGZ1bmN0aW9uKCkgew0KDQpjb25zb2xlLmxvZygiU2NyaXB0MiIpDQoNCn0pKCk7'),
-(3, 'Dritter Userscript', 1, '');
-
 -- --------------------------------------------------------
 
 --
@@ -82,16 +76,15 @@ CREATE TABLE `user_userscript` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten für Tabelle `user_userscript`
---
-
-INSERT INTO `user_userscript` (`userID`, `userscriptID`) VALUES
-(1, 1),
-(1, 2);
-
---
 -- Indizes der exportierten Tabellen
 --
+
+--
+-- Indizes für die Tabelle `auth_token`
+--
+ALTER TABLE `auth_token`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `selector` (`selector`);
 
 --
 -- Indizes für die Tabelle `user`
@@ -119,6 +112,11 @@ ALTER TABLE `user_userscript`
 -- AUTO_INCREMENT für exportierte Tabellen
 --
 
+--
+-- AUTO_INCREMENT für Tabelle `auth_token`
+--
+ALTER TABLE `auth_token`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
