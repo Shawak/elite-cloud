@@ -13,9 +13,12 @@
                     <li class="nav-item">
                         <a href="userscripts" class="nav-link">Userscripts</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="user/{LoginHandler::getInstance()->getUser()->getID()}" class="nav-link">Profile</a>
-                    </li>
+                    {if LOGGED_IN}
+                        <li class="nav-item">
+                            <a href="user/{LoginHandler::getInstance()->getUser()->getID()}"
+                               class="nav-link">Profile</a>
+                        </li>
+                    {/if}
                     <li class="nav-item">
                         <a href="#" class="nav-link" ng-controller="LogoutController" ng-click="logout()">Logout</a>
                     </li>

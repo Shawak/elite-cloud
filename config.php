@@ -24,7 +24,7 @@ $config['google']['reCAPTCHA']['secret'] = '';
 
 // RateLimit - count visits are allowed in time
 $config['rate_limit']['time'] = 60;
-$config['rate_limit']['count'] = 20;
+$config['rate_limit']['count'] = 30;
 
 // overwrite $config['db']['pass'] in an external config during development
 // which wont be uploaded to prevent mistakes (aka. uploading passwords)

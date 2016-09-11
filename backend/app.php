@@ -16,7 +16,8 @@ $app->get('/', function (Request $request, Response $response) {
 $app->get('/userscripts', function (Request $request, Response $response) {
     if (!LOGGED_IN) {
         SmartyHandler::getInstance()->assign('error', 'You have to be logged in to view this page.');
-        SmartyHandler::getInstance()->display('error.tpl');
+        SmartyHandler::getInstance()->assign('page', 'error');
+        SmartyHandler::getInstance()->display('page-error.tpl');
         return;
     }
 
