@@ -8,13 +8,21 @@ $app = new \Slim\App(["settings" => $config['slim']]);
 
 /* MAIN */
 
-foreach (['', 'page-login', 'userscripts'] as $page) {
-    $app->get('/' . $page, function (Request $request, Response $response) use ($page) {
-        $page = $page != '' ? $page : 'home';
-        SmartyHandler::getInstance()->assign('page', $page);
-        SmartyHandler::getInstance()->display('page-' . $page . '.tpl');
-    });
-}
+$app->get('/', function (Request $request, Response $response) {
+    SmartyHandler::getInstance()->assign('page', 'home');
+    SmartyHandler::getInstance()->display('page-home.tpl');
+});
+
+$app->get('/userscripts', function (Request $request, Response $response) {
+    if (!LOGGED_IN) {
+        SmartyHandler::getInstance()->assign('error', 'You have to be logged in to view this page.');
+        SmartyHandler::getInstance()->display('error.tpl');
+        return;
+    }
+
+    SmartyHandler::getInstance()->assign('page', 'userscripts');
+    SmartyHandler::getInstance()->display('page-userscripts.tpl');
+});
 
 $app->get('/user/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
