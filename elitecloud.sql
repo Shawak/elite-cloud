@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 10. Sep 2016 um 18:33
+-- Erstellungszeit: 14. Sep 2016 um 00:21
 -- Server-Version: 10.1.13-MariaDB
 -- PHP-Version: 5.6.20
 
@@ -59,8 +59,9 @@ CREATE TABLE `user` (
 
 CREATE TABLE `userscript` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
   `author` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
   `script` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -71,8 +72,8 @@ CREATE TABLE `userscript` (
 --
 
 CREATE TABLE `user_userscript` (
-  `userID` int(11) NOT NULL,
-  `userscriptID` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `userscript_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -106,7 +107,7 @@ ALTER TABLE `userscript`
 -- Indizes für die Tabelle `user_userscript`
 --
 ALTER TABLE `user_userscript`
-  ADD PRIMARY KEY (`userID`,`userscriptID`);
+  ADD PRIMARY KEY (`user_id`,`userscript_id`);
 
 --
 -- AUTO_INCREMENT für exportierte Tabellen
@@ -116,17 +117,17 @@ ALTER TABLE `user_userscript`
 -- AUTO_INCREMENT für Tabelle `auth_token`
 --
 ALTER TABLE `auth_token`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `userscript`
 --
 ALTER TABLE `userscript`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
