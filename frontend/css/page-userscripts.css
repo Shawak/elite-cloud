@@ -23,9 +23,8 @@ form input[type="text"] {
     height: 64px;
     width: 64px;
     float: left;
-    position: relative;
-    top: 4px;
-    margin: 10px 0;
+    margin: 5px 0;
+    margin-right: 10px;
 }
 
 .userscript:hover {

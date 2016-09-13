@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         e*pvp elite-cloud DEV
+// @name         e*pvp elite-cloud
 // @namespace    http://elitepvpers.com/
 // @version      1.0
 // @description  Used to load userscripts from elite-cloud
@@ -13,12 +13,8 @@
     var main = function () {
 
         var elite_cloud = {
-
             root: 'http://localhost/elite-cloud',
-
-            keyLoader: 'elite-cloud_loader',
-            keyAuthKey: 'elite-cloud_authKey'
-
+            keyLoader: 'elite-cloud_loader'
         };
 
         window.elite_cloud = elite_cloud;
@@ -130,6 +126,7 @@
     };
 
     var elem = document.createElement('script');
+    elem.setAttribute('id', 'elite-cloud_script');
     elem.appendChild(document.createTextNode('(' + main + ')();'));
     (document.head || document.body || document.documentElement).appendChild(elem);
 

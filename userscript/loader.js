@@ -4,7 +4,7 @@
 
     elite_cloud.extend({
 
-        keyName: 'elite-cloud_authKey',
+        keyAuthKey: 'elite-cloud_authKey',
 
         hideForm: function () {
             $('#ec_form').hide();
@@ -15,15 +15,15 @@
         },
 
         getAuthKey: function () {
-            return localStorage.getItem(that.keyName);
+            return localStorage.getItem(that.keyAuthKey);
         },
 
         setAuthKey: function (authKey) {
-            localStorage.setItem(that.keyName, authKey);
+            localStorage.setItem(that.keyAuthKey, authKey);
         },
 
         delAuthKey: function () {
-            localStorage.removeItem(that.keyName);
+            localStorage.removeItem(that.keyAuthKey);
         },
 
         init: function () {
