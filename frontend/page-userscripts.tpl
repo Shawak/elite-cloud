@@ -7,30 +7,37 @@
         <form>
             <input type="text" class="form-control left" placeholder="Search..">
         </form>
+        <a class="btn btn-primary right" href="create" role="button">Create userscript</a>
+
         <div class="clear"></div>
 
-        <div ng-controller="UserscriptsController">
-            <div class="userscript" ng-repeat="userscript in userscripts" ng-click="click(userscript)">
-                <img src="https://cdn4.iconfinder.com/data/icons/icocentre-free-icons/171/f-script_256-128.png">
-                <div class="info">
-                    <span class="name">[[userscript.name]]</span>
-                    <span class="author">(Uploaded by [[userscript.author.name]])</span>
-                    <span class="users"></span>
+        <table style="width: 100%">
+            <thead>
+            <tr>
+                <th class="info">Userscript</th>
+                <th class="author">Author</th>
+                <th class="users">Users</th>
+                <th class="enabled">Enabled</th>
+            </tr>
+            </thead>
+            <tbody ng-controller="UserscriptsController">
+            <tr class="userscript" ng-repeat="userscript in userscripts" ng-click="click(userscript)">
+                <td class="info">
+                    <img src="https://cdn4.iconfinder.com/data/icons/icocentre-free-icons/171/f-script_256-128.png">
+                    <span class="name">[[userscript.name]] asdas asd sa d</span>
                     <span class="description">[[userscript.description || 'no description available']]</span>
-                </div>
-                <div class="buttons">
-                    <a class="btn btn-sm btn-success" href role="button"
-                       ng-click="$event.stopPropagation(); add(userscript)"
-                       ng-if="!userscript.selected">Add to
-                        account</a>
-                    <a class="btn btn-sm btn-danger" href role="button"
-                       ng-click="$event.stopPropagation(); remove(userscript)"
-                       ng-if="userscript.selected">Remove from
-                        account</a>
-                </div>
-                <div class="clear"></div>
-            </div>
-        </div>
+                </td>
+                <td class="author">[[userscript.author.name]]</td>
+                <td class="users">100000</td>
+                <td class="enabled">
+                    <label class="switch" ng-click="toggle($event, userscript)">
+                        <input type="checkbox" ng-checked="userscript.selected">
+                        <div class="slider round"></div>
+                    </label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
         <div class="clear"></div>
     </div>
 {/block}

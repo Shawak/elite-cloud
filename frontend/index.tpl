@@ -187,7 +187,7 @@
 <script src='https://www.google.com/recaptcha/api.js'></script>
 
 <!-- NotifyJs -->
-<script type="application/javascript" src="frontend/js/notify.min.js"></script>
+<script src="frontend/js/notify.min.js"></script>
 <!-- Main -->
 <script src="frontend/js/main.js"></script>
 

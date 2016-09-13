@@ -1,7 +1,10 @@
 var app = angular.module('elite-cloud', []);
 
 function notify(data) {
-    $.notify(data.message, data.success ? 'success' : 'error');
+    $.notify(data.message, {
+        className: data.success ? 'success' : 'error',
+        autoHideDelay: 2 * 1000
+    });
 }
 
 // Config
@@ -115,6 +118,18 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
                 userscript.selected = false;
             }
         });
+    };
+
+    $scope.toggle = function ($event, userscript) {
+        $event.stopPropagation();
+        if ($event.target.tagName !== 'INPUT') {
+            return;
+        }
+        if (userscript.selected) {
+            this.remove(userscript);
+        } else {
+            this.add(userscript);
+        }
     };
 
     $scope.init();
