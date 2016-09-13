@@ -1,5 +1,6 @@
 #userscriptsWrapper {
     padding: 20px 0px;
+    min-height: 700px;
 }
 
 .table-responsive tbody tr:hover {
@@ -13,8 +14,7 @@ form input[type="text"] {
 }
 
 .userscript {
-    width: 50%;
-    margin: 10px 0;
+    width: 100%;
     padding: 10px;
     float: left;
 }
@@ -24,7 +24,8 @@ form input[type="text"] {
     width: 64px;
     float: left;
     position: relative;
-    top: 5px;
+    top: 4px;
+    margin: 10px 0;
 }
 
 .userscript:hover {
@@ -36,12 +37,14 @@ form input[type="text"] {
 }
 
 .userscript .info {
+    max-width: 800px;
     float: left;
     margin-left: 10px;
 }
 
-.userscript .info div {
-    max-width: 183px;
+.userscript .name,
+.userscript .author,
+.userscript .users {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -54,4 +57,45 @@ form input[type="text"] {
 .userscript .buttons a {
     display: block;
     margin-bottom: 5px;
+}
+
+.userscript .author {
+    font-size: 10px;
+}
+
+.userscript .description {
+    display: block;
+    font-size: 10px;
+    margin-top: 3px;
+}
+
+.userscript .description {
+    overflow: hidden;
+    position: relative;
+    line-height: 1.2em;
+    max-height: 3.6em;
+    text-align: justify;
+    margin-right: -1em;
+    padding-right: 1em;
+}
+
+.userscript .description:before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.userscript .description:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: rgb(230, 230, 230);
+}
+
+.userscript:hover .description:after {
+    background-color: rgb(210, 210, 210);
 }

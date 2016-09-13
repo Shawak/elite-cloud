@@ -5,6 +5,7 @@ class Userscript extends DBObject
 
     public $id;
     public $name;
+    public $description;
     public $author;
     protected $script;
 
@@ -35,6 +36,11 @@ class Userscript extends DBObject
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     public function getAuthor()
@@ -80,11 +86,13 @@ class Userscript extends DBObject
         $stmt = Database::getInstance()->prepare('
 			update userscript
 			set name = :name
+			set description = :description
 			set author = :author
 			set script = :script
 			where id = :id
 		');
         $stmt->bindParam(':name', $this->id);
+        $stmt->bindParam(':description', $this->description);
         $stmt->bindParam(':author', $this->author->getID());
         $stmt->bindParam(':script', $this->script);
         return $stmt->execute();

@@ -44,7 +44,7 @@ require DIR_BACKEND . 'Database.php';
 require DIR_BACKEND . 'LoginHandler.php';
 require DIR_BACKEND . 'RateLimit.php';
 
-// Initialize */
+/* Initialize */
 RateLimit::initialize($config['rate_limit']['time'], $config['rate_limit']['count']);
 if (RateLimit::getInstance()->isAboveLimit()) {
     echo new ApiResult(false, 'Rate limit reached.');
@@ -54,7 +54,7 @@ if (RateLimit::getInstance()->isAboveLimit()) {
 Database::initialize($config['db']['host'], $config['db']['datb'], $config['db']['user'], $config['db']['pass']);
 define('LOGGED_IN', LoginHandler::getInstance()->autoLogin());
 
-// App */
+/* App */
 ob_start();
 require DIR_BACKEND . 'app.php';
 echo ob_get_clean();
