@@ -126,8 +126,10 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
             return;
         }
         if (userscript.selected) {
+            userscript.users--;
             this.remove(userscript);
         } else {
+            userscript.users++;
             this.add(userscript);
         }
     };

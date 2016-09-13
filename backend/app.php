@@ -212,9 +212,11 @@ $app->get('/api/userscript/list[/{offset}[/{count}]]', function (Request $reques
     $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
     $userscipts = Database::getUserscripts($offset, $count);
     if (LOGGED_IN) {
-        $selected = LoginHandler::getInstance()->getUser()->getSelectedUserscripts();
+        $selectedIDs = array_map(function ($v) {
+            return $v->getID();
+        }, LoginHandler::getInstance()->getUser()->getSelectedUserscripts());
         foreach ($userscipts as &$script) {
-            if (in_array($script, $selected)) {
+            if (in_array($script->getID(), $selectedIDs)) {
                 $script->selected = true;
             }
         }

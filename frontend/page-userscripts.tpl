@@ -24,11 +24,11 @@
             <tr class="userscript" ng-repeat="userscript in userscripts" ng-click="click(userscript)">
                 <td class="info">
                     <img src="https://cdn4.iconfinder.com/data/icons/icocentre-free-icons/171/f-script_256-128.png">
-                    <span class="name">[[userscript.name]] asdas asd sa d</span>
+                    <span class="name">[[userscript.name]]</span>
                     <span class="description">[[userscript.description || 'no description available']]</span>
                 </td>
                 <td class="author">[[userscript.author.name]]</td>
-                <td class="users">100000</td>
+                <td class="users">[[userscript.users]]</td>
                 <td class="enabled">
                     <label class="switch" ng-click="toggle($event, userscript)">
                         <input type="checkbox" ng-checked="userscript.selected">

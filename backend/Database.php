@@ -66,7 +66,7 @@ class Database extends PDO
         if ($count == null) $count = 100;
 
         $stmt = Database::getInstance()->prepare('
-			select userscript.*, user.*
+			select userscript.*, user.*, (select count(*) from user_userscript where userscript_id = userscript.id) as users
 			from userscript, user
 			where user.id = userscript.author
 			limit :offset, :count
@@ -77,6 +77,7 @@ class Database extends PDO
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
             $v = Userscript::fromData($e);
+            $v->users = $e['.users'];
             $v->author = User::fromData($e);
             $e = $v;
         });
