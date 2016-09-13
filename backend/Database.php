@@ -2,6 +2,7 @@
 
 class Database extends PDO
 {
+
     private static $instance;
 
     public function __construct($host, $datb, $user, $pass)
@@ -44,8 +45,7 @@ class Database extends PDO
         if ($offset == null) $offset = 0;
         if ($count == null) $count = 100;
 
-        $db = Database::getInstance();
-        $stmt = $db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			select *
 			from user
 			limit :offset, :count
@@ -65,8 +65,7 @@ class Database extends PDO
         if ($offset == null) $offset = 0;
         if ($count == null) $count = 100;
 
-        $db = Database::getInstance();
-        $stmt = $db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			select userscript.*, user.*
 			from userscript, user
 			where user.id = userscript.author
@@ -84,10 +83,31 @@ class Database extends PDO
         return $ret;
     }
 
+    public static function getUserCount()
+    {
+        $stmt = Database::getInstance()->prepare('
+			select count(*) as count
+			from user 
+		');
+        $stmt->execute();
+        $ret = $stmt->fetch()['.count'];
+        return $ret;
+    }
+
+    public static function getUserscriptCount()
+    {
+        $stmt = Database::getInstance()->prepare('
+			select count(*) as count
+			from userscript 
+		');
+        $stmt->execute();
+        $ret = $stmt->fetch()['.count'];
+        return $ret;
+    }
+
     public static function getUserByAuthKey($authKey)
     {
-        $db = Database::getInstance();
-        $stmt = $db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			select *
 			from user
 			where authKey = :authKey
@@ -100,8 +120,7 @@ class Database extends PDO
 
     public static function getAuthToken($selector)
     {
-        $db = Database::getInstance();
-        $stmt = $db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			select *
 			from auth_token as AuthToken
 			where selector = :selector
@@ -114,8 +133,7 @@ class Database extends PDO
 
     public static function getUserByName($name)
     {
-        $db = Database::getInstance();
-        $stmt = $db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			select *
 			from user
 			where name = :name
@@ -128,8 +146,7 @@ class Database extends PDO
 
     public static function getUserByEmail($email)
     {
-        $db = Database::getInstance();
-        $stmt = $db->prepare('
+        $stmt = Database::getInstance()->prepare('
 			select *
 			from user
 			where email = :email

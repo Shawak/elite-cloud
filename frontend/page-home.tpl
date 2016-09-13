@@ -84,11 +84,11 @@
             <h1>Statistics</h1>
             <div class="row">
                 <div class="col-md-4 fadeIn wow feature-item">
-                    <span class="number bounceIn wow brand-hover">100</span>
+                    <span class="number bounceIn wow brand-hover">{Database::getUserCount()}</span>
                     <span class="desc">User</span>
                 </div>
                 <div class="col-md-4 fadeIn wow feature-item">
-                    <span class="number bounceIn wow brand-hover">50</span>
+                    <span class="number bounceIn wow brand-hover">{Database::getUserscriptCount()}</span>
                     <span class="desc">Available userscripts</span>
                 </div>
                 <div class="col-md-4 fadeIn wow feature-item">
@@ -120,7 +120,8 @@
                     <div class="form-group row wow fadeIn">
                         <label for="password2" class="col-lg-3 offset-lg-2 form-control-label">Repeat Password</label>
                         <div class="col-lg-4">
-                            <input type="password" class="form-control" id="password2" required minlength="8" ng-model="form.password2">
+                            <input type="password" class="form-control" id="password2" required minlength="8"
+                                   ng-model="form.password2">
                         </div>
                     </div>
                     <div class="form-group row wow fadeIn">
