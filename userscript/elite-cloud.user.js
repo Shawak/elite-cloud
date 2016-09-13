@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  Used to load userscripts from elite-cloud
 // @author       elite-cloud
-// @match        http://www.elitepvpers.com/*
+// @match        *://www.elitepvpers.com/*
 // @grant        none
 // ==/UserScript==
 
