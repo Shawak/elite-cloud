@@ -19,7 +19,7 @@ class SmartyHandler
     static public function getInstance()
     {
         if (!isset(self::$instance)) {
-            $smarty = new Smarty();
+            $smarty = new SmartyBC();
             $smarty->setTemplateDir(DIR_FRONTEND);
             $smarty->setCompileDir(DIR_SMARTY . 'compiled/');
             $smarty->setConfigDir(DIR_SMARTY . 'config/');

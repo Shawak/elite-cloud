@@ -94,7 +94,6 @@
                         target="_blank">here</a>.
     </div>
 </noscript>
-</body>
 
 {block name="content"}{/block}
 
@@ -185,10 +184,10 @@
 
 <!-- Google reCAPTCHA -->
 <script src='https://www.google.com/recaptcha/api.js'></script>
-
 <!-- NotifyJs -->
 <script src="frontend/js/notify.min.js"></script>
 <!-- Main -->
 <script src="frontend/js/main.js"></script>
 
+</body>
 </html>
