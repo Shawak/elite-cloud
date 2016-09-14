@@ -110,7 +110,7 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
             return;
         }
 
-        sort = sort || 'selected';
+        sort = sort || ($scope.lastSort != null ? $scope.lastSort : 'selected');
         if ($scope.lastSort != null && $scope.lastSort == sort) {
             $scope.order = $scope.order == 'asc' ? 'desc' : 'asc';
         } else {

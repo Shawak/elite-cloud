@@ -10,7 +10,7 @@
         <a class="btn btn-primary right" href="create" role="button">Create userscript</a>
         <div class="clear"></div>
 
-        <table style="width: 100%">
+        <table>
             <thead>
             <tr>
                 <th class="info" ng-class="lastSort=='name' ? 'active' : ''">
