@@ -60,19 +60,32 @@ class Database extends PDO
         return $ret;
     }
 
-    public static function getUserscripts($offset = null, $count = null)
+    public static function getUserscripts($search = null, $offset = null, $count = null)
     {
         if ($offset == null) $offset = 0;
         if ($count == null) $count = 100;
+        if (!empty($search)) $search = '%' . $search . '%';
 
-        $stmt = Database::getInstance()->prepare('
-			select userscript.*, user.*, (select count(*) from user_userscript where userscript_id = userscript.id) as users
+        $query = '
+            select userscript.*, user.*, (select count(*) from user_userscript where userscript_id = userscript.id) as users
 			from userscript, user
 			where user.id = userscript.author
-			limit :offset, :count
-		');
+		';
+        if (!empty($search)) {
+            $query .= ' and(
+                userscript.name like :search
+                or userscript.description like :search
+                or user.name like :search
+            ) ';
+        }
+        $query .= 'limit :offset, :count';
+
+        $stmt = Database::getInstance()->prepare($query);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':count', $count, PDO::PARAM_INT);
+        if (!empty($search)) {
+            $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+        }
         $stmt->execute();
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
@@ -87,9 +100,9 @@ class Database extends PDO
     public static function getUserCount()
     {
         $stmt = Database::getInstance()->prepare('
-			select count(*) as count
-			from user 
-		');
+select count(*) as count
+from user
+');
         $stmt->execute();
         $ret = $stmt->fetch()['.count'];
         return $ret;
@@ -98,9 +111,9 @@ class Database extends PDO
     public static function getUserscriptCount()
     {
         $stmt = Database::getInstance()->prepare('
-			select count(*) as count
-			from userscript 
-		');
+select count(*) as count
+from userscript
+');
         $stmt->execute();
         $ret = $stmt->fetch()['.count'];
         return $ret;
@@ -109,10 +122,10 @@ class Database extends PDO
     public static function getUserByAuthKey($authKey)
     {
         $stmt = Database::getInstance()->prepare('
-			select *
-			from user
-			where authKey = :authKey
-		');
+select *
+from user
+where authKey = :authKey
+');
         $stmt->bindParam(':authKey', $authKey, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();
@@ -122,10 +135,10 @@ class Database extends PDO
     public static function getAuthToken($selector)
     {
         $stmt = Database::getInstance()->prepare('
-			select *
-			from auth_token as AuthToken
-			where selector = :selector
-		');
+select *
+from auth_token as AuthToken
+where selector = :selector
+');
         $stmt->bindParam(':selector', $selector, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();
@@ -135,10 +148,10 @@ class Database extends PDO
     public static function getUserByName($name)
     {
         $stmt = Database::getInstance()->prepare('
-			select *
-			from user
-			where name = :name
-		');
+select *
+from user
+where name = :name
+');
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();
@@ -148,10 +161,10 @@ class Database extends PDO
     public static function getUserByEmail($email)
     {
         $stmt = Database::getInstance()->prepare('
-			select *
-			from user
-			where email = :email
-		');
+select *
+from user
+where email = :email
+');
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();

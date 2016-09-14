@@ -207,10 +207,12 @@ $app->post('/api/user/edit', function (Request $request, Response $response) {
 
 /* USERSCRIPT */
 
-$app->get('/api/userscript/list[/{offset}[/{count}]]', function (Request $request, Response $response) {
+$app->get('/api/userscript/list[/{search}[/{offset}[/{count}]]]', function (Request $request, Response $response) {
+    $search = filter_var($request->getAttribute('search'), FILTER_SANITIZE_STRING);
     $offset = filter_var($request->getAttribute('offset'), FILTER_VALIDATE_INT);
     $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
-    $userscipts = Database::getUserscripts($offset, $count);
+    $search = base64_decode($search);
+    $userscipts = Database::getUserscripts($search, $offset, $count);
     if (LOGGED_IN) {
         $selectedIDs = array_map(function ($v) {
             return $v->getID();

@@ -3,9 +3,9 @@
     Userscripts - {PROJECT_NAME}
 {/block}
 {block name="page"}
-    <div id="userscriptsWrapper">
+    <div id="userscriptsWrapper" ng-controller="UserscriptsController">
         <form>
-            <input type="text" class="form-control left" placeholder="Search..">
+            <input type="text" class="form-control left" placeholder="Search.." ng-model="search" ng-change="update()">
         </form>
         <a class="btn btn-primary right" href="create" role="button">Create userscript</a>
 
@@ -20,7 +20,7 @@
                 <th class="enabled">Enabled</th>
             </tr>
             </thead>
-            <tbody ng-controller="UserscriptsController">
+            <tbody>
             <tr class="userscript" ng-repeat="userscript in userscripts" ng-click="click(userscript)">
                 <td class="info">
                     <img src="https://cdn4.iconfinder.com/data/icons/icocentre-free-icons/171/f-script_256-128.png">

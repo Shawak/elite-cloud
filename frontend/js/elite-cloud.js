@@ -88,11 +88,31 @@ app.controller('LogoutController', ['$scope', '$http', '$location', function ($s
 
 app.controller('UserscriptsController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     $scope.userscripts = [];
+    $scope.search = '';
 
-    $scope.init = function () {
-        var response = $http.get('api/userscript/list');
+    $scope.lastUpdate = null;
+    $scope.updating = false;
+    $scope.event = null;
+    $scope.timeout = 250; // ms
+
+    $scope.update = function () {
+        if ($scope.updating || ($scope.lastUpdate != null && (Date.now() - $scope.lastUpdate <= $scope.timeout))) {
+            if ($scope.event != null) {
+                clearTimeout($scope.event);
+            }
+            $scope.event = setTimeout(function () {
+                $scope.update();
+                $scope.event = null
+            }, $scope.timeout);
+            return;
+        }
+
+        $scope.updating = true;
+        var response = $http.get('api/userscript/list' + ($scope.search != '' ? '/' + btoa($scope.search) : ''));
         response.success(function (e, status, headers, config) {
             $scope.userscripts = e.data;
+            $scope.lastUpdate = Date.now();
+            $scope.updating = false;
         });
     };
 
@@ -134,5 +154,5 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         }
     };
 
-    $scope.init();
+    $scope.update();
 }]);
