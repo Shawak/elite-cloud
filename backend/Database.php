@@ -70,6 +70,7 @@ class Database extends PDO
 			from userscript, user
 			where user.id = userscript.author
 			[search]
+			order by selected desc, users asc, userscript.name asc
 			limit :offset, :count
 		';
 
