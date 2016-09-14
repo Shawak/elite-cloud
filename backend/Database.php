@@ -2,7 +2,6 @@
 
 class Database extends PDO
 {
-
     private static $instance;
 
     public function __construct($host, $datb, $user, $pass)
@@ -100,9 +99,9 @@ class Database extends PDO
     public static function getUserCount()
     {
         $stmt = Database::getInstance()->prepare('
-select count(*) as count
-from user
-');
+            select count(*) as count
+            from user
+        ');
         $stmt->execute();
         $ret = $stmt->fetch()['.count'];
         return $ret;
@@ -111,9 +110,9 @@ from user
     public static function getUserscriptCount()
     {
         $stmt = Database::getInstance()->prepare('
-select count(*) as count
-from userscript
-');
+            select count(*) as count
+            from userscript
+        ');
         $stmt->execute();
         $ret = $stmt->fetch()['.count'];
         return $ret;
@@ -122,10 +121,10 @@ from userscript
     public static function getUserByAuthKey($authKey)
     {
         $stmt = Database::getInstance()->prepare('
-select *
-from user
-where authKey = :authKey
-');
+            select *
+            from user
+            where authKey = :authKey
+        ');
         $stmt->bindParam(':authKey', $authKey, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();
@@ -135,10 +134,10 @@ where authKey = :authKey
     public static function getAuthToken($selector)
     {
         $stmt = Database::getInstance()->prepare('
-select *
-from auth_token as AuthToken
-where selector = :selector
-');
+            select *
+            from auth_token as AuthToken
+            where selector = :selector
+        ');
         $stmt->bindParam(':selector', $selector, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();
@@ -148,10 +147,10 @@ where selector = :selector
     public static function getUserByName($name)
     {
         $stmt = Database::getInstance()->prepare('
-select *
-from user
-where name = :name
-');
+            select *
+            from user
+            where name = :name
+        ');
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();
@@ -161,10 +160,10 @@ where name = :name
     public static function getUserByEmail($email)
     {
         $stmt = Database::getInstance()->prepare('
-select *
-from user
-where email = :email
-');
+            select *
+            from user
+            where email = :email
+        ');
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $ret = $stmt->fetch();

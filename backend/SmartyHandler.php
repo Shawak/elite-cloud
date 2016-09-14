@@ -2,7 +2,7 @@
 
 class SmartyHandler
 {
-    static private $instance;
+    private static $instance;
 
     private function __construct()
     {
