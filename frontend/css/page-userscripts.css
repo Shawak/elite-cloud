@@ -5,7 +5,6 @@
 
 form input[type="text"] {
     width: 200px;
-    margin-bottom: 10px;
 }
 
 .table-responsive tbody tr:hover {
@@ -31,6 +30,7 @@ form input[type="text"] {
 
 table {
     width: 100%;
+    margin-top: 15px;
 }
 
 /* HEAD */
@@ -42,8 +42,8 @@ thead tr th {
 thead tr a {
     display: block;
     width: 100%;
-    padding-top: 20px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 thead .info a {
