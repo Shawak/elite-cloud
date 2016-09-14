@@ -207,12 +207,14 @@ $app->post('/api/user/edit', function (Request $request, Response $response) {
 
 /* USERSCRIPT */
 
-$app->get('/api/userscript/list[/{search}[/{offset}[/{count}]]]', function (Request $request, Response $response) {
+$app->get('/api/userscript/list[/{sort}[/{order}[/{search}[/{offset}[/{count}]]]]]', function (Request $request, Response $response) {
+    $sort = filter_var($request->getAttribute('sort'), FILTER_SANITIZE_STRING);
+    $order = filter_var($request->getAttribute('order'), FILTER_SANITIZE_STRING);
     $search = filter_var($request->getAttribute('search'), FILTER_SANITIZE_STRING);
     $offset = filter_var($request->getAttribute('offset'), FILTER_VALIDATE_INT);
     $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
     $search = base64_decode($search);
-    $userscipts = Database::getUserscripts($search, $offset, $count);
+    $userscipts = Database::getUserscripts($sort, $order, $search, $offset, $count);
     echo new ApiResult(true, '', $userscipts);
 });
 

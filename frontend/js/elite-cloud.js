@@ -95,20 +95,31 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
     $scope.event = null;
     $scope.timeout = 250; // ms
 
-    $scope.update = function () {
+    $scope.order = 'asc';
+    $scope.lastSort = null;
+
+    $scope.update = function (sort) {
         if ($scope.updating || ($scope.lastUpdate != null && (Date.now() - $scope.lastUpdate <= $scope.timeout))) {
             if ($scope.event != null) {
                 clearTimeout($scope.event);
             }
             $scope.event = setTimeout(function () {
-                $scope.update();
+                $scope.update(sort);
                 $scope.event = null
             }, $scope.timeout);
             return;
         }
 
+        sort = sort || 'selected';
+        if ($scope.lastSort != null && $scope.lastSort == sort) {
+            $scope.order = $scope.order == 'asc' ? 'desc' : 'asc';
+        } else {
+            $scope.order = (sort == 'selected' || sort == 'users') ? 'desc' : 'asc';
+        }
+        $scope.lastSort = sort;
+
         $scope.updating = true;
-        var response = $http.get('api/userscript/list' + ($scope.search != '' ? '/' + btoa($scope.search) : ''));
+        var response = $http.get('api/userscript/list/' + sort + '/' + $scope.order + ($scope.search != '' ? '/' + btoa($scope.search) : ''));
         response.success(function (e, status, headers, config) {
             $scope.userscripts = e.data;
             $scope.lastUpdate = Date.now();

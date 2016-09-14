@@ -8,16 +8,31 @@
             <input type="text" class="form-control left" placeholder="Search.." ng-model="search" ng-change="update()">
         </form>
         <a class="btn btn-primary right" href="create" role="button">Create userscript</a>
-
         <div class="clear"></div>
 
         <table style="width: 100%">
             <thead>
             <tr>
-                <th class="info">Userscript</th>
-                <th class="author">Author</th>
-                <th class="users">Users</th>
-                <th class="enabled">Enabled</th>
+                <th class="info" ng-class="lastSort=='name' ? 'active' : ''">
+                    <a href ng-click="update('name')">
+                        Userscript
+                    </a>
+                </th>
+                <th class="author" ng-class="lastSort=='author' ? 'active' : ''">
+                    <a href ng-click="update('author')">
+                        Author
+                    </a>
+                </th>
+                <th class="users" ng-class="lastSort=='users' ? 'active' : ''">
+                    <a href ng-click="update('users')">
+                        Users
+                    </a>
+                </th>
+                <th class="enabled" ng-class="lastSort=='selected' ? 'active' : ''">
+                    <a href ng-click="update('selected')">
+                        Enabled
+                    </a>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -38,6 +53,5 @@
             </tr>
             </tbody>
         </table>
-        <div class="clear"></div>
     </div>
 {/block}

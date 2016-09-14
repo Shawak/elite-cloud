@@ -13,10 +13,6 @@ form input[type="text"] {
     cursor: pointer;
 }
 
-.userscript {
-    padding: 20px;
-}
-
 .userscript:hover {
     background-color: rgb(210, 210, 210);
     cursor: pointer;
@@ -35,9 +31,19 @@ form input[type="text"] {
 
 /* HEAD */
 
-thead .info {
-    padding-bottom: 10px;
-    /*padding-left: 84px;*/
+thead tr th {
+    border-bottom: 1px solid rgb(226, 168, 90);
+}
+
+thead tr a {
+    display: block;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+
+thead .info a {
+    padding-left: 84px;
 }
 
 thead .author {
@@ -58,6 +64,10 @@ thead .enabled {
     text-align: center;
 }
 
+thead .active {
+    background-color: rgba(226, 168, 90, 0.2);
+}
+
 /* BODY */
 
 tbody .info {
@@ -68,7 +78,6 @@ tbody .info {
 tbody .author,
 tbody .users,
 tbody .enabled {
-    padding: 5px;
     text-align: center;
 }
 

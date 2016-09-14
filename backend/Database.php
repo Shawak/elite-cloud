@@ -59,18 +59,19 @@ class Database extends PDO
         return $ret;
     }
 
-    public static function getUserscripts($search = null, $offset = null, $count = null)
+    public static function getUserscripts($sort = 'selected', $order = 'asc', $search = null, $offset = null, $count = null)
     {
         if ($offset == null) $offset = 0;
         if ($count == null) $count = 100;
         if (!empty($search)) $search = '%' . $search . '%';
+        if ($order !== 'asc' && $order !== 'desc') $order = 'asc';
 
         $query = '
             select userscript.*, user.*, (select count(*) from user_userscript where userscript_id = userscript.id) as users [selected]
 			from userscript, user
 			where user.id = userscript.author
 			[search]
-			order by selected desc, users asc, userscript.name asc
+			[sort]
 			limit :offset, :count
 		';
 
@@ -89,6 +90,20 @@ class Database extends PDO
             LOGGED_IN
                 ? ', (select count(*) from user_userscript where userscript_id = userscript.id and user_id = :login_id) > 0 as selected'
                 : '',
+            $query
+        );
+
+        $sorts = array(
+            'name' => 'order by userscript.name ' . $order . ', users desc',
+            'author' => 'order by user.name ' . $order . ', users desc',
+            'users' => 'order by users ' . $order . ', userscript.name asc',
+            'selected' => 'order by selected ' . $order . ', users desc, userscript.name asc'
+        );
+        if (!array_key_exists($sort, $sorts)) {
+            $sort = 'selected';
+        }
+        $query = str_replace('[sort]',
+            $sorts[$sort],
             $query
         );
 
