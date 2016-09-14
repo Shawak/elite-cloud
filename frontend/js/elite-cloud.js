@@ -136,6 +136,7 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         response.success(function (data, status, headers, config) {
             notify(data);
             if (data.success) {
+                userscript.users++;
                 userscript.selected = true;
             }
         });
@@ -146,6 +147,7 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         response.success(function (data, status, headers, config) {
             notify(data);
             if (data.success) {
+                userscript.users--;
                 userscript.selected = false;
             }
         });
@@ -157,10 +159,8 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
             return;
         }
         if (userscript.selected) {
-            userscript.users--;
             this.remove(userscript);
         } else {
-            userscript.users++;
             this.add(userscript);
         }
     };

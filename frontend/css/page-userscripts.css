@@ -68,8 +68,13 @@ thead .enabled {
     text-align: center;
 }
 
-thead .active {
+thead .active,
+thead .active:hover {
     background-color: rgba(226, 168, 90, 0.2);
+}
+
+thead th:hover {
+    background-color: rgba(226, 168, 90, 0.1);
 }
 
 /* BODY */
