@@ -213,16 +213,6 @@ $app->get('/api/userscript/list[/{search}[/{offset}[/{count}]]]', function (Requ
     $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
     $search = base64_decode($search);
     $userscipts = Database::getUserscripts($search, $offset, $count);
-    if (LOGGED_IN) {
-        $selectedIDs = array_map(function ($v) {
-            return $v->getID();
-        }, LoginHandler::getInstance()->getUser()->getSelectedUserscripts());
-        foreach ($userscipts as &$script) {
-            if (in_array($script->getID(), $selectedIDs)) {
-                $script->selected = true;
-            }
-        }
-    }
     echo new ApiResult(true, '', $userscipts);
 });
 

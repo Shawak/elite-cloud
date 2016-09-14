@@ -66,18 +66,30 @@ class Database extends PDO
         if (!empty($search)) $search = '%' . $search . '%';
 
         $query = '
-            select userscript.*, user.*, (select count(*) from user_userscript where userscript_id = userscript.id) as users
+            select userscript.*, user.*, (select count(*) from user_userscript where userscript_id = userscript.id) as users [selected]
 			from userscript, user
 			where user.id = userscript.author
+			[search]
+			limit :offset, :count
 		';
-        if (!empty($search)) {
-            $query .= ' and(
-                userscript.name like :search
-                or userscript.description like :search
-                or user.name like :search
-            ) ';
-        }
-        $query .= 'limit :offset, :count';
+
+        $query = str_replace('[search]',
+            !empty($search)
+                ? ' and(
+                        userscript.name like :search
+                        or userscript.description like :search
+                        or user.name like :search
+                    ) '
+                : '',
+            $query
+        );
+
+        $query = str_replace('[selected]',
+            LOGGED_IN
+                ? ', (select count(*) from user_userscript where userscript_id = userscript.id and user_id = :login_id) > 0 as selected'
+                : '',
+            $query
+        );
 
         $stmt = Database::getInstance()->prepare($query);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -85,11 +97,15 @@ class Database extends PDO
         if (!empty($search)) {
             $stmt->bindParam(':search', $search, PDO::PARAM_STR);
         }
+        if (LOGGED_IN) {
+            $stmt->bindParam(':login_id', LoginHandler::getInstance()->getUser()->getID(), PDO::PARAM_INT);
+        }
         $stmt->execute();
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
             $v = Userscript::fromData($e);
             $v->users = $e['.users'];
+            $v->selected = $e['.selected'] === '1';
             $v->author = User::fromData($e);
             $e = $v;
         });
