@@ -26,6 +26,7 @@ Now enter your mysql root passwort and you are done!
     cd /var/www/elite-cloud
     git reset --hard
     git pull
+    chmod -R 777 /var/www/elite-cloud
     composer install
     
 ### Configure
