@@ -50,7 +50,6 @@ class Userscript extends DBObject
         $parser = new Parsedown();
         $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $input = $this->description;
-        $input = str_replace("\n", '<br>', $input);
         $output = $parser->text($input);
         $output = $purifier->purify($output);
         return $output;

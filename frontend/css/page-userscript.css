@@ -17,8 +17,6 @@ textarea {
 
 .header {
     padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid rgb(226, 168, 90);
 }
 
 .info img {
@@ -57,4 +55,30 @@ textarea {
     vertical-align: center;
     line-height: 34px;
     margin-right: 10px;
+}
+
+.box {
+    border-top: 1px solid rgb(226, 168, 90);
+    min-height: 30px;
+    margin-top: 20px;
+}
+
+.box-title-wrapper {
+    height: 0;
+}
+
+.box-title {
+    padding: 0 5px;
+    left: 10px;
+    position: relative;
+    top: -13px;
+    background-color: rgb(230, 230, 230);
+}
+
+.box-text {
+    padding-top: 15px;
+}
+
+.box-text ul {
+    margin-left: 18px;
 }

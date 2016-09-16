@@ -30,10 +30,27 @@
                 </div>
                 <div class="clear"></div>
             </div>
-            <span class="description">
-                {$userscript->getMarkdownDescription() nofilter}
-            </span>
-            <textarea spellcheck="false" readonly="readonly">{$userscript->getScript()}</textarea>
+            <div class="box">
+                <div class="box-title-wrapper">
+                    <span class="box-title">
+                        Description
+                    </span>
+                </div>
+                <div class="box-text description">
+
+                    {$userscript->getMarkdownDescription() nofilter}
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-title-wrapper">
+                    <span class="box-title">
+                        Script
+                    </span>
+                </div>
+                <div class="box-text">
+                    <textarea spellcheck="false" readonly="readonly">{$userscript->getScript()}</textarea>
+                </div>
+            </div>
         {else}
             A userscript with this id does not exists.
         {/if}
