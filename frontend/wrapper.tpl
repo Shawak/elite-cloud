@@ -18,10 +18,10 @@
                             <a href="user/{LoginHandler::getInstance()->getUser()->getID()}"
                                class="nav-link">Profile</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" ng-controller="LogoutController" ng-click="logout()">Logout</a>
+                        </li>
                     {/if}
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" ng-controller="LogoutController" ng-click="logout()">Logout</a>
-                    </li>
                 </ul>
             </nav>
         </div>

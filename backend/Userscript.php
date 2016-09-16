@@ -8,6 +8,8 @@ class Userscript extends DBObject
     public $description;
     public $author;
     protected $script;
+    public $users;
+    public $selected;
 
     public function __construct($id)
     {
@@ -43,6 +45,17 @@ class Userscript extends DBObject
         return $this->description;
     }
 
+    public function getMarkdownDescription()
+    {
+        $parser = new Parsedown();
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $input = $this->description;
+        $input = str_replace("\n", '<br>', $input);
+        $output = $parser->text($input);
+        $output = $purifier->purify($output);
+        return $output;
+    }
+
     public function getAuthor()
     {
         return $this->author;
@@ -65,18 +78,32 @@ class Userscript extends DBObject
 
     public function update()
     {
-        $stmt = Database::getInstance()->prepare('
-			select *
+        $query = '
+			select *, (select count(*) from user_userscript where userscript_id = userscript.id) as users [selected]
 			from userscript, user
 			where userscript.id = :id
 			  and user.id = userscript.id
-		');
+		';
+
+        $query = str_replace('[selected]',
+            LOGGED_IN
+                ? ', (select count(*) from user_userscript where userscript_id = userscript.id and user_id = :login_id) > 0 as selected'
+                : '',
+            $query
+        );
+
+        $stmt = Database::getInstance()->prepare($query);
         $stmt->bindParam(':id', $this->id);
+        if (LOGGED_IN) {
+            $stmt->bindParam(':login_id', LoginHandler::getInstance()->getUser()->getID());
+        }
         $stmt->execute();
         $ret = $stmt->fetch();
         if (!$this->consume($ret)) {
             return false;
         }
+        $this->users = $ret['.users'];
+        $this->selected = $ret['.selected'];
         $this->author = User::fromData($ret);
         return true;
     }
