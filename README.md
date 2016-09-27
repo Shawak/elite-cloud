@@ -4,7 +4,7 @@
 
 * Apache2
 * MySQL
-* PHP
+* PHP 7
 * Composer
 
 ### Installing
