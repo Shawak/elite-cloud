@@ -240,10 +240,10 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
     $name = filter_var($data['name'] ?? null, FILTER_SANITIZE_STRING);
     $description = filter_var($data['description'] ?? null, FILTER_SANITIZE_STRING);
 
-    /*if (!LOGGED_IN) {
+    if (!LOGGED_IN) {
         echo new ApiResult(false, 'You need to be logged in to edit a userscript.');
         return;
-    }*/
+    }
 
     $userscript = new Userscript($id);
     if (!$userscript->update()) {
@@ -251,7 +251,7 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
         return;
     }
 
-    if (1 != $userscript->getAuthor()->getID()) {
+    if (LoginHandler::getInstance()->getUser()->getID() != $userscript->getAuthor()->getID()) {
         echo new ApiResult(false, 'You need to be the owner of the userscript to edit it.');
         return;
     }
