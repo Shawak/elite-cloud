@@ -56,7 +56,7 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="./frontend/css/bootstrap.min.css">
-    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
     <link rel="stylesheet" href="./frontend/css/style.css">
     <link rel="stylesheet" href="./frontend/css/animate.min.css">
     <link rel="stylesheet" href="./frontend/css/font-awesome.min.css">
@@ -176,6 +176,8 @@
         </div>
     </div>
 {/if}
+
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 
 <!-- Skripte -->
 <script src="./frontend/vendor/wow.min.js"></script>

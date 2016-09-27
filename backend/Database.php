@@ -49,8 +49,8 @@ class Database extends PDO
 			from user
 			limit :offset, :count
 		');
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindParam(':count', $count, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':count', $count, PDO::PARAM_INT);
         $stmt->execute();
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
@@ -108,20 +108,20 @@ class Database extends PDO
         );
 
         $stmt = Database::getInstance()->prepare($query);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->bindParam(':count', $count, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':count', $count, PDO::PARAM_INT);
         if (!empty($search)) {
-            $stmt->bindParam(':search', $search, PDO::PARAM_STR);
+            $stmt->bindValue(':search', $search);
         }
         if (LOGGED_IN) {
-            $stmt->bindParam(':login_id', LoginHandler::getInstance()->getUser()->getID(), PDO::PARAM_INT);
+            $stmt->bindValue(':login_id', LoginHandler::getInstance()->getUser()->getID());
         }
         $stmt->execute();
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
             $v = Userscript::fromData($e);
             $v->users = $e['.users'];
-            $v->selected = $e['.selected'] === '1';
+            $v->selected = ($e['.selected'] ?? 0) === '1';
             $v->author = User::fromData($e);
             $e = $v;
         });
@@ -157,7 +157,7 @@ class Database extends PDO
             from user
             where authKey = :authKey
         ');
-        $stmt->bindParam(':authKey', $authKey, PDO::PARAM_STR);
+        $stmt->bindValue(':authKey', $authKey);
         $stmt->execute();
         $ret = $stmt->fetch();
         return User::fromData($ret);
@@ -170,7 +170,7 @@ class Database extends PDO
             from auth_token as AuthToken
             where selector = :selector
         ');
-        $stmt->bindParam(':selector', $selector, PDO::PARAM_STR);
+        $stmt->bindValue(':selector', $selector);
         $stmt->execute();
         $ret = $stmt->fetch();
         return AuthToken::fromData($ret);
@@ -183,7 +183,7 @@ class Database extends PDO
             from user
             where name = :name
         ');
-        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+        $stmt->bindValue(':name', $name);
         $stmt->execute();
         $ret = $stmt->fetch();
         return User::fromData($ret);
@@ -196,7 +196,7 @@ class Database extends PDO
             from user
             where email = :email
         ');
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindValue(':email', $email);
         $stmt->execute();
         $ret = $stmt->fetch();
         return User::fromData($ret);

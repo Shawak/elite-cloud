@@ -31,7 +31,6 @@ ob_clean();
 
 require DIR_VENDOR . 'autoload.php';
 
-require DIR_BACKEND . 'compat.php';
 require DIR_BACKEND . 'Helper.php';
 require DIR_BACKEND . 'DBObject.php';
 require DIR_BACKEND . 'User.php';
@@ -53,6 +52,16 @@ if (RateLimit::getInstance()->isAboveLimit()) {
 
 Database::initialize($config['db']['host'], $config['db']['datb'], $config['db']['user'], $config['db']['pass']);
 define('LOGGED_IN', LoginHandler::getInstance()->autoLogin());
+
+/* Install */
+if (intval(Database::getInstance()->getUserCount()) === 0) {
+    $password = bin2hex(random_bytes(5));
+    $user = User::create('Admin', $password, '', UserFlag::ADMIN);
+    echo 'You are running this page the first time, an administrative user has been created.<br><br>' .
+        'Username: Admin' . $user->getName() . '<br>'.
+        'Password: ' . $password;
+    return;
+}
 
 /* App */
 ob_start();

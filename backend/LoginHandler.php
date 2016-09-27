@@ -50,6 +50,7 @@ class LoginHandler
             $this->getUser()->save();
         }
 
+        session_regenerate_id();
         session('user_id', $this->getUser()->getID());
         session('hash', $this->getUser()->getPassword());
         if ($remember) {
@@ -64,7 +65,7 @@ class LoginHandler
             delete from auth_token
             where user_id = :user_id
 		');
-        $stmt->bindParam(':user_id', $this->getUser()->getID());
+        $stmt->bindValue(':user_id', $this->getUser()->getID());
         $stmt->execute();
     }
 
@@ -129,6 +130,7 @@ class LoginHandler
                 return false;
             }
 
+            session_regenerate_id();
             session('user_id', $authToken->getUserID());
             session('hash', $this->getUser()->getPassword());
             $this->deleteAuthTokens();

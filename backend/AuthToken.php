@@ -25,9 +25,9 @@ class AuthToken extends DBObject
 			(selector, token, user_id)
 			values (:selector, :token, :user_id)
 		');
-        $stmt->bindParam(':selector', $selector, PDO::PARAM_STR);
-        $stmt->bindParam(':token', $token, PDO::PARAM_STR);
-        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':selector', $selector);
+        $stmt->bindValue(':token', $token);
+        $stmt->bindValue(':user_id', $user_id);
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }

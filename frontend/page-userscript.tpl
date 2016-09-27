@@ -9,11 +9,11 @@
 {block name="page"}
     <div id="userscriptWrapper">
         {if $userscript}
-            <div class="header">
+            <div class="header" ng-controller="UserscriptController">
                 <div class="info left">
                     <img class="left"
                          src="https://cdn4.iconfinder.com/data/icons/icocentre-free-icons/171/f-script_256-128.png">
-                    <div class="name">{$userscript->getName()}{$userscript->getName()}{$userscript->getName()}{$userscript->getName()}{$userscript->getName()}{$userscript->getName()}</div>
+                    <div class="name">{$userscript->getName()}</div>
                     <div class="author">Author: {$userscript->getAuthor()->getName()}</div>
                     <div class="users">Users: {$userscript->users}</div>
                 </div>
@@ -25,7 +25,7 @@
                             <div class="slider round"></div>
                         </label>
                     </div>
-                    <a class="btn btn-sm btn-success" href role="button">Edit userscript</a>
+                    <a class="btn btn-sm btn-success" href role="button" ng-click="edit($event, {$userscript->getID()})">Edit userscript</a>
                     <a class="btn btn-sm btn-danger" href role="button">Delete userscript</a>
                 </div>
                 <div class="clear"></div>
@@ -37,7 +37,6 @@
                     </span>
                 </div>
                 <div class="box-text description">
-
                     {$userscript->getMarkdownDescription() nofilter}
                 </div>
             </div>

@@ -24,16 +24,17 @@ class User extends DBObject
 
     public static function create($name, $password, $email, $flag = 0)
     {
+        $password = LoginHandler::getInstance()->hashPassword($password);
         $stmt = Database::getInstance()->prepare('
 			insert into user
 			(name, password, email, flag, authKey)
 			values (:name, :password, :email, :flag, :authKey)
 		');
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':password', $password);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':flag', $flag);
-        $stmt->bindParam(':authKey', KeyGenerator::generateAuthKey());
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':password', $password);
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':flag', $flag);
+        $stmt->bindValue(':authKey', KeyGenerator::generateAuthKey());
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -97,7 +98,7 @@ class User extends DBObject
 			  and user_userscript.user_id = :id
 			  and user_userscript.userscript_id = userscript.id
 		');
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindValue(':id', $this->id);
         $stmt->execute();
         $ret = $stmt->fetchAll();
         array_walk($ret, function (&$e) {
@@ -116,8 +117,8 @@ class User extends DBObject
             values (:user_id, :userscript_id)
             on duplicate key update user_id = user_id
 		');
-        $stmt->bindParam(':user_id', $this->id);
-        $stmt->bindParam(':userscript_id', $userscript->getID());
+        $stmt->bindValue(':user_id', $this->id);
+        $stmt->bindValue(':userscript_id', $userscript->getID());
         $stmt->execute();
     }
 
@@ -128,8 +129,8 @@ class User extends DBObject
             where user_id = :user_id
               and userscript_id = :userscript_id
 		');
-        $stmt->bindParam(':user_id', $this->id);
-        $stmt->bindParam(':userscript_id', $userscript->getID());
+        $stmt->bindValue(':user_id', $this->id);
+        $stmt->bindValue(':userscript_id', $userscript->getID());
         $stmt->execute();
     }
 
@@ -140,7 +141,7 @@ class User extends DBObject
 			from user
 			where id = :id
 		');
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindValue(':id', $this->id);
         $stmt->execute();
         $ret = $stmt->fetch();
         return $this->consume($ret);
@@ -156,11 +157,11 @@ class User extends DBObject
 			  authKey = :authKey
 			where id = :id
 		');
-        $stmt->bindParam(':id', $this->id);
-        $stmt->bindParam(':name', $this->name);
-        $stmt->bindParam(':password', $this->password);
-        $stmt->bindParam(':flag', $this->flag);
-        $stmt->bindParam(':authKey', $this->authKey);
+        $stmt->bindValue(':id', $this->id);
+        $stmt->bindValue(':name', $this->name);
+        $stmt->bindValue(':password', $this->password);
+        $stmt->bindValue(':flag', $this->flag);
+        $stmt->bindValue(':authKey', $this->authKey);
         return $stmt->execute();
     }
 }

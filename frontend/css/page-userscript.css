@@ -82,3 +82,25 @@ textarea {
 .box-text ul {
     margin-left: 18px;
 }
+
+.box .description textarea .editor-preview-active * {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    outline: 0 !important;
+}
+
+.box .description textarea {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+
+.box .description pre code {
+    padding: 15px;
+    display: block;
+}
+
+.CodeMirror,
+.CodeMirror .editor-preview,
+.editor-toolbar a {
+    background-color: rgb(230, 230, 230) !important;
+}

@@ -6,6 +6,16 @@ use MatthiasMullie\Minify;
 
 $app = new \Slim\App(["settings" => $config['slim']]);
 
+$app->post('/api/markdown', function (Request $request, Response $response) {
+    $data = $request->getParsedBody();
+    $text = filter_var($data['text'] ?? '', FILTER_SANITIZE_STRING);
+    $parser = new Parsedown();
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $output = $parser->text($text);
+    $output = $purifier->purify($output);
+    echo new ApiResult(true, '', (object)['html' => $output]);
+});
+
 /* MAIN */
 
 $app->get('/', function (Request $request, Response $response) {
@@ -88,9 +98,9 @@ $app->get('/api/script/{id}', function (Request $request, Response $response) {
 
 $app->post('/api/login', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
-    $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
-    $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
-    $remember = filter_var($data['remember'], FILTER_VALIDATE_BOOLEAN);
+    $username = filter_var($data['username'] ?? null, FILTER_SANITIZE_STRING);
+    $password = filter_var($data['password'] ?? null, FILTER_SANITIZE_STRING);
+    $remember = filter_var($data['remember'] ?? null, FILTER_VALIDATE_BOOLEAN);
     $loginHandler = LoginHandler::getInstance();
     $success = $loginHandler->login($username, $password, $remember);
     echo new ApiResult($success, $success ? 'You have been successfully logged in' : 'Username and/or password was wrong');
@@ -157,9 +167,9 @@ $app->get('/api/user/removescript/{id}', function (Request $request, Response $r
 
 $app->post('/api/user/register', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
-    $username = filter_var($data['username'], FILTER_SANITIZE_STRING);
-    $password = filter_var($data['password'], FILTER_SANITIZE_STRING);
-    $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
+    $username = filter_var($data['username'] ?? null, FILTER_SANITIZE_STRING);
+    $password = filter_var($data['password'] ?? null, FILTER_SANITIZE_STRING);
+    $email = filter_var($data['email'] ?? null, FILTER_VALIDATE_EMAIL);
 
     $captcha = filter_var($data['captcha'], FILTER_SANITIZE_STRING);
     $reCaptcha = new \ReCaptcha\ReCaptcha(GOOGLE_RECAPTCHA_SECRET);
@@ -196,7 +206,6 @@ $app->post('/api/user/register', function (Request $request, Response $response)
         return;
     }
 
-    $password = LoginHandler::getInstance()->hashPassword($password);
     $user = User::create($username, $password, $email);
     echo new ApiResult(true, 'Your account has been created.', $user);
 });
@@ -225,6 +234,34 @@ $app->get('/api/userscript/{id}', function (Request $request, Response $response
     echo new ApiResult($exists, $exists ? '' : 'A userscript with this id does not exists.', $userscript);
 });
 
+$app->post('/api/userscript/{id}/edit', function (Request $request, Response $response) {
+    $data = $request->getParsedBody();
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $name = filter_var($data['name'] ?? null, FILTER_SANITIZE_STRING);
+    $description = filter_var($data['description'] ?? null, FILTER_SANITIZE_STRING);
+
+    /*if (!LOGGED_IN) {
+        echo new ApiResult(false, 'You need to be logged in to edit a userscript.');
+        return;
+    }*/
+
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A userscript with this id does not exists.');
+        return;
+    }
+
+    if (1 != $userscript->getAuthor()->getID()) {
+        echo new ApiResult(false, 'You need to be the owner of the userscript to edit it.');
+        return;
+    }
+
+    $userscript->setName($name);
+    $userscript->setDescription($description);
+    $success = $userscript->save();
+    echo new ApiResult($success, $success ? 'Successfully saved changes.' : 'An unknown error occurred, please try again later.');
+});
+
 $app->post('/api/userscript/create', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
@@ -244,10 +281,6 @@ $app->post('/api/userscript/create', function (Request $request, Response $respo
     $script = file_get_contents($file);
     $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID(), $script);
     echo new ApiResult(true, 'The userscript has been created.', $userscript);
-});
-
-$app->post('/api/userscript/edit', function (Request $request, Response $response) {
-
 });
 
 /* APP */

@@ -23,9 +23,9 @@ class Userscript extends DBObject
 			(name, author, script)
 			values (:name, :author, :script)
 		');
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':author', $author);
-        $stmt->bindParam(':script', base64_encode($script));
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':author', $author);
+        $stmt->bindValue(':script', base64_encode($script));
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -65,13 +65,23 @@ class Userscript extends DBObject
         return base64_decode($this->script);
     }
 
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
     public function delete()
     {
         $stmt = Database::getInstance()->prepare('
 			delete from userscript
 			where id = :id
 		');
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindValue(':id', $this->id);
         return $stmt->execute();
     }
 
@@ -92,9 +102,9 @@ class Userscript extends DBObject
         );
 
         $stmt = Database::getInstance()->prepare($query);
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindValue(':id', $this->id);
         if (LOGGED_IN) {
-            $stmt->bindParam(':login_id', LoginHandler::getInstance()->getUser()->getID());
+            $stmt->bindValue(':login_id', LoginHandler::getInstance()->getUser()->getID());
         }
         $stmt->execute();
         $ret = $stmt->fetch();
@@ -102,7 +112,7 @@ class Userscript extends DBObject
             return false;
         }
         $this->users = $ret['.users'];
-        $this->selected = $ret['.selected'];
+        $this->selected = ($ret['.selected'] ?? 0) === '1';
         $this->author = User::fromData($ret);
         return true;
     }
@@ -111,16 +121,17 @@ class Userscript extends DBObject
     {
         $stmt = Database::getInstance()->prepare('
 			update userscript
-			set name = :name
-			set description = :description
-			set author = :author
-			set script = :script
+			set name = :name,
+			  description = :description,
+			  author = :author,
+			  script = :script
 			where id = :id
 		');
-        $stmt->bindParam(':name', $this->id);
-        $stmt->bindParam(':description', $this->description);
-        $stmt->bindParam(':author', $this->author->getID());
-        $stmt->bindParam(':script', $this->script);
+        $stmt->bindValue(':id', $this->id);
+        $stmt->bindValue(':name', $this->name);
+        $stmt->bindValue(':description', $this->description);
+        $stmt->bindValue(':author', $this->author->getID());
+        $stmt->bindValue(':script', $this->script);
         return $stmt->execute();
     }
 }

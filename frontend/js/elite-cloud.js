@@ -1,8 +1,8 @@
 var app = angular.module('elite-cloud', []);
 
-function notify(data) {
-    $.notify(data.message, {
-        className: data.success ? 'success' : 'error',
+function notify(result) {
+    $.notify(result.message, {
+        className: result.success ? 'success' : 'error',
         autoHideDelay: 2 * 1000
     });
 }
@@ -56,9 +56,9 @@ app.controller('RegisterController', ['$scope', '$http', '$location', function (
             email: $scope.form.email,
             captcha: grecaptcha.getResponse()
         });
-        response.success(function (data, status, headers, config) {
-            notify(data);
-            if (data.success) {
+        response.success(function (result, status, headers, config) {
+            notify(result);
+            if (result.success) {
                 setTimeout(function () {
                     window.location.href = '.';
                 }, 500);
@@ -75,9 +75,9 @@ app.controller('RegisterController', ['$scope', '$http', '$location', function (
 app.controller('LogoutController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     $scope.logout = function () {
         var response = $http.post('api/logout');
-        response.success(function (data, status, headers, config) {
-            notify(data);
-            if (data.success) {
+        response.success(function (result, status, headers, config) {
+            notify(result);
+            if (result.success) {
                 setTimeout(function () {
                     window.location.href = '.';
                 }, 500);
@@ -120,8 +120,8 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
 
         $scope.updating = true;
         var response = $http.get('api/userscript/list/' + sort + '/' + $scope.order + ($scope.search != '' ? '/' + btoa($scope.search) : ''));
-        response.success(function (e, status, headers, config) {
-            $scope.userscripts = e.data;
+        response.success(function (result, status, headers, config) {
+            $scope.userscripts = result.data;
             $scope.lastUpdate = Date.now();
             $scope.updating = false;
         });
@@ -133,9 +133,9 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
 
     $scope.add = function (userscript) {
         var response = $http.get('api/user/addscript/' + userscript.id);
-        response.success(function (data, status, headers, config) {
-            notify(data);
-            if (data.success) {
+        response.success(function (result, status, headers, config) {
+            notify(result);
+            if (result.success) {
                 userscript.users++;
                 userscript.selected = true;
             }
@@ -144,9 +144,9 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
 
     $scope.remove = function (userscript) {
         var response = $http.get('api/user/removescript/' + userscript.id);
-        response.success(function (data, status, headers, config) {
-            notify(data);
-            if (data.success) {
+        response.success(function (result, status, headers, config) {
+            notify(result);
+            if (result.success) {
                 userscript.users--;
                 userscript.selected = false;
             }
@@ -166,4 +166,66 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
     };
 
     $scope.update();
+}]);
+
+app.controller('UserscriptController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+    $scope.userscript = null;
+
+    $scope.elements = {
+        'button': null,
+        'name': $('.info .name'),
+        'descrption': $('.box .description'),
+        'simplemde': null,
+        'descriptionTextarea': null
+    };
+
+    $scope.edit = function ($event, id) {
+        if ($scope.elements.button != null) {
+            $scope.save(id);
+            return;
+        }
+
+        $scope.elements.button = $($event.currentTarget);
+        $scope.elements.button.removeClass('btn-success');
+        $scope.elements.button.addClass('btn-primary');
+        $scope.elements.button.text('Save Changes');
+
+        var response = $http.get('api/userscript/' + id);
+        response.success(function (result) {
+            if (result.success) {
+                $scope.userscript = result.data;
+                $scope.elements.descrption.html('');
+                $scope.elements.descriptionTextarea = $('<textarea></textarea>').appendTo($scope.elements.descrption);
+                $scope.elements.descriptionTextarea.text($scope.userscript.description);
+                $scope.elements.simplemde = new SimpleMDE({
+                    element: $($scope.elements.descriptionTextarea)[0],
+                    previewRender: function (plainText, preview) {
+                        var response = $http.post('api/markdown', {
+                            text: plainText
+                        });
+                        response.success(function (result, status, headers, config) {
+                            if (result.success) {
+                                preview.innerHTML = result.data.html;
+                            }
+                        });
+                        return "Loading...";
+                    },
+                });
+            } else {
+                notify(result);
+            }
+        });
+    };
+
+    $scope.save = function (id) {
+        var response = $http.post('api/userscript/' + id + '/edit', {
+            name: $scope.elements.name.text(),
+            description: $scope.elements.simplemde.value()
+        });
+        response.success(function (result) {
+            dump(result);
+            notify(result);
+        });
+    };
+
 }]);
