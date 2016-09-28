@@ -9,7 +9,7 @@
 {block name="page"}
     <div id="userscriptWrapper">
         {if $userscript}
-            <div class="header" ng-controller="UserscriptController">
+            <div class="header" ng-controller="UserscriptController" ng-init="init({$userscript->getID()})">
                 <div class="info left">
                     <img class="left"
                          src="https://cdn4.iconfinder.com/data/icons/icocentre-free-icons/171/f-script_256-128.png">
@@ -20,12 +20,13 @@
                 <div class="buttons right">
                     <div class="enabled">
                         <span> Enabled:</span>
-                        <label class="switch" ng-click="toggle($event, userscript)">
+                        <label class="switch" ng-click="toggle($event)">
                             <input type="checkbox" {if $userscript->selected}checked{/if}>
                             <div class="slider round"></div>
                         </label>
                     </div>
-                    <a class="btn btn-sm btn-success" href role="button" ng-click="edit($event, {$userscript->getID()})">Edit userscript</a>
+                    <a class="btn btn-sm btn-success" href role="button"
+                       ng-click="edit($event, {$userscript->getID()})">Edit userscript</a>
                     <a class="btn btn-sm btn-danger" href role="button">Delete userscript</a>
                 </div>
                 <div class="clear"></div>

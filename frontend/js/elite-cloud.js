@@ -179,6 +179,13 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
         'descriptionTextarea': null
     };
 
+    $scope.init = function (id) {
+        var response = $http.get('api/userscript/' + id);
+        response.success(function (result, status, headers, config) {
+            $scope.userscript = result.data;
+        });
+    };
+
     $scope.edit = function ($event, id) {
         if ($scope.elements.button != null) {
             $scope.save(id);
@@ -209,7 +216,7 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
                             }
                         });
                         return "Loading...";
-                    },
+                    }
                 });
             } else {
                 notify(result);
@@ -223,8 +230,21 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
             description: $scope.elements.simplemde.value()
         });
         response.success(function (result) {
-            dump(result);
             notify(result);
+        });
+    };
+
+    $scope.toggle = function ($event) {
+        $event.stopPropagation();
+        if ($event.target.tagName !== 'INPUT') {
+            return;
+        }
+        var response = $http.get('api/user/' + ($scope.userscript.selected ? 'remove' : 'add') + 'script/' + $scope.userscript.id);
+        response.success(function (result, status, headers, config) {
+            notify(result);
+            if (result.success) {
+                $scope.userscript.selected = !$scope.userscript.selected;
+            }
         });
     };
 
