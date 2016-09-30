@@ -123,6 +123,7 @@ class Database extends PDO
             $v->users = $e['.users'];
             $v->selected = ($e['.selected'] ?? 0) === '1';
             $v->author = User::fromData($e);
+            $v->description = base64_decode($v->description);
             $e = $v;
         });
         return $ret;

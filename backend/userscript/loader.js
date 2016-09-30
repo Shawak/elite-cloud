@@ -46,7 +46,7 @@
                 '<a href="/forum/profile.php?do=editoptions">' +
                 '<li>' +
                 '<div id="ec_menuitem" style="display: inline-block">' +
-                '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + (that.root + "/frontend/img/favicon.png") + '">' +
+                '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + that.root + '/frontend/img/favicon.png">' +
                 'elite-cloud' +
                 '</div>' +
                 '</li>' +
@@ -63,7 +63,7 @@
             });
 
             $.ajax({
-                url: encodeURI(that.root + '/api/plugin'),
+                url: encodeURI(that.root + 'api/plugin'),
                 dataType: 'jsonp',
             }).done(function (e) {
                 elem.parent().prepend(e.data.plugin).append(function () {
@@ -91,7 +91,7 @@
             }
 
             $.ajax({
-                url: encodeURI(that.root + '/api/authenticate/' + authKey),
+                url: encodeURI(that.root + 'api/authenticate/' + authKey),
                 dataType: 'jsonp',
             }).done(function (e) {
                 if (e.success) {
@@ -100,7 +100,7 @@
                     for (var i = 0; i < e.data.userscripts.length; i++) {
                         that.log('> ' + e.data.userscripts[i].name);
                         $.ajax({
-                            url: encodeURI(that.root + '/api/script/' + e.data.userscripts[i].id),
+                            url: encodeURI(that.root + 'api/script/' + e.data.userscripts[i].id),
                             dataType: 'jsonp'
                         }).done(function (e) {
                             that.injectScript(e.data.script);

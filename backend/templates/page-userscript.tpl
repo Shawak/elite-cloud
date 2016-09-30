@@ -13,7 +13,7 @@
                 <div class="info left">
                     <img class="left"
                          src="https://cdn4.iconfinder.com/data/icons/icocentre-free-icons/171/f-script_256-128.png">
-                    <div class="name">{$userscript->getName()}</div>
+                    <div class="name"><input type="text" value="{$userscript->getName()}" readonly="readonly"></div>
                     <div class="author">Author: {$userscript->getAuthor()->getName()}</div>
                     <div class="users">Users: {$userscript->users}</div>
                 </div>

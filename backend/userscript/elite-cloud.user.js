@@ -13,7 +13,7 @@
     var main = function () {
 
         var elite_cloud = {
-            root: 'http://localhost/elite-cloud',
+            root: '{URL_SITE}',
             keyLoader: 'elite-cloud_loader'
         };
 
@@ -90,7 +90,7 @@
                     }
 
                     setTimeout(function () {
-                        that.$jsonp.get(that.root + '/api/loader', {
+                        that.$jsonp.get(that.root + 'api/loader', {
                             onSuccess: function (result) {
                                 that.loader.setScript(result.data.loader);
                                 that.log('Loader updated!');

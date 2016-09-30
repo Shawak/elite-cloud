@@ -25,7 +25,7 @@ class Userscript extends DBObject
 		');
         $stmt->bindValue(':name', $name);
         $stmt->bindValue(':author', $author);
-        $stmt->bindValue(':script', base64_encode($script));
+        $stmt->bindValue(':script', $script);
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -62,7 +62,7 @@ class Userscript extends DBObject
 
     public function getScript()
     {
-        return base64_decode($this->script);
+        return $this->script;
     }
 
     public function setName($name)
@@ -114,6 +114,8 @@ class Userscript extends DBObject
         $this->users = $ret['.users'];
         $this->selected = ($ret['.selected'] ?? 0) === '1';
         $this->author = User::fromData($ret);
+        $this->description = base64_decode($this->description);
+        $this->script = base64_decode($this->script);
         return true;
     }
 
@@ -129,9 +131,9 @@ class Userscript extends DBObject
 		');
         $stmt->bindValue(':id', $this->id);
         $stmt->bindValue(':name', $this->name);
-        $stmt->bindValue(':description', $this->description);
+        $stmt->bindValue(':description', base64_encode($this->description));
         $stmt->bindValue(':author', $this->author->getID());
-        $stmt->bindValue(':script', $this->script);
+        $stmt->bindValue(':script', base64_encode($this->script));
         return $stmt->execute();
     }
 }

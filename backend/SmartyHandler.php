@@ -20,7 +20,7 @@ class SmartyHandler
     {
         if (!isset(self::$instance)) {
             $smarty = new Smarty();
-            $smarty->setTemplateDir(DIR_FRONTEND);
+            $smarty->setTemplateDir(DIR_TEMPLATES);
             $smarty->setCompileDir(DIR_SMARTY . 'compiled/');
             $smarty->setConfigDir(DIR_SMARTY . 'config/');
             $smarty->setCacheDir(DIR_SMARTY . 'cache/');

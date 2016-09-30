@@ -6,10 +6,13 @@ define('DIR_VENDOR', DIR_APP . 'vendor/');
 define('DIR_SMARTY', DIR_APP . 'smarty/');
 define('DIR_BACKEND', DIR_APP . 'backend/');
 define('DIR_FRONTEND', DIR_APP . 'frontend/');
-define('DIR_USERSCRIPT', DIR_APP . 'userscript/');
+define('DIR_USERSCRIPT', DIR_BACKEND . 'userscript/');
+define('DIR_TEMPLATES', DIR_BACKEND . 'templates/');
 
 /* URLs */
+define('HTTPS', isset($_SERVER['HTTPS']) && filter_var($_SERVER['HTTPS'], FILTER_VALIDATE_BOOLEAN));
 define('URL_BASE', substr($_SERVER['SCRIPT_NAME'], 0, strripos($_SERVER['SCRIPT_NAME'], '/')) . '/');
+define('URL_SITE', (HTTPS ? "https://" : "http://") . $_SERVER['HTTP_HOST'] . URL_BASE);
 
 /* Session */
 session_cache_limiter('private');
@@ -58,7 +61,7 @@ if (intval(Database::getInstance()->getUserCount()) === 0) {
     $password = bin2hex(random_bytes(5));
     $user = User::create('Admin', $password, '', UserFlag::ADMIN);
     echo 'You are running this page the first time, an administrative user has been created.<br><br>' .
-        'Username: Admin' . $user->getName() . '<br>'.
+        'Username: Admin' . $user->getName() . '<br>' .
         'Password: ' . $password;
     return;
 }

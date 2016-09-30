@@ -6,16 +6,6 @@ use MatthiasMullie\Minify;
 
 $app = new \Slim\App(["settings" => $config['slim']]);
 
-$app->post('/api/markdown', function (Request $request, Response $response) {
-    $data = $request->getParsedBody();
-    $text = filter_var($data['text'] ?? '', FILTER_SANITIZE_STRING);
-    $parser = new Parsedown();
-    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
-    $output = $parser->text($text);
-    $output = $purifier->purify($output);
-    echo new ApiResult(true, '', (object)['html' => $output]);
-});
-
 /* MAIN */
 
 $app->get('/', function (Request $request, Response $response) {
@@ -51,7 +41,26 @@ $app->get('/userscript/{id}', function (Request $request, Response $response) {
     SmartyHandler::getInstance()->display('page-userscript.tpl');
 });
 
-/*  JS */
+/* LINKS */
+
+$app->get('/elite-cloud.user.js', function (Request $request, Response $response) {
+    SmartyHandler::getInstance()->setTemplateDir(DIR_USERSCRIPT);
+    SmartyHandler::getInstance()->display('elite-cloud.user.js');
+});
+
+/* OTHER */
+
+$app->post('/api/markdown', function (Request $request, Response $response) {
+    $data = $request->getParsedBody();
+    $text = filter_var($data['text'] ?? '', FILTER_SANITIZE_STRING);
+    $parser = new Parsedown();
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $output = $parser->text($text);
+    $output = $purifier->purify($output);
+    echo new ApiResult(true, '', (object)['html' => $output]);
+});
+
+/* JS */
 
 $app->get('/api/loader', function (Request $request, Response $response) {
     if (SETTINGS_MINIFY_JS) {
@@ -257,7 +266,7 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
     }
 
     $userscript->setName($name);
-    $userscript->setDescription($description);
+    $userscript->setDescription(base64_decode($description));
     $success = $userscript->save();
     echo new ApiResult($success, $success ? 'Successfully saved changes.' : 'An unknown error occurred, please try again later.');
 });
