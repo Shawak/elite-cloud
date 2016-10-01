@@ -61,7 +61,7 @@ if (intval(Database::getInstance()->getUserCount()) === 0) {
     $password = bin2hex(random_bytes(5));
     $user = User::create('Admin', $password, '', UserFlag::ADMIN);
     echo 'You are running this page the first time, an administrative user has been created.<br><br>' .
-        'Username: Admin' . $user->getName() . '<br>' .
+        'Username: ' . $user->getName() . '<br>' .
         'Password: ' . $password;
     return;
 }
