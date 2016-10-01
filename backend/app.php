@@ -248,6 +248,7 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $name = filter_var($data['name'] ?? null, FILTER_SANITIZE_STRING);
     $description = filter_var($data['description'] ?? null, FILTER_SANITIZE_STRING);
+    $script = filter_var($data['script'] ?? null, FILTER_SANITIZE_STRING);
 
     if (!LOGGED_IN) {
         echo new ApiResult(false, 'You need to be logged in to edit a userscript.');
@@ -267,6 +268,7 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
 
     $userscript->setName($name);
     $userscript->setDescription(base64_decode($description));
+    $userscript->setScript(base64_decode($script));
     $success = $userscript->save();
     echo new ApiResult($success, $success ? 'Successfully saved changes.' : 'An unknown error occurred, please try again later.');
 });

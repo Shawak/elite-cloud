@@ -75,6 +75,11 @@ class Userscript extends DBObject
         $this->description = $description;
     }
 
+    public function setScript($script)
+    {
+        $this->script = $script;
+    }
+
     public function delete()
     {
         $stmt = Database::getInstance()->prepare('

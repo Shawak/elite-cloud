@@ -48,7 +48,7 @@
                     </span>
                 </div>
                 <div class="box-text">
-                    <textarea spellcheck="false" readonly="readonly">{$userscript->getScript()}</textarea>
+                    <textarea id="textarea_script" spellcheck="false" readonly="readonly">{$userscript->getScript()}</textarea>
                 </div>
             </div>
         {else}

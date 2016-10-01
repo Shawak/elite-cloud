@@ -176,7 +176,8 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
         'name': $('.info .name input'),
         'descrption': $('.box .description'),
         'simplemde': null,
-        'descriptionTextarea': null
+        'descriptionTextarea': null,
+        'scriptTextarea' : $('#textarea_script')
     };
 
     $scope.init = function (id) {
@@ -193,6 +194,7 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
         }
 
         $scope.elements.name.removeAttr('readonly');
+        $scope.elements.scriptTextarea.removeAttr('readonly');
         $scope.elements.button = $($event.currentTarget);
         $scope.elements.button.removeClass('btn-success');
         $scope.elements.button.addClass('btn-primary');
@@ -228,7 +230,8 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
     $scope.save = function (id) {
         var response = $http.post('api/userscript/' + id + '/edit', {
             name: $scope.elements.name.val(),
-            description: btoa($scope.elements.simplemde.value())
+            description: btoa($scope.elements.simplemde.value()),
+            script: btoa($scope.elements.scriptTextarea.val())
         });
         response.success(function (result) {
             notify(result);
