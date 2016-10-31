@@ -171,6 +171,8 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
 app.controller('UserscriptController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     $scope.userscript = null;
 
+    $scope.id = -1;
+
     $scope.elements = {
         'button': null,
         'name': $('.info .name input'),
@@ -181,15 +183,20 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
     };
 
     $scope.init = function (id) {
-        var response = $http.get('api/userscript/' + id);
+        $scope.id = id
+        if($scope.id == -1) {
+            return;
+        }
+
+        var response = $http.get('api/userscript/' +  $scope.id);
         response.success(function (result, status, headers, config) {
             $scope.userscript = result.data;
         });
     };
 
-    $scope.edit = function ($event, id) {
+    $scope.edit = function ($event) {
         if ($scope.elements.button != null) {
-            $scope.save(id);
+            $scope.save($scope.id);
             return;
         }
 
@@ -200,9 +207,9 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
         $scope.elements.button.addClass('btn-primary');
         $scope.elements.button.text('Save Changes');
 
-        var response = $http.get('api/userscript/' + id);
+        var response = $http.get('api/userscript/' + $scope.id);
         response.success(function (result) {
-            if (result.success) {
+            if (result.success || $scope.id == -1) {
                 $scope.userscript = result.data;
                 $scope.elements.descrption.html('');
                 $scope.elements.descriptionTextarea = $('<textarea></textarea>').appendTo($scope.elements.descrption);
@@ -227,14 +234,20 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
         });
     };
 
-    $scope.save = function (id) {
-        var response = $http.post('api/userscript/' + id + '/edit', {
+    $scope.saving = false;
+    $scope.save = function () {
+        $scope.saving = true;
+        var response = $http.post($scope.id == -1 ? 'api/userscript/create' : 'api/userscript/' + $scope.id + '/edit', {
             name: $scope.elements.name.val(),
             description: btoa($scope.elements.simplemde.value()),
             script: btoa($scope.elements.scriptTextarea.val())
         });
         response.success(function (result) {
             notify(result);
+            if($scope.id == -1 && result.success) {
+                $scope.id = result.data.id;
+            }
+            $scope.saving = false;
         });
     };
 

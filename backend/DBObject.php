@@ -2,7 +2,6 @@
 
 abstract class DBObject
 {
-
     public abstract function update();
 
     public abstract function save();

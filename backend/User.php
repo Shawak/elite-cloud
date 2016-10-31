@@ -22,19 +22,17 @@ class User extends DBObject
         $this->id = $id;
     }
 
-    public static function create($name, $password, $email, $flag = 0)
+    public static function create($name, $password, $email)
     {
         $password = LoginHandler::getInstance()->hashPassword($password);
         $stmt = Database::getInstance()->prepare('
 			insert into user
-			(name, password, email, flag, authKey)
-			values (:name, :password, :email, :flag, :authKey)
+			(name, password, email)
+			values (:name, :password, :email)
 		');
         $stmt->bindValue(':name', $name);
         $stmt->bindValue(':password', $password);
         $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':flag', $flag);
-        $stmt->bindValue(':authKey', KeyGenerator::generateAuthKey());
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }

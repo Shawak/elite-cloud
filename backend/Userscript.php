@@ -16,16 +16,15 @@ class Userscript extends DBObject
         $this->id = $id;
     }
 
-    public static function create($name, $author, $script = '')
+    public static function create($name, $author)
     {
         $stmt = Database::getInstance()->prepare('
-			insert into user
-			(name, author, script)
-			values (:name, :author, :script)
+			insert into userscript
+			(name, author)
+			values (:name, :author)
 		');
         $stmt->bindValue(':name', $name);
         $stmt->bindValue(':author', $author);
-        $stmt->bindValue(':script', $script);
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -75,6 +74,11 @@ class Userscript extends DBObject
         $this->description = $description;
     }
 
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
     public function setScript($script)
     {
         $this->script = $script;
@@ -96,7 +100,6 @@ class Userscript extends DBObject
 			select *, (select count(*) from user_userscript where userscript_id = userscript.id) as users [selected]
 			from userscript, user
 			where userscript.id = :id
-			  and user.id = userscript.id
 		';
 
         $query = str_replace('[selected]',

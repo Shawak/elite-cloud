@@ -6,7 +6,7 @@ use MatthiasMullie\Minify;
 
 $app = new \Slim\App(["settings" => $config['slim']]);
 
-/* MAIN */
+/* PAGES */
 
 $app->get('/', function (Request $request, Response $response) {
     SmartyHandler::getInstance()->assign('page', 'home');
@@ -37,6 +37,16 @@ $app->get('/userscript/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
     SmartyHandler::getInstance()->assign('userscript', $userscript->update() ? $userscript : null);
+    SmartyHandler::getInstance()->assign('page', 'userscript');
+    SmartyHandler::getInstance()->display('page-userscript.tpl');
+});
+
+$app->get('/userscript/do/create', function (Request $request, Response $response) {
+    $userscript = new Userscript(-1);
+    $userscript->setName('New userscript');
+    $userscript->setAuthor(LoginHandler::getInstance()->getUser());
+    $userscript->users = 0;
+    SmartyHandler::getInstance()->assign('userscript', $userscript);
     SmartyHandler::getInstance()->assign('page', 'userscript');
     SmartyHandler::getInstance()->display('page-userscript.tpl');
 });
@@ -216,6 +226,9 @@ $app->post('/api/user/register', function (Request $request, Response $response)
     }
 
     $user = User::create($username, $password, $email);
+    $user->update();
+    $user->renewAuthKey();
+    $user->save();
     echo new ApiResult(true, 'Your account has been created.', $user);
 });
 
@@ -276,21 +289,27 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
 $app->post('/api/userscript/create', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
+    $description = filter_var($data['description'] ?? null, FILTER_SANITIZE_STRING);
+    $script = filter_var($data['script'] ?? null, FILTER_SANITIZE_STRING);
 
     if (!LOGGED_IN) {
         echo new ApiResult(false, 'You have to be logged in to perform this action.');
         return;
     }
 
-    $files = $request->getUploadedFiles();
+    /*$files = $request->getUploadedFiles();
     $file = isset($files['file']) ? $files['file'] : null;
     if ($file == null) {
         echo new ApiResult(false, 'Could not get the uploaded file.');
         return;
     }
+    $script = file_get_contents($file);*/
 
-    $script = file_get_contents($file);
-    $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID(), $script);
+    $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID());
+    $userscript->update();
+    $userscript->setDescription(base64_decode($description));
+    $userscript->setScript(base64_decode($script));
+    $userscript->save();
     echo new ApiResult(true, 'The userscript has been created.', $userscript);
 });
 

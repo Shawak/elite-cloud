@@ -26,7 +26,7 @@
                         </label>
                     </div>
                     <a class="btn btn-sm btn-success" href role="button"
-                       ng-click="edit($event, {$userscript->getID()})">Edit userscript</a>
+                       ng-click="edit($event)">Edit userscript</a>
                     <a class="btn btn-sm btn-danger" href role="button">Delete userscript</a>
                 </div>
                 <div class="clear"></div>
@@ -48,7 +48,8 @@
                     </span>
                 </div>
                 <div class="box-text">
-                    <textarea id="textarea_script" spellcheck="false" readonly="readonly">{$userscript->getScript()}</textarea>
+                    <textarea id="textarea_script" spellcheck="false"
+                              readonly="readonly">{$userscript->getScript()}</textarea>
                 </div>
             </div>
         {else}
