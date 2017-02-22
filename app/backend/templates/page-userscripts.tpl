@@ -4,11 +4,24 @@
 {/block}
 {block name="page"}
     <div id="userscriptsWrapper" ng-controller="UserscriptsController">
-        <form>
-            <input type="text" class="form-control left" placeholder="Search.." ng-model="search" ng-change="update()">
-        </form>
-        <a class="btn btn-primary right" href="userscript/do/create" role="button">Create userscript</a>
-        <div class="clear"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <form>
+              <input type="text" class="form-control left" placeholder="Search.." ng-model="search" ng-change="update()">
+            </form>
+          </div>
+
+          <div class="col-md-3">
+            <a class="btn btn-info left" href="/elite-cloud.user.js" role="button">Install elite-cloud</a>
+          </div>
+
+          <div class="offset-md-2 col-md-4">
+            <a class="btn btn-primary right" href="userscript/do/create" role="button">Create userscript</a>
+          </div>
+        </div>
+      </div>
+      <div class="clear"></div>
 
         <table>
             <thead>

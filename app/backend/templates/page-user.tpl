@@ -9,6 +9,7 @@
 {block name="page"}
     {if $user}
         <h3>{$user->getName()}</h3>
+        <h4>{$role_id}<h4>
     {else}
         A user with this id does not exists.
     {/if}
