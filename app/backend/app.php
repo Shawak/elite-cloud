@@ -30,6 +30,7 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
     $user = new User($id);
     SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
     SmartyHandler::getInstance()->assign('page', 'user');
+    SmartyHandler::getInstance()->assign('role_id', $user ? $user->getUserRole() : null);
     SmartyHandler::getInstance()->display('page-user.tpl');
 });
 
@@ -110,7 +111,47 @@ $app->get('/api/script/{id}', function (Request $request, Response $response) {
     if (SETTINGS_MINIFY_JS) {
         $script = (new Minify\JS($script))->minify();
     }
-    echo new ApiResult(true, '', (object)['script' => $script]);
+    echo new ApiResult(true, '', (object)['script' => $script, 'key_name' => $userscript->getKey()]);
+});
+
+$app->get('/api/database/getsettings/{key}', function (Request $request, Response $response) {
+  $key_name = filter_var($request->getAttribute('key'), FILTER_SANITIZE_STRING);
+  $userscript = Userscript::getUserscriptByKeyName($key_name);
+  if (!$userscript) {
+      echo new ApiResult(false, 'A script with this key_name was not found.');
+      return;
+  }
+
+  $user = Database::getUserByAuthKey($_GET['authKey']);
+  if ($user == null) {
+      echo new ApiResult(false, 'AuthKey does not belong to a user.');
+      return;
+  }
+
+  $userSettings = Database::getUserSettingsByUserscriptId($userscript['userscript.id'], $user->getID());
+  if($userSettings) {
+    echo new ApiResult(true, '', (object)['userSettings' => $userSettings['user_userscripts_settings.settings']]);
+  } else {
+    echo new ApiResult(false, '');
+  }
+});
+
+$app->get('/api/database/setsettings/{key}', function (Request $request, Response $response) {
+  $key_name = filter_var($request->getAttribute('key'), FILTER_SANITIZE_STRING);
+  $userscript = Userscript::getUserscriptByKeyName($key_name);
+  if (!$userscript) {
+      echo new ApiResult(false, 'A script with this key_name was not found.');
+      return;
+  }
+
+  $user = Database::getUserByAuthKey($_GET['authKey']);
+  if ($user == null) {
+      echo new ApiResult(false, 'AuthKey does not belong to a user.');
+      return;
+  }
+
+  $userSettings = Database::setUserSettingsByUserscriptId($userscript['userscript.id'], $_GET['settings'], $user->getID());
+  echo new ApiResult(true, '', (object)['key_name' => $userscript['userscript.key_name']]);
 });
 
 /* USER */
@@ -286,6 +327,27 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
     echo new ApiResult($success, $success ? 'Successfully saved changes.' : 'An unknown error occurred, please try again later.');
 });
 
+$app->post('/api/userscript/{id}/delete', function (Request $request, Response $response) {
+    if (!LOGGED_IN) {
+        echo new ApiResult(false, 'You need to be logged in to edit a userscript.');
+        return;
+    }
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A userscript with this id does not exists.');
+        return;
+    }
+
+    if (LoginHandler::getInstance()->getUser()->getID() != $userscript->getAuthor()->getID()) {
+        echo new ApiResult(false, 'You need to be the owner of the userscript to edit it.');
+        return;
+    }
+    $success = $userscript->delete();
+    echo new ApiResult($success, $success ? 'Successfully deleted.' : 'An unknown error occurred, please try again later.');
+});
+
 $app->post('/api/userscript/create', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
@@ -297,19 +359,15 @@ $app->post('/api/userscript/create', function (Request $request, Response $respo
         return;
     }
 
-    /*$files = $request->getUploadedFiles();
-    $file = isset($files['file']) ? $files['file'] : null;
-    if ($file == null) {
-        echo new ApiResult(false, 'Could not get the uploaded file.');
-        return;
-    }
-    $script = file_get_contents($file);*/
+    $key_name = preg_replace("/[^A-Za-z0-9_?!]/",'', substr( strtolower( str_replace(" ","_",$name) ) , 0, 150) );
 
-    $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID());
-    $userscript->update();
-    $userscript->setDescription(base64_decode($description));
-    $userscript->setScript(base64_decode($script));
-    $userscript->save();
+    $userscript = Userscript::create(
+      $name,
+      LoginHandler::getInstance()->getUser()->getID(),
+      $key_name,
+      $description,
+      $script
+    );
     echo new ApiResult(true, 'The userscript has been created.', $userscript);
 });
 

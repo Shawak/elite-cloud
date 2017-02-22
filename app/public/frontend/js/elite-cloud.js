@@ -265,4 +265,13 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
         });
     };
 
+    $scope.delete = function ($event) {
+        $event.stopPropagation();
+        console.log($scope.id);
+        var response = $http.post('api/userscript/' + $scope.id + '/delete');
+        response.success(function (result, status, headers, config) {
+            notify(result);
+        });
+    };
+
 }]);

@@ -66,9 +66,10 @@
                 console.log('[elite-cloud ' + date.toLocaleTimeString() + '.' + date.getMilliseconds() + '] %o', msg);
             },
 
-            injectScript: function (script) {
+            injectScript: function (script, key_name) {
                 var elem = document.createElement('script');
                 elem.setAttribute('type', 'text/javascript');
+                elem.setAttribute('id', key_name);
                 elem.innerHTML = script;
                 document.head.appendChild(elem);
             },
@@ -85,7 +86,7 @@
                     var injected = false;
 
                     if (script) {
-                        that.injectScript(script);
+                        that.injectScript(script, false);
                         injected = true;
                     }
 
@@ -95,7 +96,7 @@
                                 that.loader.setScript(result.data.loader);
                                 that.log('Loader updated!');
                                 if (!injected) {
-                                    that.injectScript(that.loader.getScript());
+                                    that.injectScript(that.loader.getScript(), false);
                                 }
                             }
                         });
