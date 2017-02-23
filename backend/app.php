@@ -30,7 +30,6 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
     $user = new User($id);
     SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
     SmartyHandler::getInstance()->assign('page', 'user');
-    SmartyHandler::getInstance()->assign('role_id', $user ? $user->getUserRole() : null);
     SmartyHandler::getInstance()->display('page-user.tpl');
 });
 
@@ -55,6 +54,10 @@ $app->get('/userscript/do/create', function (Request $request, Response $respons
 /* LINKS */
 
 $app->get('/elite-cloud.user.js', function (Request $request, Response $response) {
+    /* Force Download
+    header('Content-type: text/plain');
+    header("Content-Disposition: attachment; filename=elite-cloud.user.js");
+    */
     SmartyHandler::getInstance()->setTemplateDir(DIR_USERSCRIPT);
     SmartyHandler::getInstance()->display('elite-cloud.user.js');
 });
@@ -111,47 +114,43 @@ $app->get('/api/script/{id}', function (Request $request, Response $response) {
     if (SETTINGS_MINIFY_JS) {
         $script = (new Minify\JS($script))->minify();
     }
-    echo new ApiResult(true, '', (object)['script' => $script, 'key_name' => $userscript->getKey()]);
+    echo new ApiResult(true, '', (object)['script' => $script]);
 });
 
-$app->get('/api/database/getsettings/{key}', function (Request $request, Response $response) {
-  $key_name = filter_var($request->getAttribute('key'), FILTER_SANITIZE_STRING);
-  $userscript = Userscript::getUserscriptByKeyName($key_name);
-  if (!$userscript) {
-      echo new ApiResult(false, 'A script with this key_name was not found.');
+$app->get('/api/settings/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+      echo new ApiResult(false, 'A script with this id was not found.');
       return;
-  }
+    }
 
-  $user = Database::getUserByAuthKey($_GET['authKey']);
-  if ($user == null) {
+    $user = Database::getUserByAuthKey($_GET['authKey']);
+    if ($user == null) {
       echo new ApiResult(false, 'AuthKey does not belong to a user.');
       return;
-  }
+    }
 
-  $userSettings = Database::getUserSettingsByUserscriptId($userscript['userscript.id'], $user->getID());
-  if($userSettings) {
-    echo new ApiResult(true, '', (object)['userSettings' => $userSettings['user_userscripts_settings.settings']]);
-  } else {
-    echo new ApiResult(false, '');
-  }
+    $userSettings = Database::getUserSettings($userscript->getID(), $user->getID());
+    if($userSettings) {
+        echo new ApiResult(true, '', (object)['userSettings' => $userSettings['user_userscripts_settings.settings']]);
+    } else {
+        echo new ApiResult(false, '');
+    }
 });
 
-$app->get('/api/database/setsettings/{key}', function (Request $request, Response $response) {
-  $key_name = filter_var($request->getAttribute('key'), FILTER_SANITIZE_STRING);
-  $userscript = Userscript::getUserscriptByKeyName($key_name);
-  if (!$userscript) {
-      echo new ApiResult(false, 'A script with this key_name was not found.');
+$app->post('/api/settings/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $userscript = new Userscrip($id);
+    if (!$userscript->update()) {
+      echo new ApiResult(false, 'A script with this id was not found.');
       return;
-  }
+    }
 
-  $user = Database::getUserByAuthKey($_GET['authKey']);
-  if ($user == null) {
-      echo new ApiResult(false, 'AuthKey does not belong to a user.');
-      return;
-  }
-
-  $userSettings = Database::setUserSettingsByUserscriptId($userscript['userscript.id'], $_GET['settings'], $user->getID());
-  echo new ApiResult(true, '', (object)['key_name' => $userscript['userscript.key_name']]);
+    $data = $request->getParsedBody();
+    $settings = filter_var($data['settings'] ?? null, FILTER_SANITIZE_STRING);
+    $success = Database::setUserSettings(LoginHandler::getInstance()->getUser()->getID(), $id, $settings);
+    echo new ApiResult($success, '');
 });
 
 /* USER */
@@ -359,14 +358,10 @@ $app->post('/api/userscript/create', function (Request $request, Response $respo
         return;
     }
 
-    $key_name = preg_replace("/[^A-Za-z0-9_?!]/",'', substr( strtolower( str_replace(" ","_",$name) ) , 0, 150) );
-
-    $userscript = Userscript::create(
-      $name,
-      LoginHandler::getInstance()->getUser()->getID(),
-      $key_name,
-      $description,
-      $script
+    $userscript = Userscript::create($name,
+        LoginHandler::getInstance()->getUser()->getID(),
+        base64_decode($description),
+        base64_decode($script)
     );
     echo new ApiResult(true, 'The userscript has been created.', $userscript);
 });

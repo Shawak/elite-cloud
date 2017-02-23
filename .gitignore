@@ -1,9 +1,18 @@
-# Vagrant stuff
+# Composer
+vendor/*
+
+# PhpStorm settings
+.idea/*
+
+# Smarty
+smarty/*
+
+# Config-update
+config-update.php
+
+# Vargrant
 acceptance_config.yml
 boxes/*
 /.vagrant
 .vagrant/
 /vagrant-spec.config.rb
-.idea/*
-app/vendor/*
-app/smarty/*

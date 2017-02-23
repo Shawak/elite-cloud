@@ -59,63 +59,52 @@ class Database extends PDO
         return $ret;
     }
 
-    public static function getUserSettingsByUserscriptId($id = null, $userId = null)
+    public static function getUserSettings($user_id, $userscript_id)
     {
-      if ($id == null) return false;
-      if ($userId == null) return false;
-
-      $stmt = Database::getInstance()->prepare('
-        select settings
-        from user_userscripts_settings
-        where userscript_id = :id
-        and
-        user_id = :userid
-      ');
-      $stmt->bindValue(':id', $id);
-      $stmt->bindValue(':userid', $userId);
-      $stmt->execute();
-      $ret = $stmt->fetch();
-      return $ret ?: false;
+        $stmt = Database::getInstance()->prepare('
+            select data
+            from settings
+            where user_id = :user_id
+              and userscript_id = :userscript_id
+        ');
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':userscript_id', $userscript_id);
+        $stmt->execute();
+        $ret = $stmt->fetch();
+        return $ret ?: null;
     }
 
-    public static function setUserSettingsByUserscriptId($id = null, $settings = null, $userId = null)
+    public static function setUserSettings($user_id, $userscript_id, $data)
     {
-      if ($id == null) return false;
-      if ($userId == null) return false;
-      // Check if settings exist
-      $stmt = Database::getInstance()->prepare('
-        select *
-        from user_userscripts_settings
-        where userscript_id = :id
-      ');
-      $stmt->bindValue(':id', $id);
-      $stmt->execute();
-      $ret = $stmt->fetch();
-      if(!$ret) {
-        // Insert
         $stmt = Database::getInstance()->prepare('
-    			insert into user_userscripts_settings
-    			(user_id, userscript_id, settings)
-    			values (:user_id, :userscript_id, :settings)
-    		');
-        $stmt->bindValue(':user_id', $userId);
-        $stmt->bindValue(':userscript_id', $id );
-        $stmt->bindValue(':settings', $settings );
-        return $stmt->execute();
-      } else {
-        // Update
-        $stmt = Database::getInstance()->prepare('
-            update user_userscripts_settings
-            set settings = :settings
+            select *
+            from settings
             where user_id = :user_id
-            and userscript_id = :userscript_id
+              and userscript_id = :userscript_id
         ');
-        $stmt->bindValue(':user_id', $userId);
-        $stmt->bindValue(':userscript_id', $id );
-        $stmt->bindValue(':settings', $settings );
-        return $stmt->execute();
-      }
-
+        $stmt->bindValue(':userscript_id', $userscript_id);
+        if(!$stmt->fetch()) {
+            $stmt = Database::getInstance()->prepare('
+                insert into settings
+                (user_id, userscript_id, data)
+                values (:user_id, :userscript_id, :data)
+            ');
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':userscript_id', $userscript_id);
+            $stmt->bindValue(':data', $data);
+            return $stmt->execute();
+        } else {
+            $stmt = Database::getInstance()->prepare('
+                update settings
+                set data = :data
+                where user_id = :user_id
+                and userscript_id = :userscript_id
+            ');
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':userscript_id', $userscript_id);
+            $stmt->bindValue(':data', $data);
+            return $stmt->execute();
+        }
     }
 
     public static function getUserscripts($sort = 'selected', $order = 'asc', $search = null, $offset = null, $count = null)

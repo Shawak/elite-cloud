@@ -5,6 +5,7 @@ class User extends DBObject
     public $id;
     public $name;
     protected $password;
+    protected $email;
     public $flag;
     protected $authKey;
     protected $registered;
@@ -79,14 +80,14 @@ class User extends DBObject
         return $this->flag;
     }
 
-    public function getUserRole()
+    public function getRole()
     {
       $stmt = Database::getInstance()->prepare('
-    select user.*, user_roles.*
-    from user, user_roles
-    where user.id = :id
-      and user_roles.user_id = :id
-  ');
+        select user.*, user_roles.*
+        from user, user_roles
+        where user.id = :id
+          and user_roles.user_id = :id
+      ');
       $stmt->bindValue(':id', $this->id);
       $stmt->execute();
       $ret = $stmt->fetchAll();

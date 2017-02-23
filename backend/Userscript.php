@@ -1,13 +1,11 @@
 <?php
 
-
 class Userscript extends DBObject
 {
 
     public $id;
     public $name;
     public $description;
-    public $key_name;
     public $author;
     protected $script;
     public $users;
@@ -18,33 +16,17 @@ class Userscript extends DBObject
         $this->id = $id;
     }
 
-
-    public static function getUserscriptByKeyName($key)
-    {
-        $stmt = Database::getInstance()->prepare('
-            select *
-            from userscript
-            where key_name = :key
-        ');
-        $stmt->bindValue(':key', $key);
-        $stmt->execute();
-        $ret = $stmt->fetch();
-        return $ret;
-    }
-
-    public static function create($name, $author, $key_name, $description, $script)
+    public static function create($name, $author, $description, $script)
     {
         $stmt = Database::getInstance()->prepare('
     			insert into userscript
-    			(author, name, description, script, key_name)
-    			values (:author, :name, :description, :script, :key_name)
+    			(author, name, description, script)
+    			values (:author, :name, :description, :script)
     		');
-
         $stmt->bindValue(':author', $author);
         $stmt->bindValue(':name', $name);
-        $stmt->bindValue(':description', $description );
-        $stmt->bindValue(':script', $script );
-        $stmt->bindValue(':key_name', $key_name);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':script', $script);
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
@@ -52,11 +34,6 @@ class Userscript extends DBObject
     public function getID()
     {
         return $this->id;
-    }
-
-    public function getKey()
-    {
-        return $this->key_name;
     }
 
     public function getName()
@@ -99,11 +76,6 @@ class Userscript extends DBObject
         $this->description = $description;
     }
 
-    public function setKey($key_name)
-    {
-        $this->key_name = $key_name;
-    }
-
     public function setAuthor($author)
     {
         $this->author = $author;
@@ -130,8 +102,6 @@ class Userscript extends DBObject
 			select *, (select count(*) from user_userscript where userscript_id = userscript.id) as users [selected]
 			from userscript, user
 			where userscript.id = :id
-      and
-      user.id = userscript.author
 		';
 
         $query = str_replace('[selected]',
@@ -172,7 +142,7 @@ class Userscript extends DBObject
         $stmt->bindValue(':id', $this->id);
         $stmt->bindValue(':name', $this->name);
         $stmt->bindValue(':description', base64_encode($this->description));
-        $stmt->bindValue(':author', LoginHandler::getInstance()->getUser()->getID());
+        $stmt->bindValue(':author', $this->author->getID());
         $stmt->bindValue(':script', base64_encode($this->script));
         return $stmt->execute();
     }

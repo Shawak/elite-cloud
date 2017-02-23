@@ -14,8 +14,8 @@ define('SMARTY_DEBUGGING', false);
 
 // Database
 $config['db']['host'] = 'localhost';
-$config['db']['user'] = 'datadev';
-$config['db']['pass'] = 'mysql1234567';
+$config['db']['user'] = 'root';
+$config['db']['pass'] = '';
 $config['db']['datb'] = 'elitecloud';
 
 // Google reCAPTCHA

@@ -185,6 +185,7 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
     $scope.init = function (id) {
         $scope.id = id
         if($scope.id == -1) {
+            setTimeout(function() {$("a[ng-click='edit($event)'").click()});
             return;
         }
 
@@ -267,7 +268,6 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
 
     $scope.delete = function ($event) {
         $event.stopPropagation();
-        console.log($scope.id);
         var response = $http.post('api/userscript/' + $scope.id + '/delete');
         response.success(function (result, status, headers, config) {
             notify(result);
