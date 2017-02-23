@@ -99,7 +99,8 @@ $app->get('/api/authenticate/{authKey}', function (Request $request, Response $r
     }
     echo new ApiResult(true, '', (object)[
         'user' => $user,
-        'userscripts' => $user->getSelectedUserscripts()
+        //'userscripts' => $user->getSelectedUserscripts(),
+        'data' => Database::getScriptsAndSettings($user)
     ]);
 });
 

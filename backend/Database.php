@@ -82,6 +82,7 @@ class Database extends PDO
             where user_id = :user_id
               and userscript_id = :userscript_id
         ');
+        $stmt->bindValue(':user_id', $user_id);
         $stmt->bindValue(':userscript_id', $userscript_id);
         if(!$stmt->fetch()) {
             $stmt = Database::getInstance()->prepare('
@@ -249,6 +250,33 @@ class Database extends PDO
         $stmt->execute();
         $ret = $stmt->fetch();
         return User::fromData($ret);
+    }
+
+    public static function getScriptsAndSettings($user) {
+        $stmt = Database::getInstance()->prepare('
+            select
+              userscript.id,
+              userscript.name,
+              userscript.script,
+              settings.data
+            from user 
+              left join user_userscript on user_userscript.user_id = user.id
+              left join userscript on userscript.id = user_userscript.userscript_id
+              left join settings on settings.user_id = user.id
+            where user.id = :user_id
+        ');
+        $stmt->bindValue(':user_id', $user->getID());
+        $stmt->execute();
+        $ret = $stmt->fetchAll();
+        array_walk($ret, function (&$e) {
+            $v = (object)[];
+            $v->id = $e['userscript.id'];
+            $v->name = $e['userscript.name'];
+            $v->script = $e['userscript.script'];
+            $v->settings = $e['settings.data'];
+            $e = $v;
+        });
+        return $ret;
     }
 
 }

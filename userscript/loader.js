@@ -7,6 +7,7 @@
         keyAuthKey: 'elite-cloud_authKey',
         keyLookupTable: 'elite-cloud_lookup',
         keyScriptPrefix: 'elite-cloud_script',
+        keySettingPrefix: 'elite-cloud_setting',
 
         hideForm: function () {
             $('#ec_form').hide();
@@ -29,6 +30,8 @@
         },
 
         init: function () {
+            that.loadLocalScripts();
+
             that.log('Loader init()');
             that.injectPlugin(function () {
                 that.login();
@@ -79,7 +82,7 @@
                     });
                     after();
                 });
-            }).fail(function (e, status) {
+            }).fail(function (e, status, err) {
                 that.log(status);
             });
         },
@@ -90,7 +93,7 @@
 
         getLookupTable: function () {
             var table = localStorage.getItem(that.keyLookupTable);
-            return table ? JSON.parse(table) : {};
+            return table !== null ? JSON.parse(table) : {};
         },
 
         setLookupTable: function (table) {
@@ -98,11 +101,58 @@
         },
 
         getScript: function (id, key) {
-            return localStorage.getItem(that.keyScriptPrefix + '_' + id + '_' + key)
+            return localStorage.getItem(that.keyScriptPrefix + '_' + id + '_' + key);
+        },
+        
+        delScript: function (id, key) {
+            localStorage.removeItem(that.keyScriptPrefix + '_' + id + '_' + key);
         },
 
         setScript: function (id, key, script) {
             localStorage.setItem(that.keyScriptPrefix + '_' + id + '_' + key, script);
+        },
+
+        getSetting: function (id, key) {
+            return JSON.parse(localStorage.getItem(that.keySettingPrefix + '_' + id + '_' + key));
+        },
+
+        setSetting: function (id, key, setting, save) {
+            save = (typeof save !== 'undefined') ?  save : true;
+            localStorage.setItem(that.keySettingPrefix + '_' + id + '_' + key, JSON.stringify(setting));
+            if (!save) {
+                return;
+            }
+            var id = document.currentScript.getAttribute('userscript_id');
+            var key = document.currentScript.getAttribute('userscript_key');
+            $.ajax({
+                type: 'post',
+                url: encodeURI(that.root + 'api/settings/' + id),
+                data: {
+                    settings: JSON.stringify(settings),
+                    authKey: that.getAuthKey()
+                },
+                dataType: 'jsonp'
+            }).done(function (e) {
+                if (e.success) {
+                    that.log(key + ' saved settings to Database');
+                } else {
+                    that.log(e.message);
+                }
+            }).fail(function (e, status) {
+                that.log('error: ' + status);
+            });
+        },
+
+        loadLocalScripts: function () {
+            that.log('Loading scripts from LocalStorage');
+            var lookup = that.getLookupTable();
+            for (var prop in lookup) {
+                if (that.getScript(lookup[prop].id, lookup[prop].key)) {
+                    that.injectScript(that.getScript(lookup[prop].id, lookup[prop].key), lookup[prop].id, lookup[prop].key);
+                } else {
+                    that.log('We found a script in LocalStorage Lookup but this is not stored');
+                }
+            }
         },
 
         login: function () {
@@ -119,53 +169,43 @@
             }).done(function (e) {
                 if (e.success) {
                     that.setMessage('Authenticated as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
-                    that.log('Loading userscripts..');
-                    for (var i = 0; i < e.data.userscripts.length; i++) {
-                        var script = e.data.userscripts[i];
-                        var table = that.getLookupTable();
 
-                        // we don't store information about the script yet
-                        if (!table.hasOwnProperty(script.id)) {
-                            that.log('adding script info to lookup table');
+                    that.log('Updating userscripts (' + e.data.data.length +') ..');
+
+                    var table = that.getLookupTable();
+                    for (var i = 0; i < e.data.data.length; i++) {
+                        var info = e.data.data[i];
+                        that.log('Updating script "' + info.name + '"');
+                        // check if the script is in the lookup table
+                        if (!table.hasOwnProperty(info.id)) {
                             var entry = {
-                                id: script.id,
-                                name: script.name,
-                                key: that.strToKey(script.name)
+                                id: info.id,
+                                name: info.name,
+                                key: that.strToKey(info.name)
                             };
-                            table[script.id] = entry;
-                            that.setLookupTable(table);
+                            table[info.id] = entry;
                         } else {
-                            var entry = table[script.id];
-                            if (entry.name != script.name) {
-                                entry.key = that.strToKey(script.name);
-                                that.setLookupTable(table);
+                            var entry = table[info.id];
+                            // update the key name if the script name has changed
+                            if (entry.name != info.name) {
+                                var tmp = that.getScript(entry.id, entry.key);
+                                that.delScript(entry.id, entry.key);
+                                entry.key = that.strToKey(info.name);
+                                that.setScript(entry.id, entry.key, tmp);
                             }
                         }
 
-                        var sscript = that.getScript(script.id, entry.key);
-                        // script is inside the local storage
-                        if (sscript) {
-                            that.log(entry.key + ' loaded from local storage');
-                            that.injectScript(sscript, script.id, entry.key)
-                        } else {
-                            $.ajax({
-                                url: encodeURI(that.root + 'api/script/' + script.id),
-                                dataType: 'jsonp'
-                            }).done(function (e) {
-                                that.log(entry.key + ' saved to local storage');
-                                that.setScript(script.id, entry.key, e.data.script);
-                                that.injectScript(e.data.script, script.id, entry.key);
-                            }).fail(function (e, status) {
-                                that.log(status);
-                            })
-                        }
+                        that.setScript(entry.id, entry.key, info.script);
+                        that.setSetting(entry.id, entry.key, info.data, false);
                     }
+
+                    that.setLookupTable(table);
                 } else {
                     that.setMessage(e.message);
                     that.showForm();
                 }
             }).fail(function (e, status) {
-                that.log(status);
+                that.log('error: ' + status);
             });
         },
 
@@ -174,11 +214,11 @@
             location.reload();
         },
 
-        setSettings: function (settings) {
+        /*setSettings: function (settings) {
             var id = document.currentScript.getAttribute('userscript_id');
             var key = document.currentScript.getAttribute('userscript_key');
             $.ajax({
-                type: 'get',
+                type: 'post',
                 url: encodeURI(that.root + 'api/settings/' + id),
                 data: {
                     settings: JSON.stringify(settings),
@@ -187,51 +227,55 @@
                 dataType: 'jsonp'
             }).done(function (e) {
                 if (e.success) {
-                    // localStorage.removeItem('settings_' + id); // force-delete the old whole-script
-                    localStorage.setItem('settings_' + id, JSON.stringify(settings));
+                    // localStorage.removeItem('settings_' + key_name); // force-delete the old whole-script
+                    localStorage.setItem('settings_' + key, JSON.stringify(settings));
                     that.log('[' + key + ']Successfully saved settings to Database');
                 } else {
                     that.log('[' + key + '][Error] =>' + e.message);
                 }
-            }).fail(function (e, status) {
-                that.log(status);
+            }).fail(function (e, status, err) {
+                that.log('error: ' + status);
             });
 
             return true;
-        },
+        },*/
 
         // Load on every start for every script
-        loadSettings: function (settings) {
+        /*loadSettings: function (settings) {
             var id = document.currentScript.getAttribute('userscript_id');
             var key = document.currentScript.getAttribute('userscript_key');
-            if (localStorage.getItem('settings_' + id)) {
-                // if in localStorage
-                settings = JSON.parse(localStorage.getItem('settings_' + id));
-                return settings;
+
+            var ssetting = that.getSetting(id, key);
+
+            if (ssetting) {
+                that.log(key + ' loaded setting from local storage');
+                that.setSetting(id, key, ssetting);
+                console.log(ssetting);
+                return ssetting;
             } else {
                 // if not in localStorage check Database first
                 $.ajax({
-                    type: "GET",
-                    url: encodeURI(that.root + 'api/database/getsettings/' + id),
+                    type: 'get',
+                    url: encodeURI(that.root + 'api/settings/' + id),
                     data: {
                         authKey: that.getAuthKey()
                     },
                     dataType: 'jsonp'
                 }).done(function (e) {
                     if (e.success) {
-                        localStorage.setItem('settings_' + id, JSON.stringify(e.data.userSettings));
-                        that.log('[' + key + ']Successfully loaded settings from Database');
-                        return JSON.parse(e.data.userSettings);
+                        that.setSetting(id, key, e.data.userSettings);
+                        that.log('[' + key + ']Successfully loaded setting from Database');
+                        return e.data.userSettings;
                     } else {
-                        that.log('[' + key + ']Successfully loaded settings from default');
-                        localStorage.setItem('settings_' + id, JSON.stringify(settings));
+                        that.setSetting(id, key, settings);
+                        that.log('[' + key + ']Successfully loaded setting from default');
                         return settings; // returning default settings
                     }
-                }).fail(function (e, status) {
+                }).fail(function (e, status, err) {
                     that.log('[' + key + '][Error] =>' + status);
                 });
             }
-        },
+        },*/
 
 
     });
