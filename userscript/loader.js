@@ -82,7 +82,7 @@
                     });
                     after();
                 });
-            }).fail(function (e, status, err) {
+            }).fail(function (e, status) {
                 that.log(status);
             });
         },
@@ -103,44 +103,13 @@
         getScript: function (id, key) {
             return localStorage.getItem(that.keyScriptPrefix + '_' + id + '_' + key);
         },
-        
+
         delScript: function (id, key) {
             localStorage.removeItem(that.keyScriptPrefix + '_' + id + '_' + key);
         },
 
         setScript: function (id, key, script) {
             localStorage.setItem(that.keyScriptPrefix + '_' + id + '_' + key, script);
-        },
-
-        getSetting: function (id, key) {
-            return JSON.parse(localStorage.getItem(that.keySettingPrefix + '_' + id + '_' + key));
-        },
-
-        setSetting: function (id, key, setting, save) {
-            save = (typeof save !== 'undefined') ?  save : true;
-            localStorage.setItem(that.keySettingPrefix + '_' + id + '_' + key, JSON.stringify(setting));
-            if (!save) {
-                return;
-            }
-            var id = document.currentScript.getAttribute('userscript_id');
-            var key = document.currentScript.getAttribute('userscript_key');
-            $.ajax({
-                type: 'post',
-                url: encodeURI(that.root + 'api/settings/' + id),
-                data: {
-                    settings: JSON.stringify(settings),
-                    authKey: that.getAuthKey()
-                },
-                dataType: 'jsonp'
-            }).done(function (e) {
-                if (e.success) {
-                    that.log(key + ' saved settings to Database');
-                } else {
-                    that.log(e.message);
-                }
-            }).fail(function (e, status) {
-                that.log('error: ' + status);
-            });
         },
 
         loadLocalScripts: function () {
@@ -175,7 +144,7 @@
                     var table = that.getLookupTable();
                     for (var i = 0; i < e.data.data.length; i++) {
                         var info = e.data.data[i];
-                        that.log('Updating script "' + info.name + '"');
+                        that.log('> ' + info.name);
                         // check if the script is in the lookup table
                         if (!table.hasOwnProperty(info.id)) {
                             var entry = {
@@ -195,8 +164,10 @@
                             }
                         }
 
-                        that.setScript(entry.id, entry.key, info.script);
-                        that.setSetting(entry.id, entry.key, info.data, false);
+                        that.setScript(entry.id, entry.key, atob(info.script));
+                        if(typeof info.settings === 'string') {
+                            that.setSettings(entry.id, entry.key, JSON.parse(info.settings), false);
+                        }
                     }
 
                     that.setLookupTable(table);
@@ -214,70 +185,49 @@
             location.reload();
         },
 
-        /*setSettings: function (settings) {
-            var id = document.currentScript.getAttribute('userscript_id');
-            var key = document.currentScript.getAttribute('userscript_key');
-            $.ajax({
-                type: 'post',
-                url: encodeURI(that.root + 'api/settings/' + id),
-                data: {
-                    settings: JSON.stringify(settings),
-                    authKey: that.getAuthKey()
-                },
-                dataType: 'jsonp'
-            }).done(function (e) {
-                if (e.success) {
-                    // localStorage.removeItem('settings_' + key_name); // force-delete the old whole-script
-                    localStorage.setItem('settings_' + key, JSON.stringify(settings));
-                    that.log('[' + key + ']Successfully saved settings to Database');
-                } else {
-                    that.log('[' + key + '][Error] =>' + e.message);
-                }
-            }).fail(function (e, status, err) {
-                that.log('error: ' + status);
-            });
-
-            return true;
-        },*/
+        getSettings: function (id, key) {
+            var item = localStorage.getItem(that.keySettingPrefix + '_' + id + '_' + key);
+            return item != null ? JSON.parse(item) : null;
+        },
 
         // Load on every start for every script
-        /*loadSettings: function (settings) {
+        // called by any user script
+        loadSettings: function (defaultSettings) {
             var id = document.currentScript.getAttribute('userscript_id');
             var key = document.currentScript.getAttribute('userscript_key');
+            var settings = that.getSettings(id, key);
+            return settings ? settings : defaultSettings;
+        },
 
-            var ssetting = that.getSetting(id, key);
-
-            if (ssetting) {
-                that.log(key + ' loaded setting from local storage');
-                that.setSetting(id, key, ssetting);
-                console.log(ssetting);
-                return ssetting;
-            } else {
-                // if not in localStorage check Database first
-                $.ajax({
-                    type: 'get',
-                    url: encodeURI(that.root + 'api/settings/' + id),
-                    data: {
-                        authKey: that.getAuthKey()
-                    },
-                    dataType: 'jsonp'
-                }).done(function (e) {
-                    if (e.success) {
-                        that.setSetting(id, key, e.data.userSettings);
-                        that.log('[' + key + ']Successfully loaded setting from Database');
-                        return e.data.userSettings;
-                    } else {
-                        that.setSetting(id, key, settings);
-                        that.log('[' + key + ']Successfully loaded setting from default');
-                        return settings; // returning default settings
-                    }
-                }).fail(function (e, status, err) {
-                    that.log('[' + key + '][Error] =>' + status);
-                });
+        setSettings: function (id, key, setting, save) {
+            save = (typeof save !== 'undefined') ?  save : true;
+            localStorage.setItem(that.keySettingPrefix + '_' + id + '_' + key, JSON.stringify(setting));
+            if (!save) {
+                return;
             }
-        },*/
+            $.ajax({
+                url: encodeURI(that.root + 'api/settings/set/' + id),
+                data: {
+                    settings: btoa(JSON.stringify(settings))
+                },
+                dataType: 'jsonp',
+            }).done(function (e) {
+                if (e.success) {
+                    that.log(key + ' saved settings to Database');
+                } else {
+                    that.log(e.message);
+                }
+            }).fail(function (e, status) {
+                that.log('error: ' + status);
+            });
+        },
 
-
+        // called by any user script
+        saveSettings: function(settings) {
+            var id = document.currentScript.getAttribute('userscript_id');
+            var key = document.currentScript.getAttribute('userscript_key');
+            that.setSettings(id, key, settings, true);
+        },
     });
 
     var that = elite_cloud;

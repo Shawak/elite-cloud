@@ -1,7 +1,5 @@
 <?php
 
-
-
 /* Directories */
 define('DIR_APP', getcwd() . '/');
 define('DIR_VENDOR', DIR_APP . 'vendor/');

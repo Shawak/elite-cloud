@@ -122,34 +122,41 @@ $app->get('/api/settings/{id}', function (Request $request, Response $response) 
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
     if (!$userscript->update()) {
-      echo new ApiResult(false, 'A script with this id was not found.');
-      return;
+        echo new ApiResult(false, 'A script with this id was not found.');
+        return;
     }
 
-    $user = Database::getUserByAuthKey($_GET['authKey']);
+    $user = LoginHandler::getInstance()->getUser();
     if ($user == null) {
-      echo new ApiResult(false, 'AuthKey does not belong to a user.');
-      return;
+        echo new ApiResult(false, 'AuthKey does not belong to a user.');
+        return;
     }
 
     $userSettings = Database::getUserSettings($userscript->getID(), $user->getID());
     if($userSettings) {
         echo new ApiResult(true, '', (object)['userSettings' => $userSettings['user_userscripts_settings.settings']]);
     } else {
-        echo new ApiResult(false, '');
+        echo new ApiResult(false, 'Error by get settings');
     }
 });
 
-$app->post('/api/settings/{id}', function (Request $request, Response $response) {
+$app->get('/api/settings/set/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
-    $userscript = new Userscrip($id);
+    $settings = base64_decode(get('settings'));
+
+    $userscript = new Userscript($id);
     if (!$userscript->update()) {
-      echo new ApiResult(false, 'A script with this id was not found.');
-      return;
+        echo new ApiResult(false, 'A script with this id was not found.');
+        return;
     }
 
-    $data = $request->getParsedBody();
-    $settings = filter_var($data['settings'] ?? null, FILTER_SANITIZE_STRING);
+    $user = LoginHandler::getInstance()->getUser();
+    if ($user == null) {
+        echo new ApiResult(false, 'AuthKey does not belong to a user.');
+        return;
+    }
+
+    // echo new ApiResult(false, 'test', (object)['1'=> 'test']);
     $success = Database::setUserSettings(LoginHandler::getInstance()->getUser()->getID(), $id, $settings);
     echo new ApiResult($success, '');
 });

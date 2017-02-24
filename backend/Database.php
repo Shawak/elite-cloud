@@ -84,6 +84,7 @@ class Database extends PDO
         ');
         $stmt->bindValue(':user_id', $user_id);
         $stmt->bindValue(':userscript_id', $userscript_id);
+        $stmt->execute();
         if(!$stmt->fetch()) {
             $stmt = Database::getInstance()->prepare('
                 insert into settings
