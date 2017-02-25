@@ -200,7 +200,8 @@ header nav a {
 
 footer {
     background-color: #1c1e20;
-    color: #e6e6e6
+    color: #e6e6e6;
+    margin-top: 50px
 }
 
 .footer-content {

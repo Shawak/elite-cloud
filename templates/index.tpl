@@ -80,6 +80,7 @@
     <!-- AngularJS -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
     <script src="js/elite-cloud.js"></script>
+    {block name="scriptjs"}{/block}
 </head>
 
 <body>

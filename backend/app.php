@@ -29,6 +29,7 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $user = new User($id);
     SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
+    SmartyHandler::getInstance()->assign('scripts', $user->getSelectedUserscripts() ?: null);
     SmartyHandler::getInstance()->assign('page', 'user');
     SmartyHandler::getInstance()->display('page-user.tpl');
 });
