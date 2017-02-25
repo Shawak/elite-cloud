@@ -1,0 +1,110 @@
+#userscriptWrapper {
+    padding: 20px 0;
+}
+
+.header {
+    padding-bottom: 10px;
+}
+
+.info img {
+    width: 64px;
+    height: 64px;
+    margin-right: 15px;
+}
+
+.info .name,
+.info .author,
+.info .users {
+    width: 700px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.info .name {
+    display: block;
+}
+
+.info .name input[readonly=readonly] {
+    background-color: inherit;
+}
+
+.buttons a {
+    width: 140px;
+    float: right;
+    clear: both;
+    margin-bottom: 5px;
+}
+
+.buttons > *:last-child {
+    margin: 0;
+}
+
+.buttons span {
+    float: left;
+    display: block;
+    vertical-align: center;
+    line-height: 34px;
+    margin-right: 10px;
+}
+
+.box {
+    border-top: 1px solid rgb(226, 168, 90);
+    min-height: 30px;
+    margin-top: 20px;
+}
+
+.box-title-wrapper {
+    height: 0;
+}
+
+.box-title {
+    padding: 0 5px;
+    left: 10px;
+    position: relative;
+    top: -13px;
+    background-color: rgb(230, 230, 230);
+}
+
+.box-text {
+    padding-top: 15px;
+}
+
+.box-text ul {
+    margin-left: 18px;
+}
+
+.box textarea {
+    width: 100%;
+    height: 100%;
+    border: inset 1px solid black;
+    background-color: rgb(237, 237, 237);
+    border-radius: 5px;
+    resize: none;
+    min-height: 400px;
+    padding: 10px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 12px;
+}
+
+.box .description textarea .editor-preview-active * {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    outline: 0 !important;
+}
+
+.box .description textarea {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+}
+
+.box .description pre code {
+    padding: 15px;
+    display: block;
+}
+
+.CodeMirror,
+.CodeMirror .editor-preview,
+.editor-toolbar a {
+    background-color: rgb(230, 230, 230) !important;
+}

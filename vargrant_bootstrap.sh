@@ -9,7 +9,7 @@ MAINDB='elitecloud'
 # Main root password
 PHPADMINPASSWORD='un2134h98n234fnv89Gweb31vA'
 # Folder
-PROJECTFOLDER='app/public'
+PROJECTFOLDER='elite-cloud/public'
 
 # update / upgrade
 sudo apt-get update

@@ -1,32 +1,37 @@
 # elite-cloud
 
-### Requirements:
-* vagrant
-* git
+### Installing using vargrant
 
-### Installing:
-Run the following commands:
-
-    git clone git@gitlab.com:elitepvpers-external/elite-cloud.git
+    git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud
     vagrant up
     vagrant ssh
-    cd /var/www/app/
+    cd /var/www/elite-cloud
     composer install
-    cd ..
-    cd dump
-    mysql -u root -p < *dump*.sql
-
+    mysql -u root -p < elitecloud.sql
+    
 Now enter your mysql root passwort and you are done!
 
-### Updating:
+### Installing (linux)
 
-    cd /var/www/app
+Install Apache, PHP7, MySQL and Composer
+
+    apt-get install unzip
+    cd /var/www
+    git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud
+    chmod -R 777 elite-cloud
+    cd elite-cloud
+    composer install
+    mysql -u root -p < elitecloud.sql
+
+### Updating
+
+    cd /var/www/elite-cloud
     git reset --hard
     git pull
-    chmod -R 777 /var/www/app
+    chmod -R 777 /var/www/elite-cloud
     composer install
 
-### Configure:
+### Configure
 
 You may enter personal data/passwords into a `config-update.php` file to overwrite the `config.php` this way to prevent uploading them during development.
 

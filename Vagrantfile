@@ -18,7 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "private_network", ip: "90.90.90.91"
   config.vm.network "forwarded_port", guest: 85, host: 8082
 
-  config.vm.synced_folder "./", "/var/www", :nfs => !Vagrant::Util::Platform.windows?
+  config.vm.synced_folder "./", "/var/www/elite-cloud", :nfs => !Vagrant::Util::Platform.windows?
 
   config.vm.provision :shell, path: "bootstrap.sh"
 
