@@ -25,8 +25,8 @@ class Userscript extends DBObject
     		');
         $stmt->bindValue(':author', $author);
         $stmt->bindValue(':name', $name);
-        $stmt->bindValue(':description', $description);
-        $stmt->bindValue(':script', $script);
+        $stmt->bindValue(':description', base64_encode($description));
+        $stmt->bindValue(':script', base64_encode($script));
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }
