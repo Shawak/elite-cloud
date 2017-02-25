@@ -54,6 +54,10 @@ $app->get('/userscript/do/create', function (Request $request, Response $respons
 /* LINKS */
 
 $app->get('/elite-cloud.user.js', function (Request $request, Response $response) {
+    /* Force Download
+    header('Content-type: text/plain');
+    header("Content-Disposition: attachment; filename=elite-cloud.user.js");
+    */
     SmartyHandler::getInstance()->setTemplateDir(DIR_USERSCRIPT);
     SmartyHandler::getInstance()->display('elite-cloud.user.js');
 });
@@ -95,7 +99,8 @@ $app->get('/api/authenticate/{authKey}', function (Request $request, Response $r
     }
     echo new ApiResult(true, '', (object)[
         'user' => $user,
-        'userscripts' => $user->getSelectedUserscripts()
+        //'userscripts' => $user->getSelectedUserscripts(),
+        'data' => Database::getScriptsAndSettings($user)
     ]);
 });
 
@@ -111,6 +116,49 @@ $app->get('/api/script/{id}', function (Request $request, Response $response) {
         $script = (new Minify\JS($script))->minify();
     }
     echo new ApiResult(true, '', (object)['script' => $script]);
+});
+
+$app->get('/api/settings/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A script with this id was not found.');
+        return;
+    }
+
+    $user = LoginHandler::getInstance()->getUser();
+    if ($user == null) {
+        echo new ApiResult(false, 'AuthKey does not belong to a user.');
+        return;
+    }
+
+    $userSettings = Database::getUserSettings($userscript->getID(), $user->getID());
+    if($userSettings) {
+        echo new ApiResult(true, '', (object)['userSettings' => $userSettings['user_userscripts_settings.settings']]);
+    } else {
+        echo new ApiResult(false, 'Error by get settings');
+    }
+});
+
+$app->get('/api/settings/set/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $settings = base64_decode(get('settings'));
+
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A script with this id was not found.');
+        return;
+    }
+
+    $user = LoginHandler::getInstance()->getUser();
+    if ($user == null) {
+        echo new ApiResult(false, 'AuthKey does not belong to a user.');
+        return;
+    }
+
+    // echo new ApiResult(false, 'test', (object)['1'=> 'test']);
+    $success = Database::setUserSettings(LoginHandler::getInstance()->getUser()->getID(), $id, $settings);
+    echo new ApiResult($success, '');
 });
 
 /* USER */
@@ -286,6 +334,27 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
     echo new ApiResult($success, $success ? 'Successfully saved changes.' : 'An unknown error occurred, please try again later.');
 });
 
+$app->post('/api/userscript/{id}/delete', function (Request $request, Response $response) {
+    if (!LOGGED_IN) {
+        echo new ApiResult(false, 'You need to be logged in to edit a userscript.');
+        return;
+    }
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A userscript with this id does not exists.');
+        return;
+    }
+
+    if (LoginHandler::getInstance()->getUser()->getID() != $userscript->getAuthor()->getID()) {
+        echo new ApiResult(false, 'You need to be the owner of the userscript to edit it.');
+        return;
+    }
+    $success = $userscript->delete();
+    echo new ApiResult($success, $success ? 'Successfully deleted.' : 'An unknown error occurred, please try again later.');
+});
+
 $app->post('/api/userscript/create', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
@@ -297,19 +366,11 @@ $app->post('/api/userscript/create', function (Request $request, Response $respo
         return;
     }
 
-    /*$files = $request->getUploadedFiles();
-    $file = isset($files['file']) ? $files['file'] : null;
-    if ($file == null) {
-        echo new ApiResult(false, 'Could not get the uploaded file.');
-        return;
-    }
-    $script = file_get_contents($file);*/
-
-    $userscript = Userscript::create($name, LoginHandler::getInstance()->getUser()->getID());
-    $userscript->update();
-    $userscript->setDescription(base64_decode($description));
-    $userscript->setScript(base64_decode($script));
-    $userscript->save();
+    $userscript = Userscript::create($name,
+        LoginHandler::getInstance()->getUser()->getID(),
+        base64_decode($description),
+        base64_decode($script)
+    );
     echo new ApiResult(true, 'The userscript has been created.', $userscript);
 });
 

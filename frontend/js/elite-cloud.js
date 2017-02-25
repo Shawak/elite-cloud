@@ -185,6 +185,7 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
     $scope.init = function (id) {
         $scope.id = id
         if($scope.id == -1) {
+            setTimeout(function() {$("a[ng-click='edit($event)'").click()});
             return;
         }
 
@@ -262,6 +263,14 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
             if (result.success) {
                 $scope.userscript.selected = !$scope.userscript.selected;
             }
+        });
+    };
+
+    $scope.delete = function ($event) {
+        $event.stopPropagation();
+        var response = $http.post('api/userscript/' + $scope.id + '/delete');
+        response.success(function (result, status, headers, config) {
+            notify(result);
         });
     };
 

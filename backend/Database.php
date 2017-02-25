@@ -59,6 +59,56 @@ class Database extends PDO
         return $ret;
     }
 
+    public static function getUserSettings($user_id, $userscript_id)
+    {
+        $stmt = Database::getInstance()->prepare('
+            select data
+            from settings
+            where user_id = :user_id
+              and userscript_id = :userscript_id
+        ');
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':userscript_id', $userscript_id);
+        $stmt->execute();
+        $ret = $stmt->fetch();
+        return $ret ?: null;
+    }
+
+    public static function setUserSettings($user_id, $userscript_id, $data)
+    {
+        $stmt = Database::getInstance()->prepare('
+            select *
+            from settings
+            where user_id = :user_id
+              and userscript_id = :userscript_id
+        ');
+        $stmt->bindValue(':user_id', $user_id);
+        $stmt->bindValue(':userscript_id', $userscript_id);
+        $stmt->execute();
+        if(!$stmt->fetch()) {
+            $stmt = Database::getInstance()->prepare('
+                insert into settings
+                (user_id, userscript_id, data)
+                values (:user_id, :userscript_id, :data)
+            ');
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':userscript_id', $userscript_id);
+            $stmt->bindValue(':data', $data);
+            return $stmt->execute();
+        } else {
+            $stmt = Database::getInstance()->prepare('
+                update settings
+                set data = :data
+                where user_id = :user_id
+                and userscript_id = :userscript_id
+            ');
+            $stmt->bindValue(':user_id', $user_id);
+            $stmt->bindValue(':userscript_id', $userscript_id);
+            $stmt->bindValue(':data', $data);
+            return $stmt->execute();
+        }
+    }
+
     public static function getUserscripts($sort = 'selected', $order = 'asc', $search = null, $offset = null, $count = null)
     {
         if ($offset == null) $offset = 0;
@@ -201,6 +251,33 @@ class Database extends PDO
         $stmt->execute();
         $ret = $stmt->fetch();
         return User::fromData($ret);
+    }
+
+    public static function getScriptsAndSettings($user) {
+        $stmt = Database::getInstance()->prepare('
+            select
+              userscript.id,
+              userscript.name,
+              userscript.script,
+              settings.data
+            from user 
+              left join user_userscript on user_userscript.user_id = user.id
+              left join userscript on userscript.id = user_userscript.userscript_id
+              left join settings on settings.user_id = user.id
+            where user.id = :user_id
+        ');
+        $stmt->bindValue(':user_id', $user->getID());
+        $stmt->execute();
+        $ret = $stmt->fetchAll();
+        array_walk($ret, function (&$e) {
+            $v = (object)[];
+            $v->id = $e['userscript.id'];
+            $v->name = $e['userscript.name'];
+            $v->script = $e['userscript.script'];
+            $v->settings = $e['settings.data'];
+            $e = $v;
+        });
+        return $ret;
     }
 
 }

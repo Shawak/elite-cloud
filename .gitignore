@@ -9,3 +9,10 @@ smarty/*
 
 # Config-update
 config-update.php
+
+# Vargrant
+acceptance_config.yml
+boxes/*
+/.vagrant
+.vagrant/
+/vagrant-spec.config.rb

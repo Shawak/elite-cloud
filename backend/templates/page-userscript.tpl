@@ -25,9 +25,10 @@
                             <div class="slider round"></div>
                         </label>
                     </div>
-                    <a class="btn btn-sm btn-success" href role="button"
-                       ng-click="edit($event)">Edit userscript</a>
-                    <a class="btn btn-sm btn-danger" href role="button">Delete userscript</a>
+                    {if $userscript->getAuthor()->getID() eq LoginHandler::getInstance()->getUser()->getID()}
+                      <a class="btn btn-sm btn-success" href role="button" ng-click="edit($event)">Edit userscript</a>
+                      <a class="btn btn-sm btn-danger" href role="button" ng-click="delete($event)">Delete userscript</a>
+                    {/if}
                 </div>
                 <div class="clear"></div>
             </div>

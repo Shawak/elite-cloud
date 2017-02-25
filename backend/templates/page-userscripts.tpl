@@ -7,6 +7,7 @@
         <form>
             <input type="text" class="form-control left" placeholder="Search.." ng-model="search" ng-change="update()">
         </form>
+        <a class="btn btn-info left" style="margin-left: 100px" href="download" role="button">Install elite-cloud</a>
         <a class="btn btn-primary right" href="userscript/do/create" role="button">Create userscript</a>
         <div class="clear"></div>
 

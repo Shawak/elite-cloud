@@ -6,7 +6,7 @@ class Helper
     public static function copyYear($year)
     {
         $yearNow = date("Y");
-        return '&copy; ' . ($yearNow == $year ? $yearNow : $year . ' - ' . $yearNow);
+        return '© ' . ($yearNow == $year ? $yearNow : $year . ' - ' . $yearNow);
     }
 
     public static function tryParseDouble($val)

@@ -16,15 +16,17 @@ class Userscript extends DBObject
         $this->id = $id;
     }
 
-    public static function create($name, $author)
+    public static function create($name, $author, $description, $script)
     {
         $stmt = Database::getInstance()->prepare('
-			insert into userscript
-			(name, author)
-			values (:name, :author)
-		');
-        $stmt->bindValue(':name', $name);
+    			insert into userscript
+    			(author, name, description, script)
+    			values (:author, :name, :description, :script)
+    		');
         $stmt->bindValue(':author', $author);
+        $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':description', $description);
+        $stmt->bindValue(':script', $script);
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }

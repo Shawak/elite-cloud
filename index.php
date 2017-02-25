@@ -6,7 +6,7 @@ define('DIR_VENDOR', DIR_APP . 'vendor/');
 define('DIR_SMARTY', DIR_APP . 'smarty/');
 define('DIR_BACKEND', DIR_APP . 'backend/');
 define('DIR_FRONTEND', DIR_APP . 'frontend/');
-define('DIR_USERSCRIPT', DIR_BACKEND . 'userscript/');
+define('DIR_USERSCRIPT', DIR_APP . 'userscript/');
 define('DIR_TEMPLATES', DIR_BACKEND . 'templates/');
 
 /* URLs */
@@ -59,9 +59,9 @@ define('LOGGED_IN', LoginHandler::getInstance()->autoLogin());
 /* Install */
 if (intval(Database::getInstance()->getUserCount()) === 0) {
     $password = bin2hex(random_bytes(5));
-    $user = User::create('Admin', $password, '', UserFlag::ADMIN);
+    $user = User::create('Admin', $password, '');
     echo 'You are running this page the first time, an administrative user has been created.<br><br>' .
-        'Username: ' . $user->getName() . '<br>' .
+        'Username: Admin <br>' .
         'Password: ' . $password;
     return;
 }

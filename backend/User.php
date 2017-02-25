@@ -1,18 +1,11 @@
 <?php
 
-class UserFlag
-{
-    const USER = 0;
-    const MODERATOR = 1;
-    const ADMIN = 2;
-    const BANNED = 4;
-}
-
 class User extends DBObject
 {
     public $id;
     public $name;
     protected $password;
+    protected $email;
     public $flag;
     protected $authKey;
     protected $registered;
@@ -69,22 +62,36 @@ class User extends DBObject
 
     public function isUser()
     {
-        return $this->flag & UserFlag::USER;
+        return $this->flag;
     }
 
     public function isModerator()
     {
-        return $this->flag & UserFlag::MODERATOR;
+        return $this->flag;
     }
 
     public function isAdmin()
     {
-        return $this->flag & UserFlag::ADMIN;
+        return $this->flag;
     }
 
     public function isBanned()
     {
-        return $this->flag & UserFlag::BANNED;
+        return $this->flag;
+    }
+
+    public function getRole()
+    {
+      $stmt = Database::getInstance()->prepare('
+        select user.*, user_roles.*
+        from user, user_roles
+        where user.id = :id
+          and user_roles.user_id = :id
+      ');
+      $stmt->bindValue(':id', $this->id);
+      $stmt->execute();
+      $ret = $stmt->fetchAll();
+      return $ret[0]['user_roles.role_id'];
     }
 
     public function getSelectedUserscripts()
@@ -151,14 +158,12 @@ class User extends DBObject
 			update user
 			set name = :name,
 			  password = :password,
-			  flag = :flag,
 			  authKey = :authKey
 			where id = :id
 		');
         $stmt->bindValue(':id', $this->id);
         $stmt->bindValue(':name', $this->name);
         $stmt->bindValue(':password', $this->password);
-        $stmt->bindValue(':flag', $this->flag);
         $stmt->bindValue(':authKey', $this->authKey);
         return $stmt->execute();
     }
