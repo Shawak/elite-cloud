@@ -28,7 +28,7 @@ $config['rate_limit']['count'] = 120;
 
 // overwrite $config['db']['pass'] in an external config during development
 // which wont be uploaded to prevent mistakes (aka. uploading passwords)
-@include 'config-update.php';
+@include DIR_APP . '../config-update.php';
 
 // export config to constants
 define('GOOGLE_RECAPTCHA_KEY', $config['google']['reCAPTCHA']['key']);

@@ -57,6 +57,19 @@ Database::initialize($config['db']['host'], $config['db']['datb'], $config['db']
 define('LOGGED_IN', LoginHandler::getInstance()->autoLogin());
 
 /* Install */
+// TODO: FIX THIS
+{
+    $stmt = Database::getInstance()->prepare('
+        select count(*)
+        from information_schema.TABLES
+        where (TABLE_SCHEMA = "elitecloud") and (TABLE_NAME = "user")
+    ');
+    $stmt->execute();
+    if(intval($stmt->fetch()['.count(*)']) === 0) {
+        Database::getInstance()->exec(file_get_contents(DIR_APP . 'elitecloud.sql'));
+    }
+}
+
 if (intval(Database::getInstance()->getUserCount()) === 0) {
     $password = bin2hex(random_bytes(5));
     $user = User::create('Admin', $password, '');

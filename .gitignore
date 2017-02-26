@@ -1,11 +1,11 @@
 # Composer
-vendor/*
+app/vendor/*
 
 # PhpStorm settings
 .idea/*
 
 # Smarty
-smarty/*
+app/smarty/*
 
 # Config-update
 config-update.php
