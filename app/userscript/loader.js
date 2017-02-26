@@ -199,9 +199,9 @@
             return settings ? settings : defaultSettings;
         },
 
-        setSettings: function (id, key, setting, save) {
+        setSettings: function (id, key, settings, save) {
             save = (typeof save !== 'undefined') ?  save : true;
-            localStorage.setItem(that.keySettingPrefix + '_' + id + '_' + key, JSON.stringify(setting));
+            localStorage.setItem(that.keySettingPrefix + '_' + id + '_' + key, JSON.stringify(settings));
             if (!save) {
                 return;
             }

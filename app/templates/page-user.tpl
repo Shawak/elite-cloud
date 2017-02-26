@@ -63,7 +63,6 @@
                 <table class="table table-list">
                   <thead>
                     <tr>
-                      <th>ID</th>
                       <th>Name</th>
                       <th>Author</th>
                     </tr>
@@ -71,7 +70,6 @@
                   <tbody>
                     {foreach key=id item=data from=$scripts}
                     <tr>
-                        <td>{$id}</td>
                         <td>{$data->name}</td>
                         <td><a href="user/{$wert->author->id}">{$data->author->name}</a></td>
                     </tr>

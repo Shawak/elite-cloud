@@ -276,7 +276,7 @@ class Database extends PDO
             from user
               left join user_userscript on user_userscript.user_id = user.id
               left join userscript on userscript.id = user_userscript.userscript_id
-              left join settings on settings.user_id = user.id
+              left join settings on settings.user_id = user.id and userscript.id = settings.userscript_id
             where user.id = :user_id
         ');
         $stmt->bindValue(':user_id', $user->getID());
