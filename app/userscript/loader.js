@@ -51,7 +51,7 @@
                 '<a href="/forum/profile.php?do=editoptions">' +
                 '<li>' +
                 '<div id="ec_menuitem" style="display: inline-block">' +
-                '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + that.root + '/frontend/img/favicon.png">' +
+                '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + that.root + '/img/favicon.png">' +
                 'elite-cloud' +
                 '</div>' +
                 '</li>' +

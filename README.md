@@ -5,7 +5,7 @@
     git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud
     vagrant up
     vagrant ssh
-    cd /var/www/elite-cloud
+    cd /var/www/elite-cloud/app
     composer install
     mysql -u root -p < elitecloud.sql
     
