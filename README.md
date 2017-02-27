@@ -5,7 +5,7 @@
 * git
 * composer
 
-### Installing using vargrant
+### Installing using vagrant
 
     git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud
     vagrant up
@@ -13,8 +13,6 @@
     cd /var/www/elite-cloud/app
     composer install
     mysql -u root -p < elitecloud.sql
-    
-Now enter your mysql root passwort and you are done!
 
 ### Installing using docker
 
@@ -24,7 +22,7 @@ Now enter your mysql root passwort and you are done!
     cd ../
     docker-compose up -d --build
 
-### Installing (linux)
+### Installing (manually)
 
 Install Apache, PHP7 and MySQL
 
@@ -35,6 +33,8 @@ Install Apache, PHP7 and MySQL
     cd elite-cloud
     composer install
     mysql -u root -p < elitecloud.sql
+    
+Now enter your mysql root passwort and you are done!
 
 ### Updating
 
