@@ -8,10 +8,15 @@
         keyLookupTable: 'elite-cloud_lookup',
         keyScriptPrefix: 'elite-cloud_script',
         keySettingPrefix: 'elite-cloud_setting',
+        keyLastUpdate: 'elite-cloud_lastUpdate',
 
         gui: {
 
-            init: function (after) {
+            isOnEditPage: function() {
+                return $('form[action="profile.php?do=updateoptions"]').length;
+            },
+
+            injectHeader: function() {
                 var lookup = that.storage.getLookupTable();
                 var count = 0;
                 for(var id in lookup) {
@@ -31,7 +36,9 @@
                     '</div>' +
                     '</li>' +
                     '</a>');
+            },
 
+            injectSettings: function (after) {
                 var elem = $('form[action="profile.php?do=updateoptions"]');
                 if (!elem.length) {
                     after();
@@ -81,6 +88,22 @@
 
         storage: {
 
+            loadLocalScripts: function () {
+                that.log('Loading scripts from LocalStorage');
+                var lookup = that.storage.getLookupTable();
+                for(var id in lookup) {
+                    var entry = lookup[id];
+                    if (entry.enabled) {
+                        var script = that.storage.getScript(entry);
+                        if(script) {
+                            that.injectScript(script, entry.id, entry.key);
+                        } else {
+                            that.log('We found a script in LocalStorage Lookup but this is not stored');
+                        }
+                    }
+                }
+            },
+
             /* Auth Key */
             getAuthKey: function () {
                 return localStorage.getItem(that.keyAuthKey);
@@ -125,37 +148,43 @@
 
             setSettings: function(entry, settings) {
                 localStorage.setItem(that.keySettingPrefix + '_' + entry.id + '_' + entry.key, JSON.stringify(settings));
+            },
+
+            /* Last Update */
+
+            getLastUpdate: function() {
+                var value = localStorage.getItem(that.keyLastUpdate);
+                return value ? value : 0;
+            },
+
+            setLastUpdate: function(time) {
+                localStorage.setItem(that.keyLastUpdate, time);
             }
 
         },
 
         init: function () {
-            that.loadLocalScripts();
+            that.storage.loadLocalScripts();
+            that.gui.injectHeader();
+
+            if(!that.gui.isOnEditPage()) {
+                var now = Date.now();
+                var diff = now - that.storage.getLastUpdate();
+                if(diff <= 30 * 1000) {
+                    that.log('Next update in ' + diff / 1000 + ' seconds.');
+                    return;
+                }
+                that.storage.setLastUpdate(now);
+            }
 
             that.log('Loader init()');
-            that.gui.init(function () {
+            that.gui.injectSettings(function () {
                 that.login();
             });
         },
 
         nameToKey: function (str) {
             return str.toLowerCase().replace(/ /g, '_').replace(/[^A-Za-z0-9_?!]/g, '').substr(0, 50);
-        },
-
-        loadLocalScripts: function () {
-            that.log('Loading scripts from LocalStorage');
-            var lookup = that.storage.getLookupTable();
-            for(var id in lookup) {
-                var entry = lookup[id];
-                if (entry.enabled) {
-                    var script = that.storage.getScript(entry);
-                    if(script) {
-                        that.injectScript(script, entry.id, entry.key);
-                    } else {
-                        that.log('We found a script in LocalStorage Lookup but this is not stored');
-                    }
-                }
-            }
         },
 
         login: function () {
