@@ -32,7 +32,10 @@ ob_start();
 require DIR_APP . 'config.php';
 ob_clean();
 
-require DIR_VENDOR . 'autoload.php';
+if(!@include DIR_VENDOR . 'autoload.php') {
+    echo 'autoload.php not found, please run `composer install`.';
+    return;
+}
 
 require DIR_BACKEND . 'Helper.php';
 require DIR_BACKEND . 'DBObject.php';

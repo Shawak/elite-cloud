@@ -67,12 +67,10 @@
             },
 
             injectScript: function (script, id, key) {
-                id = (typeof id !== 'undefined' ? id : null);
-                key = (typeof key !== 'undefined' ? key : null);
                 var elem = document.createElement('script');
                 elem.setAttribute('type', 'text/javascript');
-                if (id !== null) elem.setAttribute('userscript_id', id);
-                if (key !== null) elem.setAttribute('userscript_key', key);
+                if (typeof id !== 'undefined') elem.setAttribute('userscript_id', id);
+                if (typeof key !== 'undefined') elem.setAttribute('userscript_key', key);
                 elem.innerHTML = script;
                 document.head.appendChild(elem);
             },
