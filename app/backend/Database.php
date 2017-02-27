@@ -273,8 +273,8 @@ class Database extends PDO
               userscript.name,
               userscript.script,
               settings.data
-            from user
-              left join user_userscript on user_userscript.user_id = user.id
+            from user_userscript
+              left join user on user_userscript.user_id = user.id
               left join userscript on userscript.id = user_userscript.userscript_id
               left join settings on settings.user_id = user.id and userscript.id = settings.userscript_id
             where user.id = :user_id

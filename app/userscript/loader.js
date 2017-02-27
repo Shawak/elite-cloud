@@ -12,6 +12,14 @@
         gui: {
 
             init: function (after) {
+                var lookup = that.storage.getLookupTable();
+                var count = 0;
+                for(var id in lookup) {
+                    if(lookup[id].enabled) {
+                        count++;
+                    }
+                }
+
                 $('#userbaritems').append('' +
                     '<style>#ec_menuitem:hover img {opacity: 1 !important}</style>' +
                     '<a href="/forum/profile.php?do=editoptions">' +
@@ -19,6 +27,7 @@
                     '<div id="ec_menuitem" style="display: inline-block">' +
                     '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + that.root + '/img/favicon.png">' +
                     'elite-cloud' +
+                    ' (' + count + ')' +
                     '</div>' +
                     '</li>' +
                     '</a>');
@@ -138,11 +147,13 @@
             var lookup = that.storage.getLookupTable();
             for(var id in lookup) {
                 var entry = lookup[id];
-                var script = that.storage.getScript(entry);
-                if(script) {
-                    that.injectScript(script, entry.id, entry.key);
-                } else {
-                    that.log('We found a script in LocalStorage Lookup but this is not stored');
+                if (entry.enabled) {
+                    var script = that.storage.getScript(entry);
+                    if(script) {
+                        that.injectScript(script, entry.id, entry.key);
+                    } else {
+                        that.log('We found a script in LocalStorage Lookup but this is not stored');
+                    }
                 }
             }
         },
@@ -162,21 +173,29 @@
                 if (e.success) {
                     that.gui.setMessage('Authenticated as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
                     that.log('Updating userscripts (' + e.data.data.length +') ..');
-                    var table = that.storage.getLookupTable();
+
+                    var lookup = that.storage.getLookupTable();
+                    for(var id in lookup) {
+                        lookup[id].enabled = false;
+                    }
+
                     for (var i = 0; i < e.data.data.length; i++) {
                         var info = e.data.data[i];
                         that.log('> ' + info.name);
 
                         // add the script to the lookup table
-                        if (!table.hasOwnProperty(info.id)) {
-                            table[info.id] = {
+                        if (!lookup.hasOwnProperty(info.id)) {
+                            lookup[info.id] = {
                                 id: info.id,
                                 name: info.name,
-                                key: that.nameToKey(info.name)
+                                key: that.nameToKey(info.name),
+                                enabled: false
                             };
                         }
 
-                        var entry = table[info.id];
+                        var entry = lookup[info.id];
+                        entry.enabled = true;
+
                         // update the key name if
                         // the script name has changed
                         if (entry.name != info.name) {
@@ -202,7 +221,7 @@
                         }
                     }
 
-                    that.storage.setLookupTable(table);
+                    that.storage.setLookupTable(lookup);
                 } else {
                     that.gui.setMessage(e.message);
                     that.gui.showForm();
@@ -234,8 +253,8 @@
         // Save settings to the cloud
         // called by any user script
         setSettings: function (settings) {
-            var table = that.storage.getLookupTable();
-            var entry = table[settings.__id];
+            var lookup = that.storage.getLookupTable();
+            var entry = lookup[settings.__id];
 
             // doing a shallow copy here to remove the __id
             // without preventing further function calls
