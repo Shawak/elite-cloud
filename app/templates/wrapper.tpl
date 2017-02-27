@@ -10,10 +10,10 @@
             </a>
             <nav class="navbar" role="navigation">
                 <ul class="nav navbar-nav">
-                    <li class="nav-item">
-                        <a href="userscripts" class="nav-link">Userscripts</a>
-                    </li>
                     {if LOGGED_IN}
+                        <li class="nav-item">
+                            <a href="userscripts" class="nav-link">Userscripts</a>
+                        </li>
                         <li class="nav-item">
                             <a href="user/{LoginHandler::getInstance()->getUser()->getID()}"
                                class="nav-link">Profile</a>
