@@ -42,15 +42,20 @@
         {if LoginHandler::getInstance()->getUser()}
           {if LoginHandler::getInstance()->getUser()->getID() == $user->getID()}
         <div class="panel panel-default">
-          <div class="panel-body">
-            <h3>Settings</h3>
-            <div class="row">
-              <label for="inputType" class="col-sm-4 col-md-3 control-label">Authkey</label>
-              <div class="col-sm-6 col-md-7">
-                  <input type="text" class="form-control authkey" id="key" value="{$user->getAuthKey()}" autocomplete="off" readonly>
-              </div>
-            </div>
-          </div>
+            <form action="/user/{LoginHandler::getInstance()->getUser()->getID()}" method="post">
+                <div class="panel-body">
+                    <h3>Settings</h3>
+                    <div class="row">
+                        <label for="inputType" class="col-sm-4 col-md-3 control-label">Authkey</label>
+                        <div class="col-sm-6 col-md-4">
+                            <input type="text" class="form-control authkey" id="key" value="{$user->getAuthKey()}" autocomplete="off" readonly>
+                        </div>
+                        <div class="col-sm-2 col-md-4 offset-md-1">
+                            <button type="submit" class="btn btn-info left" role="button">Refresh</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
           {/if}
         {/if}

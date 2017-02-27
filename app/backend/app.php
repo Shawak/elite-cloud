@@ -34,6 +34,24 @@ $app->get('/user/{id}', function (Request $request, Response $response) {
     SmartyHandler::getInstance()->display('page-user.tpl');
 });
 
+$app->post('/user/{id}', function (Request $request, Response $response) {
+    if (!LOGGED_IN) {
+        SmartyHandler::getInstance()->assign('error', 'You have to be logged in to view this page.');
+        SmartyHandler::getInstance()->assign('page', 'error');
+        SmartyHandler::getInstance()->display('page-error.tpl');
+        return;
+    }
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $user = new User($id);
+    $updateAuth = new User(LoginHandler::getInstance()->getUser()->getID());
+    $updateAuth->renewAuthKey();
+    $updateAuth->saveAuthkey();
+    SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
+    SmartyHandler::getInstance()->assign('scripts', $user->getSelectedUserscripts() ?: null);
+    SmartyHandler::getInstance()->assign('page', 'user');
+    SmartyHandler::getInstance()->display('page-user.tpl');
+});
+
 $app->get('/userscript/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
