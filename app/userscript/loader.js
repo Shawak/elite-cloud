@@ -166,32 +166,39 @@
                     for (var i = 0; i < e.data.data.length; i++) {
                         var info = e.data.data[i];
                         that.log('> ' + info.name);
-                        // check if the script is in the lookup table
+
+                        // add the script to the lookup table
                         if (!table.hasOwnProperty(info.id)) {
-                            var entry = {
+                            table[info.id] = {
                                 id: info.id,
                                 name: info.name,
                                 key: that.nameToKey(info.name)
                             };
-                            table[info.id] = entry;
-                        } else {
-                            var entry = table[info.id];
-                            // update the key name if the script name has changed
-                            if (entry.name != info.name) {
-                                // move script
-                                var tmp = that.storage.getScript(entry);
-                                that.storage.delScript(entry);
-                                entry.key = that.nameToKey(info.name);
-                                that.storage.setScript(entry, tmp);
-                                // move settings
-                                var settings = that.storage.getSettings(entry);
-                                if (settings) that.storage.setSettings(entry, settings);
-                            }
                         }
 
+                        var entry = table[info.id];
+                        // update the key name if
+                        // the script name has changed
+                        if (entry.name != info.name) {
+                            // move script
+                            var tmp = that.storage.getScript(entry);
+                            that.storage.delScript(entry);
+                            entry.key = that.nameToKey(info.name);
+                            that.storage.setScript(entry, tmp);
+                            // move settings
+                            var settings = that.storage.getSettings(entry);
+                            if (settings) that.storage.setSettings(entry, settings);
+                        }
+
+                        // update script
                         that.storage.setScript(entry, atob(info.script));
+
+                        // update settings
                         if(typeof info.settings === 'string') {
-                            that.storage.setSettings(entry, JSON.parse(info.settings));
+                            if(JSON.stringify(that.storage.getSettings(entry)) != info.settings) {
+                                that.storage.setSettings(entry, JSON.parse(info.settings));
+                                that.log('Settings from ' + entry.key + ' has been updated.');
+                            }
                         }
                     }
 
@@ -244,7 +251,7 @@
                 dataType: 'jsonp'
             }).done(function (e) {
                 if (e.success) {
-                    that.log(entry.key + ' saved settings to Database');
+                    that.log(entry.key + ' saved settings to the database.');
                 } else {
                     that.log(e.message);
                 }
