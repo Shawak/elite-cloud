@@ -112,8 +112,7 @@
                                 href="https://github.com/elitepvpers-community/elite-cloud/graphs/contributors">elitepvpers-community</a>
                     </div>
                     <div class="contact col-md-4">
-                        Contact: <a href="#discord" target="_blank">Discord</a> | <a
-                                href="mailto: contact@elite-cloud.de" target="_blank">E-Mail</a>
+                        Contact: <a href="http://www.elitepvpers.com/forum/members/2342603-shawak.html" target="_blank">Shawak@Elitepvpers</a>
                     </div>
                 </div>
                 <div class="row zeile">
