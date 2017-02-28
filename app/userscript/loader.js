@@ -264,6 +264,7 @@
 
                         var entry = lookup[info.id];
                         entry.enabled = true;
+                        entry.keep = true;
 
                         // update the key name if
                         // the script name has changed
@@ -293,6 +294,17 @@
                         // inject script if not loaded yet
                         if(isNew) {
                             that.injectScript(script, entry.id, entry.key);
+                        }
+                    }
+
+                    // delete disabled scripts
+                    for(var id in lookup) {
+                        if(!lookup[id].keep) {
+                            that.storage.delScript(lookup[id]);
+                            that.storage.delSettings(lookup[id]);
+                            delete lookup[id];
+                        } else {
+                            delete lookup[id].keep;
                         }
                     }
 
