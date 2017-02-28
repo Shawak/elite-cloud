@@ -190,17 +190,17 @@ ALTER TABLE `auth_token`
 -- AUTO_INCREMENT für Tabelle `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `userscript`
 --
 ALTER TABLE `userscript`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Constraints der exportierten Tabellen
 --
@@ -209,22 +209,23 @@ ALTER TABLE `userscript`
 -- Constraints der Tabelle `settings`
 --
 ALTER TABLE `settings`
-  ADD CONSTRAINT `FK_user_userscript_settings_userscript` FOREIGN KEY (`userscript_id`) REFERENCES `userscript` (`id`),
-  ADD CONSTRAINT `FK_user_userscripts_settings_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `FK_user_userscript_settings_userscript` FOREIGN KEY (`userscript_id`) REFERENCES `userscript` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_user_userscripts_settings_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `user_roles`
 --
 ALTER TABLE `user_roles`
   ADD CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
+  ADD CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `user_userscript`
 --
 ALTER TABLE `user_userscript`
-  ADD CONSTRAINT `user_userscript_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-
+  ADD CONSTRAINT `user_userscript_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `user_userscript_ibfk_2` FOREIGN KEY (`userscript_id`) REFERENCES `userscript` (`id`) ON DELETE CASCADE;
+  
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
