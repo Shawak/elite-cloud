@@ -77,9 +77,9 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `banned` tinyint(1) DEFAULT NULL,
-  `authKey` varchar(255) NOT NULL,
+  `authKey` varchar(255) DEFAULT NULL,
   `registered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -223,7 +223,7 @@ ALTER TABLE `user_roles`
 -- Constraints der Tabelle `user_userscript`
 --
 ALTER TABLE `user_userscript`
-  ADD CONSTRAINT `user_userscript_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `user_userscript_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `user_userscript_ibfk_2` FOREIGN KEY (`userscript_id`) REFERENCES `userscript` (`id`) ON DELETE CASCADE;
   
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

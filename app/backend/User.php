@@ -15,17 +15,16 @@ class User extends DBObject
         $this->id = $id;
     }
 
-    public static function create($name, $password, $email)
+    public static function create($name, $password)
     {
         $password = LoginHandler::getInstance()->hashPassword($password);
         $stmt = Database::getInstance()->prepare('
 			insert into user
-			(name, password, email)
-			values (:name, :password, :email)
+			(name, password)
+			values (:name, :password)
 		');
         $stmt->bindValue(':name', $name);
         $stmt->bindValue(':password', $password);
-        $stmt->bindValue(':email', $email);
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
     }

@@ -75,7 +75,7 @@ define('LOGGED_IN', LoginHandler::getInstance()->autoLogin());
 
 if (intval(Database::getInstance()->getUserCount()) === 0) {
     $password = bin2hex(random_bytes(5));
-    $user = User::create('Admin', $password, '');
+    $user = User::create('Admin', $password);
     echo 'You are running this page the first time, an administrative user has been created.<br><br>' .
         'Username: Admin <br>' .
         'Password: ' . $password;

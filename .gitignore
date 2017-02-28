@@ -7,6 +7,9 @@ app/vendor/*
 # Smarty
 app/smarty/*
 
+# Database
+db/*
+
 # Config-update
 config-update.php
 
