@@ -16,7 +16,7 @@
                 return $('form[action="profile.php?do=updateoptions"]').length;
             },
 
-            injectHeader: function() {
+            updateActiveCount: function() {
                 var lookup = that.storage.getLookupTable();
                 var count = 0;
                 for(var id in lookup) {
@@ -24,18 +24,40 @@
                         count++;
                     }
                 }
+                $('#ec_menuitem .activeScripts').text(count);
+            },
 
+            injectHeader: function() {
                 $('#userbaritems').append('' +
-                    '<style>#ec_menuitem:hover img {opacity: 1 !important}</style>' +
-                    '<a href="/forum/profile.php?do=editoptions">' +
+                    '<style>' +
+                    '#ec_menuitem {height: 13px}' +
+                    '#ec_menuitem img:hover {opacity: 1 !important}' +
+                    '#ec_menuitem img {opacity: 0.8; float: left; width: 16px; height: 16px; margin-right: 5px;}' +
+                    '</style>' +
+
                     '<li>' +
                     '<div id="ec_menuitem" style="display: inline-block">' +
-                    '<img style="opacity: 0.8; float: left; width: 13px; height: 13px; margin-right: 5px;" src="' + that.root + '/img/favicon.png">' +
-                    'elite-cloud' +
-                    ' (' + count + ')' +
+
+                    '</a>' +
+                    '<a title="Options" href="/forum/profile.php?do=editoptions">' +
+                    '<img src="' + that.root + '/img/settings.png">' +
+                    '</a>' +
+
+                    '</a>' +
+                    '<a title="Reload" href="#reload" onclick="elite_cloud.reload(); location.reload()">' +
+                    '<img src="' + that.root + '/img/reload.png">' +
+                    '</a>' +
+
+                    '<a title="Website" href="' + that.root + '">' +
+                    '<img src="' + that.root + '/img/favicon.png">' +
+                    'elite-cloud (<span class="activeScripts">0</span>)' +
+                    '</a>' +
+
                     '</div>' +
                     '</li>' +
-                    '</a>');
+                    '');
+
+                that.gui.updateActiveCount();
             },
 
             injectSettings: function (after) {
@@ -54,11 +76,11 @@
                     dataType: 'jsonp'
                 }).done(function (e) {
                     elem.parent().prepend(e.data.plugin).append(function () {
+                        $('#ec_authKey').val(that.storage.getAuthKey());
                         $("#ec_form").submit(function (event) {
                             event.preventDefault();
                             that.gui.hideForm();
                             var authKey = $('#ec_authKey').val();
-                            $('#ec_authKey').val('');
                             that.storage.setAuthKey(authKey);
                             that.login();
                         });
@@ -94,6 +116,7 @@
                 for(var id in lookup) {
                     var entry = lookup[id];
                     if (entry.enabled) {
+                        that.log('> ' + entry.key);
                         var script = that.storage.getScript(entry);
                         if(script) {
                             that.injectScript(script, entry.id, entry.key);
@@ -150,6 +173,10 @@
                 localStorage.setItem(that.keySettingPrefix + '_' + entry.id + '_' + entry.key, JSON.stringify(settings));
             },
 
+            delSettings: function(entry) {
+                localStorage.removeItem(that.keySettingPrefix + '_' + entry.id + '_' + entry.key);
+            },
+
             /* Last Update */
             getLastUpdate: function() {
                 var value = localStorage.getItem(that.keyLastUpdate);
@@ -182,6 +209,18 @@
             });
         },
 
+        reload: function() {
+            var table = that.storage.getLookupTable();
+            for(var id in table) {
+                var entry = table[id];
+                that.storage.delScript(entry);
+                that.storage.delSettings(entry);
+                delete table[id];
+            }
+            that.storage.setLastUpdate(Date.now());
+            that.storage.setLookupTable(table);
+        },
+
         nameToKey: function (str) {
             return str.toLowerCase().replace(/ /g, '_').replace(/[^A-Za-z0-9_?!]/g, '').substr(0, 50);
         },
@@ -211,6 +250,7 @@
                         var info = e.data.data[i];
                         that.log('> ' + info.name);
 
+                        var isNew = false;
                         // add the script to the lookup table
                         if (!lookup.hasOwnProperty(info.id)) {
                             lookup[info.id] = {
@@ -219,6 +259,7 @@
                                 key: that.nameToKey(info.name),
                                 enabled: false
                             };
+                            isNew = true;
                         }
 
                         var entry = lookup[info.id];
@@ -238,7 +279,8 @@
                         }
 
                         // update script
-                        that.storage.setScript(entry, atob(info.script));
+                        var script = atob(info.script);
+                        that.storage.setScript(entry, script);
 
                         // update settings
                         if(typeof info.settings === 'string') {
@@ -247,9 +289,15 @@
                                 that.log('Settings from ' + entry.key + ' has been updated.');
                             }
                         }
+
+                        // inject script if not loaded yet
+                        if(isNew) {
+                            that.injectScript(script, entry.id, entry.key);
+                        }
                     }
 
                     that.storage.setLookupTable(lookup);
+                    that.gui.updateActiveCount();
                 } else {
                     that.gui.setMessage(e.message);
                     that.gui.showForm();
