@@ -168,6 +168,25 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
     $scope.update();
 }]);
 
+app.controller('UserController', ['$scope', '$http', function ($scope, $http) {
+    $scope.user = null;
+
+    $scope.init = function (id) {
+        $scope.user = {};
+        $scope.user.id = id;
+    };
+
+    $scope.renewAuthKey = function() {
+        var response = $http.get('api/user/' +  $scope.user.id + '/renewAuthKey');
+        response.success(function (result, status, headers, config) {
+            notify(result);
+            if (result.success) {
+                $('#key').val(result.data.authKey);
+            }
+        });
+    };
+}]);
+
 app.controller('UserscriptController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     $scope.userscript = null;
 
@@ -183,7 +202,7 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
     };
 
     $scope.init = function (id) {
-        $scope.id = id
+        $scope.id = id;
         if($scope.id == -1) {
             setTimeout(function() {$("a[ng-click='edit($event)'").click()});
             return;

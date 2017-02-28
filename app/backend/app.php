@@ -13,6 +13,14 @@ $app->get('/', function (Request $request, Response $response) {
     SmartyHandler::getInstance()->display('page-home.tpl');
 });
 
+$app->get('/user/{id}', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+    $user = new User($id);
+    SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
+    SmartyHandler::getInstance()->assign('page', 'user');
+    SmartyHandler::getInstance()->display('page-user.tpl');
+});
+
 $app->get('/userscripts', function (Request $request, Response $response) {
     if (!LOGGED_IN) {
         SmartyHandler::getInstance()->assign('error', 'You have to be logged in to view this page.');
@@ -25,33 +33,6 @@ $app->get('/userscripts', function (Request $request, Response $response) {
     SmartyHandler::getInstance()->display('page-userscripts.tpl');
 });
 
-$app->get('/user/{id}', function (Request $request, Response $response) {
-    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
-    $user = new User($id);
-    SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
-    SmartyHandler::getInstance()->assign('scripts', $user->getSelectedUserscripts() ?: null);
-    SmartyHandler::getInstance()->assign('page', 'user');
-    SmartyHandler::getInstance()->display('page-user.tpl');
-});
-
-$app->post('/user/{id}', function (Request $request, Response $response) {
-    if (!LOGGED_IN) {
-        SmartyHandler::getInstance()->assign('error', 'You have to be logged in to view this page.');
-        SmartyHandler::getInstance()->assign('page', 'error');
-        SmartyHandler::getInstance()->display('page-error.tpl');
-        return;
-    }
-    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
-    $user = new User($id);
-    $updateAuth = new User(LoginHandler::getInstance()->getUser()->getID());
-    $updateAuth->renewAuthKey();
-    $updateAuth->saveAuthkey();
-    SmartyHandler::getInstance()->assign('user', $user->update() ? $user : null);
-    SmartyHandler::getInstance()->assign('scripts', $user->getSelectedUserscripts() ?: null);
-    SmartyHandler::getInstance()->assign('page', 'user');
-    SmartyHandler::getInstance()->display('page-user.tpl');
-});
-
 $app->get('/userscript/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
@@ -61,6 +42,13 @@ $app->get('/userscript/{id}', function (Request $request, Response $response) {
 });
 
 $app->get('/userscript/do/create', function (Request $request, Response $response) {
+    if (!LOGGED_IN) {
+        SmartyHandler::getInstance()->assign('error', 'You have to be logged in to view this page.');
+        SmartyHandler::getInstance()->assign('page', 'error');
+        SmartyHandler::getInstance()->display('page-error.tpl');
+        return;
+    }
+
     $userscript = new Userscript(-1);
     $userscript->setName('New userscript');
     $userscript->setAuthor(LoginHandler::getInstance()->getUser());
@@ -211,6 +199,25 @@ $app->get('/api/user/{id}', function (Request $request, Response $response) {
     } else {
         echo new ApiResult(false, 'A user with this id does not exists');
     }
+});
+
+$app->get('/api/user/{id}/renewAuthKey', function (Request $request, Response $response) {
+    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
+
+    $user = new User($id);
+    if (!$user->update()) {
+        echo new ApiResult(false, 'A user with this id was not found.');
+        return;
+    }
+
+    if(LoginHandler::getInstance()->getUser()->getID() != $user->getID()) {
+        echo new ApiResult(false, 'You don\'t have permissions to do so.');
+        return;
+    }
+
+    $user->renewAuthKey();
+    $user->save();
+    echo new ApiResult(true, 'Your authKey has been successfully updated.', (object)['authKey' => $user->getAuthKey()]);
 });
 
 $app->get('/api/user/addscript/{id}', function (Request $request, Response $response) {

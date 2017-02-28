@@ -168,15 +168,4 @@ class User extends DBObject
         return $stmt->execute();
     }
 
-    public function saveAuthkey()
-    {
-        $stmt = Database::getInstance()->prepare('
-			update user
-			  set authKey = :authKey
-			where id = :id
-		');
-        $stmt->bindValue(':id', $this->id);
-        $stmt->bindValue(':authKey', $this->authKey);
-        return $stmt->execute();
-    }
 }

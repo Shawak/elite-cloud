@@ -8,7 +8,7 @@
 {/block}
 {block name="page"}
     {if $user}
-    <div class="container-fluid">
+    <div class="container-fluid" ng-controller="UserController" ng-init="init({$user->getID()})">
       <div class="col-xs-12">
 
         <div class="panel panel-default">
@@ -42,20 +42,18 @@
         {if LoginHandler::getInstance()->getUser()}
           {if LoginHandler::getInstance()->getUser()->getID() == $user->getID()}
         <div class="panel panel-default">
-            <form action="/user/{LoginHandler::getInstance()->getUser()->getID()}" method="post">
-                <div class="panel-body">
-                    <h3>Settings</h3>
-                    <div class="row">
-                        <label for="inputType" class="col-sm-4 col-md-3 control-label">Authkey</label>
-                        <div class="col-sm-6 col-md-4">
-                            <input type="text" class="form-control authkey" id="key" value="{$user->getAuthKey()}" autocomplete="off" readonly>
-                        </div>
-                        <div class="col-sm-2 col-md-4 offset-md-1">
-                            <button type="submit" class="btn btn-info left" role="button">Refresh</button>
-                        </div>
+            <div class="panel-body">
+                <h3>Settings</h3>
+                <div class="row">
+                    <label for="inputType" class="col-sm-4 col-md-3 control-label">Authkey</label>
+                    <div class="col-sm-6 col-md-4">
+                        <input type="text" class="form-control authkey" id="key" value="{$user->getAuthKey()}" autocomplete="off" readonly>
+                    </div>
+                    <div class="col-sm-2 col-md-4 offset-md-1">
+                        <button type="submit" class="btn btn-info left" ng-click="renewAuthKey()" role="button">Refresh</button>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
           {/if}
         {/if}
@@ -73,7 +71,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {foreach key=id item=data from=$scripts}
+                    {foreach key=id item=data from=$user->getSelectedUserscripts()}
                     <tr>
                         <td>{$data->name}</td>
                         <td><a href="user/{$wert->author->id}">{$data->author->name}</a></td>
@@ -85,8 +83,6 @@
             </div>
           </div>
         </div>
-
-
 
       </div>
     </div>

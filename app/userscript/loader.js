@@ -151,7 +151,6 @@
             },
 
             /* Last Update */
-
             getLastUpdate: function() {
                 var value = localStorage.getItem(that.keyLastUpdate);
                 return value ? value : 0;
