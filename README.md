@@ -30,7 +30,7 @@ Install Apache, PHP7 and MySQL
     cd /var/www
     git clone -b develop https://github.com/elitepvpers-community/elite-cloud elite-cloud
     chmod -R 777 elite-cloud
-    cd elite-cloud
+    cd elite-cloud/app
     composer install
     mysql -u root -p < elitecloud.sql
     
