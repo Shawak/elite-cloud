@@ -8,7 +8,7 @@
 {/block}
 {block name="page"}
     {if $user}
-    <div class="container-fluid">
+    <div class="container-fluid" ng-controller="UserController" ng-init="init({$user->getID()})">
       <div class="col-xs-12">
 
         <div class="panel panel-default">
@@ -70,7 +70,7 @@
 
     <script>
       var g = new JustGage({
-        id: "usindScripts",
+        id: "usingScripts",
         value: {Database::getUserUserscriptCount($user->getId())},
         min: 0,
         max: {Database::getUserscriptCount()},

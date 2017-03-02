@@ -193,6 +193,15 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
     $scope.update();
 }]);
 
+app.controller('UserController', ['$scope', '$http', function ($scope, $http) {
+    $scope.user = null;
+
+    $scope.init = function (id) {
+        $scope.user = {};
+        $scope.user.id = id;
+    };
+}]);
+
 app.controller('UserscriptController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     $scope.userscript = null;
 
