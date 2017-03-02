@@ -89,8 +89,8 @@
 
             /* Last Update */
             getLastUpdate: function() {
-                var value = localStorage.getItem(that.keyLastUpdate);
-                return value ? value : 0;
+                var time = localStorage.getItem(that.keyLastUpdate);
+                return time ? time : 0;
             },
 
             setLastUpdate: function(time) {
@@ -124,7 +124,8 @@
                 delete table[id];
             }
             that.loader.delScript();
-            that.storage.setLastUpdate(Date.now());
+            that.loader.setLastUpdate(0);
+            that.storage.setLastUpdate(0);
             that.storage.setLookupTable(table);
         },
 

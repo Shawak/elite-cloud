@@ -14,7 +14,8 @@
 
         var elite_cloud = {
             root: '{URL_SITE}',
-            keyLoader: 'elite-cloud_loader'
+            keyLoader: 'elite-cloud_loader',
+            keyLoaderLastUpdate: 'elite-cloud_loader_lastUpdate'
         };
 
         window.elite_cloud = elite_cloud;
@@ -68,9 +69,9 @@
 
             injectScript: function (script, id, key) {
                 var elem = document.createElement('script');
-                elem.setAttribute('type', 'text/javascript');
                 if (typeof id !== 'undefined') elem.setAttribute('userscript_id', id);
                 if (typeof key !== 'undefined') elem.setAttribute('userscript_key', key);
+                elem.setAttribute('type', 'text/javascript');
                 elem.innerHTML = script;
                 document.head.appendChild(elem);
             },
@@ -84,24 +85,36 @@
 
                     that.log('init()');
                     var script = that.loader.getScript();
-                    var injected = false;
-
                     if (script) {
                         that.injectScript(script);
-                        injected = true;
                     }
 
-                    setTimeout(function () {
-                        that.$jsonp.get(that.root + 'api/loader', {
-                            onSuccess: function (result) {
-                                that.loader.setScript(result.data.loader);
-                                that.log('Loader updated!');
-                                if (!injected) {
-                                    that.injectScript(that.loader.getScript());
-                                }
+                    var now = Date.now();
+                    var diff = now - that.loader.getLastUpdate();
+                    if(diff <= 60 * 1000) {
+                        that.log('Next loader update in ' + diff / 1000 + ' seconds.');
+                        return;
+                    }
+                    that.loader.setLastUpdate(now);
+
+                    that.$jsonp.get(that.root + 'api/loader', {
+                        onSuccess: function (result) {
+                            that.loader.setScript(result.data.loader);
+                            that.log('Loader updated!');
+                            if (!script) {
+                                that.injectScript(that.loader.getScript());
                             }
-                        });
-                    }, 2.5 * 1000);
+                        }
+                    });
+                },
+
+                getLastUpdate: function() {
+                  var time = localStorage.getItem(that.keyLoaderLastUpdate);
+                    return time ? time : 0;
+                },
+
+                setLastUpdate: function(time) {
+                    localStorage.setItem(that.keyLoaderLastUpdate, time);
                 },
 
                 getScript: function () {
