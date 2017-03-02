@@ -109,10 +109,11 @@ class Database extends PDO
         }
     }
 
-    public static function getUserscripts($sort = 'selected', $order = 'asc', $search = null, $offset = null, $count = null)
+    public static function getUserscripts($sort = 'selected', $order = 'asc', $count = null, $offset = null, $search = null)
     {
         if ($offset == null) $offset = 0;
-        if ($count == null) $count = 100;
+        if ($count == null || $count <= 0) $count = 20;
+        if ($count > 50 || $count <= 0) $count = 50;
         if (!empty($search)) $search = '%' . $search . '%';
         if ($order !== 'asc' && $order !== 'desc') $order = 'asc';
 

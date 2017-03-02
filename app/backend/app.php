@@ -312,15 +312,17 @@ $app->post('/api/user/edit', function (Request $request, Response $response) {
 
 /* USERSCRIPT */
 
-$app->get('/api/userscript/list[/{sort}[/{order}[/{search}[/{offset}[/{count}]]]]]', function (Request $request, Response $response) {
+$app->get('/api/userscript/list[/{sort}[/{order}[/{count}[/{offset}[/{search}]]]]]', function (Request $request, Response $response) {
     $sort = filter_var($request->getAttribute('sort'), FILTER_SANITIZE_STRING);
     $order = filter_var($request->getAttribute('order'), FILTER_SANITIZE_STRING);
-    $search = filter_var($request->getAttribute('search'), FILTER_SANITIZE_STRING);
-    $offset = filter_var($request->getAttribute('offset'), FILTER_VALIDATE_INT);
     $count = filter_var($request->getAttribute('count'), FILTER_VALIDATE_INT);
+    $offset = filter_var($request->getAttribute('offset'), FILTER_VALIDATE_INT);
+    $search = filter_var($request->getAttribute('search'), FILTER_SANITIZE_STRING);
     $search = base64_decode($search);
-    $userscipts = Database::getUserscripts($sort, $order, $search, $offset, $count);
-    echo new ApiResult(true, '', $userscipts);
+    echo new ApiResult(true, '', (object) [
+        'count' => Database::getUserscriptCount(),
+        'userscripts' => Database::getUserscripts($sort, $order, $count, $offset, $search)
+    ]);
 });
 
 $app->get('/api/userscript/{id}', function (Request $request, Response $response) {

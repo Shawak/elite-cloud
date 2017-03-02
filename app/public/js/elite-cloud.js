@@ -87,6 +87,10 @@ app.controller('LogoutController', ['$scope', '$http', '$location', function ($s
 }]);
 
 app.controller('UserscriptsController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
+
+    var perPage = 20;
+    var pages = 1;
+
     $scope.userscripts = [];
     $scope.search = '';
 
@@ -97,6 +101,8 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
 
     $scope.order = 'asc';
     $scope.lastSort = null;
+
+    $scope.page = 1;
 
     $scope.update = function (sort) {
         if ($scope.updating || ($scope.lastUpdate != null && (Date.now() - $scope.lastUpdate <= $scope.timeout))) {
@@ -119,12 +125,29 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         $scope.lastSort = sort;
 
         $scope.updating = true;
-        var response = $http.get('api/userscript/list/' + sort + '/' + $scope.order + ($scope.search != '' ? '/' + btoa($scope.search) : ''));
+        var response = $http.get('api/userscript/list/' + sort + '/' + $scope.order +
+            '/' + perPage + '/' + (($scope.page - 1) * perPage) + ($scope.search != '' ? '/' + btoa($scope.search) : ''));
         response.success(function (result, status, headers, config) {
-            $scope.userscripts = result.data;
+            $scope.userscripts = result.data.userscripts;
+            pages = Math.ceil(result.data.count / perPage);
             $scope.lastUpdate = Date.now();
             $scope.updating = false;
         });
+    };
+
+    $scope.changePage = function(newPage) {
+        var gotoPage = 0;
+        if(newPage == 'first') {
+            gotoPage = 1;
+        } else if(newPage == 'last') {
+            gotoPage = pages;
+        } else {
+            gotoPage = $scope.page + newPage;
+        }
+        if(gotoPage >= 1 && gotoPage <= pages) {
+            $scope.page = gotoPage;
+            $scope.update();
+        }
     };
 
     $scope.click = function (userscript) {
