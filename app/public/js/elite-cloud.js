@@ -128,7 +128,6 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         $scope.updating = true;
         var query = 'api/userscript/list/' + sort + '/' + $scope.order + '/' + perPage +
             '/' + (($scope.page - 1) * perPage) + ($scope.search != '' ? '/' + btoa($scope.search) : '');
-        console.log(query);
         var response = $http.get(query);
         response.success(function (result, status, headers, config) {
             $scope.userscripts = result.data.userscripts;
