@@ -112,7 +112,7 @@ class Database extends PDO
     public static function getUserscripts($sort = 'selected', $order = 'asc', $count = null, $offset = null, $search = null)
     {
         if ($offset == null) $offset = 0;
-        if ($count == null || $count <= 0) $count = 20;
+        if ($count == null || $count < 0) $count = 20;
         if ($count > 50 || $count <= 0) $count = 50;
         if (!empty($search)) $search = '%' . $search . '%';
         if ($order !== 'asc' && $order !== 'desc') $order = 'asc';
@@ -145,6 +145,7 @@ class Database extends PDO
         );
 
         $sorts = array(
+            'id' => 'order by userscript.id ' . $order . ', users desc',
             'name' => 'order by userscript.name ' . $order . ', users desc',
             'author' => 'order by user.name ' . $order . ', users desc',
             'users' => 'order by users ' . $order . ', userscript.name asc',

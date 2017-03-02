@@ -88,12 +88,13 @@ app.controller('LogoutController', ['$scope', '$http', '$location', function ($s
 
 app.controller('UserscriptsController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
 
-    var perPage = 20;
-    var pages = 1;
+    var perPage = 5;
+    $scope.pages = 1;
 
     $scope.userscripts = [];
     $scope.search = '';
 
+    $scope.page = 1;
     $scope.lastUpdate = null;
     $scope.updating = false;
     $scope.event = null;
@@ -102,9 +103,9 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
     $scope.order = 'asc';
     $scope.lastSort = null;
 
-    $scope.page = 1;
+    $scope.update = function (sort, keepOrder) {
+        if(typeof keepOrder === 'undefined') keepOrder = false;
 
-    $scope.update = function (sort) {
         if ($scope.updating || ($scope.lastUpdate != null && (Date.now() - $scope.lastUpdate <= $scope.timeout))) {
             if ($scope.event != null) {
                 clearTimeout($scope.event);
@@ -117,7 +118,7 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         }
 
         sort = sort || ($scope.lastSort != null ? $scope.lastSort : 'selected');
-        if ($scope.lastSort != null && $scope.lastSort == sort) {
+        if ($scope.lastSort != null && $scope.lastSort == sort && !keepOrder) {
             $scope.order = $scope.order == 'asc' ? 'desc' : 'asc';
         } else {
             $scope.order = (sort == 'selected' || sort == 'users') ? 'desc' : 'asc';
@@ -125,11 +126,13 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         $scope.lastSort = sort;
 
         $scope.updating = true;
-        var response = $http.get('api/userscript/list/' + sort + '/' + $scope.order +
-            '/' + perPage + '/' + (($scope.page - 1) * perPage) + ($scope.search != '' ? '/' + btoa($scope.search) : ''));
+        var query = 'api/userscript/list/' + sort + '/' + $scope.order + '/' + perPage +
+            '/' + (($scope.page - 1) * perPage) + ($scope.search != '' ? '/' + btoa($scope.search) : '');
+        console.log(query);
+        var response = $http.get(query);
         response.success(function (result, status, headers, config) {
             $scope.userscripts = result.data.userscripts;
-            pages = Math.ceil(result.data.count / perPage);
+            $scope.pages = Math.ceil(result.data.count / perPage);
             $scope.lastUpdate = Date.now();
             $scope.updating = false;
         });
@@ -140,13 +143,13 @@ app.controller('UserscriptsController', ['$scope', '$http', '$location', functio
         if(newPage == 'first') {
             gotoPage = 1;
         } else if(newPage == 'last') {
-            gotoPage = pages;
+            gotoPage = $scope.pages;
         } else {
             gotoPage = $scope.page + newPage;
         }
-        if(gotoPage >= 1 && gotoPage <= pages) {
+        if(gotoPage >= 1 && gotoPage <= $scope.pages) {
             $scope.page = gotoPage;
-            $scope.update();
+            $scope.update(null, true);
         }
     };
 
