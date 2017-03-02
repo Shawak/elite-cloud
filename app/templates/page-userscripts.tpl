@@ -58,9 +58,9 @@
         <div class="textcenter">
             <span class="center">
                 <div class="btn btn-primary" role="button" ng-click="changePage('first')">First</div>
-                <div class="btn btn-primary" role="button" ng-click="changePage(-1)"><</div>
+                <div class="btn btn-primary" role="button" ng-click="changePage(-1)">&laquo</div>
                 <span style="margin: 0 15px">[[page]] / [[pages]]</span>
-                <div class="btn btn-primary" role="button" ng-click="changePage(1)">></div>
+                <div class="btn btn-primary" role="button" ng-click="changePage(1)">&raquo;</div>
                 <div class="btn btn-primary" role="button" ng-click="changePage('last')">Last</div>
             </span>
         </div>
