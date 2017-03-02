@@ -39,25 +39,6 @@
           </div>
         </div>
 
-        {if LoginHandler::getInstance()->getUser()}
-          {if LoginHandler::getInstance()->getUser()->getID() == $user->getID()}
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h3>Settings</h3>
-                <div class="row">
-                    <label for="inputType" class="col-sm-4 col-md-3 control-label">Authkey</label>
-                    <div class="col-sm-6 col-md-4">
-                        <input type="text" class="form-control authkey" id="key" value="{$user->getAuthKey()}" autocomplete="off" readonly>
-                    </div>
-                    <div class="col-sm-2 col-md-4 offset-md-1">
-                        <button type="submit" class="btn btn-info left" ng-click="renewAuthKey()" role="button">Refresh</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-          {/if}
-        {/if}
-
         <div class="panel panel-default">
           <div class="panel-body">
             <h3>Scripts User is using</h3>
@@ -88,21 +69,8 @@
     </div>
 
     <script>
-    $( document ).ready(function() {
-      $( "#key" )
-        .mouseover(function() {
-          $( this ).css( "color", "black" );
-          $( this ).css( "text-shadow", "0 0 0px rgba(0, 0, 0, 0.5)" );
-      })
-        .mouseout(function() {
-          $( this ).css( "color", "transparent" );
-          $( this ).css( "text-shadow", "0 0 6px rgba(0, 0, 0, 0.5)" );
-      });
-    });
-    </script>
-    <script>
       var g = new JustGage({
-        id: "usindScripts",
+        id: "usingScripts",
         value: {Database::getUserUserscriptCount($user->getId())},
         min: 0,
         max: {Database::getUserscriptCount()},

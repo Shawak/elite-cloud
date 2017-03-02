@@ -86,27 +86,25 @@ $app->post('/api/markdown', function (Request $request, Response $response) {
 $app->get('/api/loader', function (Request $request, Response $response) {
     if (SETTINGS_MINIFY_JS) {
         $loader = (new Minify\JS(DIR_USERSCRIPT . 'loader.js'))->minify();
+        $plugin = (new Minify\CSS(DIR_USERSCRIPT . 'plugin.html'))->minify();
     } else {
         $loader = file_get_contents(DIR_USERSCRIPT . 'loader.js');
+        $plugin = file_get_contents(DIR_USERSCRIPT . 'plugin.html');
     }
+    $plugin = str_replace('\'', '\\\'', $plugin);
+    $loader = str_replace('{PLUGIN}', base64_encode($plugin), $loader);
     echo new ApiResult(true, '', (object)['loader' => $loader]);
 });
 
-$app->get('/api/plugin', function (Request $request, Response $response) {
-    $plugin = (new Minify\CSS(DIR_USERSCRIPT . 'plugin.html'))->minify();
-    echo new ApiResult(true, '', (object)['plugin' => $plugin]);
-});
-
-$app->get('/api/authenticate/{authKey}', function (Request $request, Response $response) {
-    $authKey = filter_var($request->getAttribute('authKey'), FILTER_SANITIZE_STRING);
-    $user = Database::getUserByAuthKey($authKey);
-    if ($user == null) {
-        echo new ApiResult(false, 'AuthKey does not belong to a user.');
+$app->get('/api/authenticate', function (Request $request, Response $response) {
+    if (!LOGGED_IN) {
+        echo new ApiResult(false, 'You have to be logged in to perform this action.');
         return;
     }
+
+    $user = LoginHandler::getInstance()->getUser();
     echo new ApiResult(true, '', (object)[
         'user' => $user,
-        //'userscripts' => $user->getSelectedUserscripts(),
         'data' => Database::getScriptsAndSettings($user)
     ]);
 });
@@ -127,15 +125,16 @@ $app->get('/api/script/{id}', function (Request $request, Response $response) {
 
 $app->get('/api/settings/{id}', function (Request $request, Response $response) {
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
-    $userscript = new Userscript($id);
-    if (!$userscript->update()) {
-        echo new ApiResult(false, 'A script with this id was not found.');
-        return;
-    }
 
     $user = LoginHandler::getInstance()->getUser();
     if ($user == null) {
-        echo new ApiResult(false, 'AuthKey does not belong to a user.');
+        echo new ApiResult(false, 'You have to be logged in to perform this action.');
+        return;
+    }
+
+    $userscript = new Userscript($id);
+    if (!$userscript->update()) {
+        echo new ApiResult(false, 'A script with this id was not found.');
         return;
     }
 
@@ -159,7 +158,7 @@ $app->get('/api/settings/set/{id}', function (Request $request, Response $respon
 
     $user = LoginHandler::getInstance()->getUser();
     if ($user == null) {
-        echo new ApiResult(false, 'AuthKey does not belong to a user.');
+        echo new ApiResult(false, 'You have to be logged in to perform this action.');
         return;
     }
 
@@ -199,25 +198,6 @@ $app->get('/api/user/{id}', function (Request $request, Response $response) {
     } else {
         echo new ApiResult(false, 'A user with this id does not exists');
     }
-});
-
-$app->get('/api/user/{id}/renewAuthKey', function (Request $request, Response $response) {
-    $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
-
-    $user = new User($id);
-    if (!$user->update()) {
-        echo new ApiResult(false, 'A user with this id was not found.');
-        return;
-    }
-
-    if(LoginHandler::getInstance()->getUser()->getID() != $user->getID()) {
-        echo new ApiResult(false, 'You don\'t have permissions to do so.');
-        return;
-    }
-
-    $user->renewAuthKey();
-    $user->save();
-    echo new ApiResult(true, 'Your authKey has been successfully updated.', (object)['authKey' => $user->getAuthKey()]);
 });
 
 $app->get('/api/user/addscript/{id}', function (Request $request, Response $response) {
@@ -301,8 +281,6 @@ $app->post('/api/user/register', function (Request $request, Response $response)
 
     $user = User::create($username, $password, $email);
     $user->update();
-    $user->renewAuthKey();
-    $user->save();
     echo new ApiResult(true, 'Your account has been created.', $user);
 });
 

@@ -4,17 +4,12 @@
 
     elite_cloud.extend({
 
-        keyAuthKey: 'elite-cloud_authKey',
         keyLookupTable: 'elite-cloud_lookup',
         keyScriptPrefix: 'elite-cloud_script',
         keySettingPrefix: 'elite-cloud_setting',
         keyLastUpdate: 'elite-cloud_lastUpdate',
 
         gui: {
-
-            isOnEditPage: function() {
-                return $('form[action="profile.php?do=updateoptions"]').length;
-            },
 
             updateActiveCount: function() {
                 var lookup = that.storage.getLookupTable();
@@ -24,86 +19,14 @@
                         count++;
                     }
                 }
-                $('#ec_menuitem .activeScripts').text(count);
+                $('#elite-cloud_menu .activeScripts').text(count);
             },
 
             injectHeader: function() {
-                $('#userbaritems').append('' +
-                    '<style>' +
-                    '#ec_menuitem {height: 13px}' +
-                    '#ec_menuitem img:hover {opacity: 1 !important}' +
-                    '#ec_menuitem img {opacity: 0.8; float: left; width: 16px; height: 16px; margin-right: 5px;}' +
-                    '</style>' +
-
-                    '<li>' +
-                    '<div id="ec_menuitem" style="display: inline-block">' +
-
-                    '</a>' +
-                    '<a title="Options" href="/forum/profile.php?do=editoptions">' +
-                    '<img src="' + that.root + '/img/settings.png">' +
-                    '</a>' +
-
-                    '</a>' +
-                    '<a title="Reload" href="#reload" onclick="elite_cloud.reload(); location.reload()">' +
-                    '<img src="' + that.root + '/img/reload.png">' +
-                    '</a>' +
-
-                    '<a title="Website" href="' + that.root + '">' +
-                    '<img src="' + that.root + '/img/favicon.png">' +
-                    'elite-cloud (<span class="activeScripts">0</span>)' +
-                    '</a>' +
-
-                    '</div>' +
-                    '</li>' +
-                    '');
-
+                var plugin = atob('{PLUGIN}');
+                plugin = plugin.replace(new RegExp('{URL_SITE}', 'g'), that.root);
+                $('#userbaritems').append(plugin);
                 that.gui.updateActiveCount();
-            },
-
-            injectSettings: function (after) {
-                var elem = $('form[action="profile.php?do=updateoptions"]');
-                if (!elem.length) {
-                    after();
-                    return;
-                }
-
-                $(document).on('click', '#ec_logout', function () {
-                    that.logout();
-                });
-
-                $.ajax({
-                    url: encodeURI(that.root + 'api/plugin'),
-                    dataType: 'jsonp'
-                }).done(function (e) {
-                    elem.parent().prepend(e.data.plugin).append(function () {
-                        $('#ec_authKey').val(that.storage.getAuthKey());
-                        $("#ec_form").submit(function (event) {
-                            event.preventDefault();
-                            that.gui.hideForm();
-                            var authKey = $('#ec_authKey').val();
-                            that.storage.setAuthKey(authKey);
-                            that.login();
-                        });
-                        after();
-                    });
-                }).fail(function (e, status) {
-                    that.log(status);
-                });
-            },
-
-            hideForm: function () {
-                $('#ec_form').hide();
-            },
-
-            showForm: function () {
-                $('#ec_form').show();
-            },
-
-            setMessage: function (str) {
-                var elem = $('#ec_message');
-                if (elem.length) {
-                    $('#ec_message').html(str);
-                }
             }
 
         },
@@ -125,19 +48,6 @@
                         }
                     }
                 }
-            },
-
-            /* Auth Key */
-            getAuthKey: function () {
-                return localStorage.getItem(that.keyAuthKey);
-            },
-
-            setAuthKey: function (authKey) {
-                localStorage.setItem(that.keyAuthKey, authKey);
-            },
-
-            delAuthKey: function () {
-                localStorage.removeItem(that.keyAuthKey);
             },
 
             /* Lookup Table */
@@ -179,8 +89,8 @@
 
             /* Last Update */
             getLastUpdate: function() {
-                var value = localStorage.getItem(that.keyLastUpdate);
-                return value ? value : 0;
+                var time = localStorage.getItem(that.keyLastUpdate);
+                return time ? time : 0;
             },
 
             setLastUpdate: function(time) {
@@ -193,20 +103,16 @@
             that.storage.loadLocalScripts();
             that.gui.injectHeader();
 
-            if(!that.gui.isOnEditPage()) {
-                var now = Date.now();
-                var diff = now - that.storage.getLastUpdate();
-                if(diff <= 30 * 1000) {
-                    that.log('Next update in ' + diff / 1000 + ' seconds.');
-                    return;
-                }
-                that.storage.setLastUpdate(now);
+            var now = Date.now();
+            var diff = now - that.storage.getLastUpdate();
+            if(diff <= 30 * 1000) {
+                that.log('Next update in ' + diff / 1000 + ' seconds.');
+                return;
             }
+            that.storage.setLastUpdate(now);
 
             that.log('Loader init()');
-            that.gui.injectSettings(function () {
-                that.login();
-            });
+            that.update();
         },
 
         reload: function() {
@@ -217,7 +123,9 @@
                 that.storage.delSettings(entry);
                 delete table[id];
             }
-            that.storage.setLastUpdate(Date.now());
+            that.loader.delScript();
+            that.loader.setLastUpdate(0);
+            that.storage.setLastUpdate(0);
             that.storage.setLookupTable(table);
         },
 
@@ -225,20 +133,12 @@
             return str.toLowerCase().replace(/ /g, '_').replace(/[^A-Za-z0-9_?!]/g, '').substr(0, 50);
         },
 
-        login: function () {
-            var authKey = that.storage.getAuthKey();
-            if (authKey == null || authKey == '') {
-                that.gui.setMessage('No authentication key found.');
-                that.gui.showForm();
-                return;
-            }
-
+        update: function () {
             $.ajax({
-                url: encodeURI(that.root + 'api/authenticate/' + authKey),
+                url: encodeURI(that.root + 'api/authenticate'),
                 dataType: 'jsonp'
             }).done(function (e) {
                 if (e.success) {
-                    that.gui.setMessage('Authenticated as ' + e.data.user.name + ', <span id="ec_logout">logout</span>.');
                     that.log('Updating userscripts (' + e.data.data.length +') ..');
 
                     var lookup = that.storage.getLookupTable();
@@ -310,18 +210,10 @@
 
                     that.storage.setLookupTable(lookup);
                     that.gui.updateActiveCount();
-                } else {
-                    that.gui.setMessage(e.message);
-                    that.gui.showForm();
                 }
             }).fail(function (e, status) {
                 that.log(status);
             });
-        },
-
-        logout: function () {
-            that.storage.delAuthKey();
-            location.reload();
         },
 
         // Load on every start for every script

@@ -79,7 +79,6 @@ CREATE TABLE `user` (
   `password` varchar(255) NOT NULL,
   `email` varchar(255) DEFAULT NULL,
   `banned` tinyint(1) DEFAULT NULL,
-  `authKey` varchar(255) DEFAULT NULL,
   `registered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
