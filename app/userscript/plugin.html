@@ -1,61 +1,35 @@
 <style>
 
-    #elite-cloud {
-        margin-top: 1px;
-        margin-bottom: 15px;
-        background-color: rgb(227, 227, 227);
+    #elite-cloud_menu {
+        height: 13px;
     }
 
-    #elite-cloud .ec_title {
-        padding: 5px;
-        background-color: #1c1e20;
-        color: white;
-        font-weight: bold;
-        border-top-left-radius: 3px;
-        border-top-right-radius: 3px;
-    }
-
-    #elite-cloud .ec_content {
-        padding: 20px;
-        text-align: center;
-    }
-
-    #elite-cloud #ec_form {
-        margin-top: 8px;
-    }
-
-    #elite-cloud input[type="text"] {
-        padding: 3px;
+    #elite-cloud_menu .group-item img {
+        width: 16px;
+        height: 16px;
+        float: left;
+        opacity: 0.8;
         margin-right: 5px;
-        text-align: center;
     }
 
-    #elite-cloud input[type="submit"] {
-        padding: 3px;
-    }
-
-    #elite-cloud #ec_logout {
-        text-decoration: underline;
-        cursor: pointer
-    }
-
-    #elite-cloud #ec_logout:hover {
-        color: #0000CD;
+    #elite-cloud_menu .group-item:hover img {
+        opacity: 1 !important;
     }
 
 </style>
 
-<div id="elite-cloud">
-    <div class="ec_title">
-        elite-cloud
+<li>
+    <div id="elite-cloud_menu" style="display: inline-block">
+        <span class="group-item">
+            <a title="Reload" href="#" onclick="elite_cloud.reload(); location.reload()">
+                <img src="{URL_SITE}/img/reload.png">
+            </a>
+        </span>
+        <span class="group-item">
+             <a title="Website" href="{URL_SITE}" target="_blank">
+                 <img src="{URL_SITE}/img/favicon.png">
+                 elite-cloud (<span class="activeScripts">0</span>)
+             </a>
+        </span>
     </div>
-
-    <div class="ec_content">
-        <span id="ec_message">Loading..</span>
-
-        <form id="ec_form" style="display: none">
-            <input id="ec_authKey" type="text" placeholder="Authentication key">
-            <input type="submit" value="Login">
-        </form>
-    </div>
-</div>
+</li>

@@ -7,7 +7,6 @@ class User extends DBObject
     protected $password;
     protected $email;
     public $flag;
-    protected $authKey;
     protected $registered;
 
     public function __construct($id)
@@ -44,19 +43,9 @@ class User extends DBObject
         return $this->password;
     }
 
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
     public function getRegisteredTimestamp()
     {
         return strtotime($this->registered);
-    }
-
-    public function renewAuthKey()
-    {
-        $this->authKey = KeyGenerator::generateAuthKey();
     }
 
     public function isUser()
@@ -157,13 +146,13 @@ class User extends DBObject
 			update user
 			set name = :name,
 			  password = :password,
-			  authKey = :authKey
+			  email = :email
 			where id = :id
 		');
         $stmt->bindValue(':id', $this->id);
         $stmt->bindValue(':name', $this->name);
         $stmt->bindValue(':password', $this->password);
-        $stmt->bindValue(':authKey', $this->authKey);
+        $stmt->bindValue(':email', $this->email);
         return $stmt->execute();
     }
 

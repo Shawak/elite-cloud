@@ -112,6 +112,10 @@
                     localStorage.setItem(that.keyLoader, script);
                 },
 
+                delScript: function() {
+                    localStorage.removeItem(that.keyLoader);
+                },
+
                 checkForIFrame: function () {
                     try {
                         return window.self !== window.top;

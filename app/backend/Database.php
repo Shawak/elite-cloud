@@ -216,19 +216,6 @@ class Database extends PDO
       return $ret;
     }
 
-    public static function getUserByAuthKey($authKey)
-    {
-        $stmt = Database::getInstance()->prepare('
-            select *
-            from user
-            where authKey = :authKey
-        ');
-        $stmt->bindValue(':authKey', $authKey);
-        $stmt->execute();
-        $ret = $stmt->fetch();
-        return User::fromData($ret);
-    }
-
     public static function getAuthToken($selector)
     {
         $stmt = Database::getInstance()->prepare('
