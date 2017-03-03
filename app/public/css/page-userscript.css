@@ -2,6 +2,16 @@
     padding: 20px 0;
 }
 
+#userscriptWrapper input:not([readonly]) {
+    border: 1px solid rgb(200, 200, 200);
+    padding-left: 5px;
+}
+
+#userscriptWrapper input[readonly=readonly] {
+    width: 500px;
+}
+
+
 .header {
     padding-bottom: 10px;
 }
@@ -26,6 +36,10 @@
 }
 
 .info .name input[readonly=readonly] {
+    background-color: inherit;
+}
+
+.settings input[readonly=readonly] {
     background-color: inherit;
 }
 

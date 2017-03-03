@@ -57,7 +57,6 @@ if (RateLimit::getInstance()->isAboveLimit()) {
 }
 
 Database::initialize($config['db']['host'], $config['db']['datb'], $config['db']['user'], $config['db']['pass']);
-define('LOGGED_IN', LoginHandler::getInstance()->autoLogin());
 
 /* Install */
 // TODO: FIX THIS
@@ -77,10 +76,12 @@ if (intval(Database::getInstance()->getUserCount()) === 0) {
     $password = bin2hex(random_bytes(5));
     $user = User::create('Admin', $password);
     echo 'You are running this page the first time, an administrative user has been created.<br><br>' .
-        'Username: Admin <br>' .
+        'Username: Admin<br>' .
         'Password: ' . $password;
     return;
 }
+
+define('LOGGED_IN', LoginHandler::getInstance()->autoLogin());
 
 /* App */
 ob_start();

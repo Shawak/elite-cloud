@@ -203,19 +203,6 @@ class Database extends PDO
         return $ret;
     }
 
-    public static function getUserUserscriptCount($id)
-    {
-      $stmt = Database::getInstance()->prepare('
-          select count(*) as count
-          from user_userscript
-          where user_id = :id
-      ');
-      $stmt->bindValue(':id', $id);
-      $stmt->execute();
-      $ret = $stmt->fetch()['.count'];
-      return $ret;
-    }
-
     public static function getAuthToken($selector)
     {
         $stmt = Database::getInstance()->prepare('
@@ -253,33 +240,6 @@ class Database extends PDO
         $stmt->execute();
         $ret = $stmt->fetch();
         return User::fromData($ret);
-    }
-
-    public static function getScriptsAndSettings($user) {
-        $stmt = Database::getInstance()->prepare('
-            select
-              userscript.id,
-              userscript.name,
-              userscript.script,
-              settings.data
-            from user_userscript
-              left join user on user_userscript.user_id = user.id
-              left join userscript on userscript.id = user_userscript.userscript_id
-              left join settings on settings.user_id = user.id and userscript.id = settings.userscript_id
-            where user.id = :user_id
-        ');
-        $stmt->bindValue(':user_id', $user->getID());
-        $stmt->execute();
-        $ret = $stmt->fetchAll();
-        array_walk($ret, function (&$e) {
-            $v = (object)[];
-            $v->id = $e['userscript.id'];
-            $v->name = $e['userscript.name'];
-            $v->script = $e['userscript.script'];
-            $v->settings = $e['settings.data'];
-            $e = $v;
-        });
-        return $ret;
     }
 
 }

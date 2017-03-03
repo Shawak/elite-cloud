@@ -71,15 +71,14 @@ class User extends DBObject
     public function getRole()
     {
       $stmt = Database::getInstance()->prepare('
-        select user.*, user_roles.*
-        from user, user_roles
+        select user.*, user_role.*
+        from user, user_role
         where user.id = :id
-          and user_roles.user_id = :id
+          and user_role.user_id = :id
       ');
       $stmt->bindValue(':id', $this->id);
       $stmt->execute();
-      $ret = $stmt->fetchAll();
-      return $ret[0]['user_roles.role_id'];
+      return $stmt->fetch()['user_role.role_id'];
     }
 
     public function getSelectedUserscripts()
@@ -125,6 +124,48 @@ class User extends DBObject
         $stmt->bindValue(':user_id', $this->id);
         $stmt->bindValue(':userscript_id', $userscript->getID());
         $stmt->execute();
+    }
+
+    public function getScriptsAndSettings() {
+        $stmt = Database::getInstance()->prepare('
+            select
+              userscript.id,
+              userscript.name,
+              userscript.include,
+              userscript.script,
+              settings.data
+            from user_userscript
+              left join user on user_userscript.user_id = user.id
+              left join userscript on userscript.id = user_userscript.userscript_id
+              left join settings on settings.user_id = user.id and userscript.id = settings.userscript_id
+            where user.id = :user_id
+        ');
+        $stmt->bindValue(':user_id', $this->id);
+        $stmt->execute();
+        $ret = $stmt->fetchAll();
+        array_walk($ret, function (&$e) {
+            $v = (object)[];
+            $v->id = $e['userscript.id'];
+            $v->name = $e['userscript.name'];
+            $v->script = $e['userscript.script'];
+            $v->include = $e['userscript.include'];
+            $v->settings = $e['settings.data'];
+            $e = $v;
+        });
+        return $ret;
+    }
+
+    public function getSelectedUserscriptCount()
+    {
+        $stmt = Database::getInstance()->prepare('
+          select count(*) as count
+          from user_userscript
+          where user_id = :user_id
+      ');
+        $stmt->bindValue(':user_id', $this->id);
+        $stmt->execute();
+        $ret = $stmt->fetch()['.count'];
+        return $ret;
     }
 
     public function update()

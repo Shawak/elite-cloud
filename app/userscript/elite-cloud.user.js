@@ -67,15 +67,6 @@
                 console.log('[elite-cloud ' + date.toLocaleTimeString() + '.' + date.getMilliseconds() + '] %o', msg);
             },
 
-            injectScript: function (script, id, key) {
-                var elem = document.createElement('script');
-                if (typeof id !== 'undefined') elem.setAttribute('userscript_id', id);
-                if (typeof key !== 'undefined') elem.setAttribute('userscript_key', key);
-                elem.setAttribute('type', 'text/javascript');
-                elem.innerHTML = script;
-                document.head.appendChild(elem);
-            },
-
             loader: {
 
                 init: function () {
@@ -86,7 +77,7 @@
                     that.log('init()');
                     var script = that.loader.getScript();
                     if (script) {
-                        that.injectScript(script);
+                        that.loader.injectScript(script);
                     }
 
                     var now = Date.now();
@@ -102,10 +93,17 @@
                             that.loader.setScript(result.data.loader);
                             that.log('Loader updated!');
                             if (!script) {
-                                that.injectScript(that.loader.getScript());
+                                that.loader.injectScript(that.loader.getScript());
                             }
                         }
                     });
+                },
+
+                injectScript: function (script) {
+                    var elem = document.createElement('script');
+                    elem.setAttribute('type', 'text/javascript');
+                    elem.innerHTML = script;
+                    document.head.appendChild(elem);
                 },
 
                 getLastUpdate: function() {

@@ -38,19 +38,19 @@ CREATE TABLE `auth_token` (
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `roles`
+-- Tabellenstruktur für Tabelle `role`
 --
 
-CREATE TABLE `roles` (
+CREATE TABLE `role` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Daten für Tabelle `roles`
+-- Daten für Tabelle `role`
 --
 
-INSERT INTO `roles` (`id`, `name`) VALUES
+INSERT INTO `role` (`id`, `name`) VALUES
 (1, 'Admin'),
 (2, 'Moderator'),
 (3, 'Supporter');
@@ -93,16 +93,17 @@ CREATE TABLE `userscript` (
   `author` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
+  `include` text NOT NULL,
   `script` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `user_roles`
+-- Tabellenstruktur für Tabelle `user_role`
 --
 
-CREATE TABLE `user_roles` (
+CREATE TABLE `user_role` (
   `user_id` int(11) NOT NULL,
   `role_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -130,9 +131,9 @@ ALTER TABLE `auth_token`
   ADD UNIQUE KEY `selector` (`selector`);
 
 --
--- Indizes für die Tabelle `roles`
+-- Indizes für die Tabelle `role`
 --
-ALTER TABLE `roles`
+ALTER TABLE `role`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `id` (`id`);
 
@@ -164,9 +165,9 @@ ALTER TABLE `userscript`
   ADD KEY `id_2` (`id`);
 
 --
--- Indizes für die Tabelle `user_roles`
+-- Indizes für die Tabelle `user_role`
 --
-ALTER TABLE `user_roles`
+ALTER TABLE `user_role`
   ADD PRIMARY KEY (`user_id`),
   ADD KEY `role_id` (`role_id`);
 
@@ -186,9 +187,9 @@ ALTER TABLE `user_userscript`
 ALTER TABLE `auth_token`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT für Tabelle `roles`
+-- AUTO_INCREMENT für Tabelle `role`
 --
-ALTER TABLE `roles`
+ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT für Tabelle `user`
@@ -212,11 +213,11 @@ ALTER TABLE `settings`
   ADD CONSTRAINT `FK_user_userscripts_settings_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints der Tabelle `user_roles`
+-- Constraints der Tabelle `user_role`
 --
-ALTER TABLE `user_roles`
-  ADD CONSTRAINT `user_roles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `user_roles_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE;
+ALTER TABLE `user_role`
+  ADD CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `user_role_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints der Tabelle `user_userscript`

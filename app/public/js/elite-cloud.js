@@ -205,33 +205,41 @@ app.controller('UserController', ['$scope', '$http', function ($scope, $http) {
 app.controller('UserscriptController', ['$scope', '$http', '$location', function ($scope, $http, $location) {
     $scope.userscript = null;
 
-    $scope.id = -1;
-
     $scope.elements = {
         'button': null,
         'name': $('.info .name input'),
         'descrption': $('.box .description'),
+        'settings': $('.box .settings'),
+        'addNewInclude': $('.box .settings .addNew'),
         'simplemde': null,
         'descriptionTextarea': null,
         'scriptTextarea' : $('#textarea_script')
     };
 
     $scope.init = function (id) {
-        $scope.id = id;
-        if($scope.id == -1) {
-            setTimeout(function() {$("a[ng-click='edit($event)'").click()});
+        var response = $http.get('api/userscript/' + id);
+        response.success(function (result, status, headers, config) {
+            $scope.userscript = result.data;
+            $scope.userscript.include = JSON.parse($scope.userscript.include);
+            if(!result.success) {
+                setTimeout(function() {$("a[ng-click='edit($event)'").click()});
+            }
+        });
+    };
+
+    $scope.addToInclude = function() {
+        var value = $scope.elements.addNewInclude.val();
+        if(value == null) {
             return;
         }
 
-        var response = $http.get('api/userscript/' +  $scope.id);
-        response.success(function (result, status, headers, config) {
-            $scope.userscript = result.data;
-        });
+        $scope.userscript.include.push(value);
+        $scope.elements.addNewInclude.val('');
     };
 
     $scope.edit = function ($event) {
         if ($scope.elements.button != null) {
-            $scope.save($scope.id);
+            $scope.save();
             return;
         }
 
@@ -241,11 +249,13 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
         $scope.elements.button.removeClass('btn-success');
         $scope.elements.button.addClass('btn-primary');
         $scope.elements.button.text('Save Changes');
+        $scope.elements.addNewInclude.show();
 
-        var response = $http.get('api/userscript/' + $scope.id);
+        var response = $http.get('api/userscript/' + $scope.userscript.id);
         response.success(function (result) {
-            if (result.success || $scope.id == -1) {
+            if (result.success || $scope.userscript.id == -1) {
                 $scope.userscript = result.data;
+                $scope.userscript.include = JSON.parse($scope.userscript.include);
                 $scope.elements.descrption.html('');
                 $scope.elements.descriptionTextarea = $('<textarea></textarea>').appendTo($scope.elements.descrption);
                 $scope.elements.descriptionTextarea.text($scope.userscript.description);
@@ -272,15 +282,16 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
     $scope.saving = false;
     $scope.save = function () {
         $scope.saving = true;
-        var response = $http.post($scope.id == -1 ? 'api/userscript/create' : 'api/userscript/' + $scope.id + '/edit', {
+        var response = $http.post($scope.userscript.id == -1 ? 'api/userscript/create' : 'api/userscript/' + $scope.userscript.id + '/edit', {
             name: $scope.elements.name.val(),
             description: btoa($scope.elements.simplemde.value()),
+            include: btoa(JSON.stringify($scope.userscript.include)),
             script: btoa($scope.elements.scriptTextarea.val())
         });
         response.success(function (result) {
             notify(result);
-            if($scope.id == -1 && result.success) {
-                $scope.id = result.data.id;
+            if($scope.userscript.id == -1 && result.success) {
+                $scope.userscript.id = result.data.id;
             }
             $scope.saving = false;
         });
@@ -302,7 +313,7 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
 
     $scope.delete = function ($event) {
         $event.stopPropagation();
-        var response = $http.post('api/userscript/' + $scope.id + '/delete');
+        var response = $http.post('api/userscript/' + $scope.userscript.id + '/delete');
         response.success(function (result, status, headers, config) {
             notify(result);
         });

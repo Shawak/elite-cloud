@@ -33,7 +33,7 @@
                 </table>
               </div>
               <div class="col-sm-4 col-md-5">
-                <div id="usindScripts"></div>
+                <div id="usingScripts"></div>
               </div>
             </div>
           </div>
@@ -71,7 +71,7 @@
     <script>
       var g = new JustGage({
         id: "usingScripts",
-        value: {Database::getUserUserscriptCount($user->getId())},
+        value: {$user->getSelectedUserscriptCount()},
         min: 0,
         max: {Database::getUserscriptCount()},
         gaugeWidthScale: 0.2,

@@ -34,7 +34,7 @@ class LoginHandler
 
     public function login($username, $password, $remember = false)
     {
-        $user = Database::getInstance()->getUserByName($username);
+        $user = Database::getUserByName($username);
         if (!$user) {
             return false;
         }

@@ -105,7 +105,7 @@ $app->get('/api/authenticate', function (Request $request, Response $response) {
     $user = LoginHandler::getInstance()->getUser();
     echo new ApiResult(true, '', (object)[
         'user' => $user,
-        'data' => Database::getScriptsAndSettings($user)
+        'data' => $user->getScriptsAndSettings()
     ]);
 });
 
@@ -307,6 +307,13 @@ $app->get('/api/userscript/{id}', function (Request $request, Response $response
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $userscript = new Userscript($id);
     $exists = $userscript->update();
+    if(!$userscript->update()) {
+        $userscript->setName('New Userscript');
+        $userscript->setAuthor(LoginHandler::getInstance()->getUser()->getID());
+        $userscript->setDescription('');
+        $userscript->setInclude(json_encode(['.*:\/\/www.elitepvpers.com\/.*']));
+        $userscript->setScript('');
+    }
     echo new ApiResult($exists, $exists ? '' : 'A userscript with this id does not exists.', $userscript);
 });
 
@@ -315,6 +322,7 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
     $id = filter_var($request->getAttribute('id'), FILTER_VALIDATE_INT);
     $name = filter_var($data['name'] ?? null, FILTER_SANITIZE_STRING);
     $description = filter_var($data['description'] ?? null, FILTER_SANITIZE_STRING);
+    $include = filter_var($data['include'] ?? null, FILTER_SANITIZE_STRING);
     $script = filter_var($data['script'] ?? null, FILTER_SANITIZE_STRING);
 
     if (!LOGGED_IN) {
@@ -335,6 +343,7 @@ $app->post('/api/userscript/{id}/edit', function (Request $request, Response $re
 
     $userscript->setName($name);
     $userscript->setDescription(base64_decode($description));
+    $userscript->setInclude(base64_decode($include));
     $userscript->setScript(base64_decode($script));
     $success = $userscript->save();
     echo new ApiResult($success, $success ? 'Successfully saved changes.' : 'An unknown error occurred, please try again later.');
@@ -365,6 +374,7 @@ $app->post('/api/userscript/create', function (Request $request, Response $respo
     $data = $request->getParsedBody();
     $name = filter_var($data['name'], FILTER_SANITIZE_STRING);
     $description = filter_var($data['description'] ?? null, FILTER_SANITIZE_STRING);
+    $include = filter_var($data['include'] ?? null, FILTER_SANITIZE_STRING);
     $script = filter_var($data['script'] ?? null, FILTER_SANITIZE_STRING);
 
     if (!LOGGED_IN) {
@@ -375,6 +385,7 @@ $app->post('/api/userscript/create', function (Request $request, Response $respo
     $userscript = Userscript::create($name,
         LoginHandler::getInstance()->getUser()->getID(),
         base64_decode($description),
+        base64_decode($include),
         base64_decode($script)
     );
     echo new ApiResult(true, 'The userscript has been created.', $userscript);

@@ -5,8 +5,9 @@ class Userscript extends DBObject
 
     public $id;
     public $name;
-    public $description;
     public $author;
+    public $description;
+    public $include;
     protected $script;
     public $users;
     public $selected;
@@ -16,16 +17,17 @@ class Userscript extends DBObject
         $this->id = $id;
     }
 
-    public static function create($name, $author, $description, $script)
+    public static function create($name, $author, $description, $include, $script)
     {
         $stmt = Database::getInstance()->prepare('
     			insert into userscript
-    			(author, name, description, script)
-    			values (:author, :name, :description, :script)
+    			(name, author, description, include, script)
+    			values (:name, :author, :description, :include, :script)
     		');
-        $stmt->bindValue(':author', $author);
         $stmt->bindValue(':name', $name);
+        $stmt->bindValue(':author', $author);
         $stmt->bindValue(':description', base64_encode($description));
+        $stmt->bindValue(':include', base64_encode($include));
         $stmt->bindValue(':script', base64_encode($script));
         $stmt->execute();
         return new self(Database::getInstance()->lastID());
@@ -61,6 +63,11 @@ class Userscript extends DBObject
         return $this->author;
     }
 
+    public function getInclude()
+    {
+        return $this->include;
+    }
+
     public function getScript()
     {
         return $this->script;
@@ -79,6 +86,11 @@ class Userscript extends DBObject
     public function setAuthor($author)
     {
         $this->author = $author;
+    }
+
+    public function setInclude($include)
+    {
+        $this->include = $include;
     }
 
     public function setScript($script)
@@ -125,6 +137,7 @@ class Userscript extends DBObject
         $this->selected = ($ret['.selected'] ?? 0) === '1';
         $this->author = User::fromData($ret);
         $this->description = base64_decode($this->description);
+        $this->include = base64_decode($this->include);
         $this->script = base64_decode($this->script);
         return true;
     }
@@ -134,15 +147,17 @@ class Userscript extends DBObject
         $stmt = Database::getInstance()->prepare('
 			update userscript
 			set name = :name,
-			  description = :description,
 			  author = :author,
+			  description = :description,
+			  include = :include,
 			  script = :script
 			where id = :id
 		');
         $stmt->bindValue(':id', $this->id);
         $stmt->bindValue(':name', $this->name);
-        $stmt->bindValue(':description', base64_encode($this->description));
         $stmt->bindValue(':author', $this->author->getID());
+        $stmt->bindValue(':description', base64_encode($this->description));
+        $stmt->bindValue(':include', base64_encode($this->include));
         $stmt->bindValue(':script', base64_encode($this->script));
         return $stmt->execute();
     }

@@ -12,14 +12,7 @@
         gui: {
 
             updateActiveCount: function() {
-                var lookup = that.storage.getLookupTable();
-                var count = 0;
-                for(var id in lookup) {
-                    if(lookup[id].enabled) {
-                        count++;
-                    }
-                }
-                $('#elite-cloud_menu .activeScripts').text(count);
+                $('#elite-cloud_menu .activeScripts').text(that.injected);
             },
 
             injectHeader: function() {
@@ -34,17 +27,16 @@
         storage: {
 
             loadLocalScripts: function () {
-                that.log('Loading scripts from LocalStorage');
+                that.log('Loading scripts from local storage');
                 var lookup = that.storage.getLookupTable();
                 for(var id in lookup) {
                     var entry = lookup[id];
                     if (entry.enabled) {
-                        that.log('> ' + entry.key);
                         var script = that.storage.getScript(entry);
-                        if(script) {
-                            that.injectScript(script, entry.id, entry.key);
+                        if(script !== null) {
+                            that.injectUserscript(entry, script);
                         } else {
-                            that.log('We found a script in LocalStorage Lookup but this is not stored');
+                            that.log(entry.key + ' found in the lookup but it is not stored');
                         }
                     }
                 }
@@ -115,6 +107,37 @@
             that.update();
         },
 
+        injected: 0,
+
+        injectUserscript: function(entry, script) {
+            var include = false;
+            for(var i = 0; i < entry.include.length; i++) {
+                try {
+                    include = new RegExp(entry.include[i]).test(window.location.href);
+                } catch(err) {
+                    console.log('error: ' + err);
+                }
+                if(include) {
+                    break;
+                }
+            }
+
+            if(!include) {
+                that.log('> NOT jnjecting ' + entry.key + ' (pattern does not match)');
+                return;
+            }
+
+            that.injected++;
+            that.log('> Injecting ' + entry.key);
+
+            var elem = document.createElement('script');
+            elem.setAttribute('type', 'text/javascript');
+            elem.setAttribute('userscript_id', entry.id);
+            elem.setAttribute('userscript_key', entry.key);
+            elem.innerHTML = script;
+            document.head.appendChild(elem);
+        },
+
         reload: function() {
             var table = that.storage.getLookupTable();
             for(var id in table) {
@@ -129,8 +152,8 @@
             that.storage.setLookupTable(table);
         },
 
-        nameToKey: function (str) {
-            return str.toLowerCase().replace(/ /g, '_').replace(/[^A-Za-z0-9_?!]/g, '').substr(0, 50);
+        generateKey: function (entry) {
+            return entry.name.toLowerCase().replace(/ /g, '_').replace(/[^A-Za-z0-9_?!]/g, '').substr(0, 50);
         },
 
         update: function () {
@@ -144,27 +167,28 @@
                     var lookup = that.storage.getLookupTable();
                     for(var id in lookup) {
                         lookup[id].enabled = false;
+                        lookup[id].keep = false;
                     }
 
                     for (var i = 0; i < e.data.data.length; i++) {
                         var info = e.data.data[i];
                         that.log('> ' + info.name);
 
-                        var isNew = false;
+                        var isNew = !lookup.hasOwnProperty(info.id);
                         // add the script to the lookup table
-                        if (!lookup.hasOwnProperty(info.id)) {
+                        if (isNew) {
                             lookup[info.id] = {
                                 id: info.id,
                                 name: info.name,
-                                key: that.nameToKey(info.name),
+                                key: that.generateKey(info),
                                 enabled: false
                             };
-                            isNew = true;
                         }
 
                         var entry = lookup[info.id];
                         entry.enabled = true;
                         entry.keep = true;
+                        entry.include = JSON.parse(atob(info.include));
 
                         // update the key name if
                         // the script name has changed
@@ -172,7 +196,7 @@
                             // move script
                             var tmp = that.storage.getScript(entry);
                             that.storage.delScript(entry);
-                            entry.key = that.nameToKey(info.name);
+                            entry.key = that.generateKey(info);
                             that.storage.setScript(entry, tmp);
                             // move settings
                             var settings = that.storage.getSettings(entry);
@@ -193,7 +217,7 @@
 
                         // inject script if not loaded yet
                         if(isNew) {
-                            that.injectScript(script, entry.id, entry.key);
+                            that.injectUserscript(entry, script);
                         }
                     }
 

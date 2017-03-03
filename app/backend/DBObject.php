@@ -26,7 +26,7 @@ abstract class DBObject
         }
 
         $dbData = self::filterData($dbData);
-        if (!$dbData['id']) {
+        if ($dbData['id'] == null) {
             return null;
         }
 
