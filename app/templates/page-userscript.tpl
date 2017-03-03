@@ -51,7 +51,7 @@
                     </div>
                     <div class="box-text settings">
                         <div style="margin: 1px 0px" ng-repeat="inc in userscript.include track by $index">
-                            <button class="btn btn-sm btn-danger" href role="button" ng-click="userscript.include.splice($index, 1)">-</button>
+                            <button class="btn btn-sm btn-danger" style="display: none" href role="button" ng-click="userscript.include.splice($index, 1)">-</button>
                             <input type="text" ng-model="inc" readonly="readonly">
                         </div>
                         <input class="addNew" style="margin-top: 4px; display: none" type="text" ng-keyup="$event.keyCode == 13 ? addToInclude() : null">

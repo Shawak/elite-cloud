@@ -250,6 +250,7 @@ app.controller('UserscriptController', ['$scope', '$http', '$location', function
         $scope.elements.button.addClass('btn-primary');
         $scope.elements.button.text('Save Changes');
         $scope.elements.addNewInclude.show();
+        $('.settings .btn').show();
 
         var response = $http.get('api/userscript/' + $scope.userscript.id);
         response.success(function (result) {
