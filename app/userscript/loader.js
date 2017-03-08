@@ -91,6 +91,66 @@
 
         },
 
+        api: {
+
+            // Load on every start for every script
+            // called by any user script
+            getSettings: function (identity, defaultSettings) {
+                var table = that.storage.getLookupTable();
+                var entry = table[identity.id];
+                if(!entry) {
+                    that.log('(' + identity.key + ') Not lookup-able, using defaultSettings.');
+                    return defaultSettings;
+                }
+
+                var settings = that.storage.getSettings(entry);
+                if(!settings) {
+                    that.log('(' + identity.key + ') Settings not found, using defaultSettings.');
+                    return defaultSettings;
+                }
+
+                that.log('(' + identity.key + ') Loaded settings from local cache.');
+                return settings;
+            },
+
+            // Save settings to the cloud
+            // called by any user script
+            setSettings: function (identity, settings) {
+                var lookup = that.storage.getLookupTable();
+                var entry = lookup[identity.id];
+                that.storage.setSettings(entry, settings);
+                $.ajax({
+                    url: encodeURI(that.root + 'api/settings/set/' + entry.id),
+                    data: { settings: btoa(JSON.stringify(settings)) },
+                    dataType: 'jsonp'
+                }).done(function (e) {
+                    if (e.success) {
+                        that.log('(' + identity.key + ') Saved settings to the cloud.');
+                    } else {
+                        that.log(e.message);
+                    }
+                }).fail(function (e, status) {
+                    that.log(status);
+                });
+            },
+
+            // called by our own plugin
+            reload: function() {
+                var table = that.storage.getLookupTable();
+                for(var id in table) {
+                    var entry = table[id];
+                    that.storage.delScript(entry);
+                    that.storage.delSettings(entry);
+                    delete table[id];
+                }
+                that.loader.delScript();
+                that.loader.setLastUpdate(0);
+                that.storage.setLastUpdate(0);
+                that.storage.setLookupTable(table);
+            }
+
+        },
+
         init: function () {
             that.storage.loadLocalScripts();
             that.gui.injectHeader();
@@ -115,7 +175,7 @@
                 try {
                     include = new RegExp(entry.include[i]).test(window.location.href);
                 } catch(err) {
-                    console.log('error: ' + err);
+                    that.log('error: ' + err);
                 }
                 if(include) {
                     break;
@@ -130,26 +190,21 @@
             that.injected++;
             that.log('> Injecting ' + entry.key);
 
-            var elem = document.createElement('script');
-            elem.setAttribute('type', 'text/javascript');
-            elem.setAttribute('userscript_id', entry.id);
-            elem.setAttribute('userscript_key', entry.key);
-            elem.innerHTML = script;
-            document.head.appendChild(elem);
-        },
+            var header = '' +
+                'var elite_cloud = {' +
+                    'identity: {' +
+                        'id: ' + entry.id + ', ' +
+                        'key: \'' + entry.key + '\'' +
+                    '}' +
+                '};\n' +
+                'elite_cloud.getSettings = function(defaultSettings) { return elite_cloud_api.getSettings(elite_cloud.identity, defaultSettings) };\n' +
+                'elite_cloud.setSettings = function(settings) { return elite_cloud_api.setSettings(elite_cloud.identity, settings) };\n' +
+            '\n';
 
-        reload: function() {
-            var table = that.storage.getLookupTable();
-            for(var id in table) {
-                var entry = table[id];
-                that.storage.delScript(entry);
-                that.storage.delSettings(entry);
-                delete table[id];
-            }
-            that.loader.delScript();
-            that.loader.setLastUpdate(0);
-            that.storage.setLastUpdate(0);
-            that.storage.setLookupTable(table);
+            var elem = document.createElement('script');
+            elem.type = 'text/javascript';
+            elem.innerHTML = '(function() {\n' + header + script + '\n})();';
+            document.head.appendChild(elem);
         },
 
         generateKey: function (entry) {
@@ -238,53 +293,13 @@
             }).fail(function (e, status) {
                 that.log(status);
             });
-        },
-
-        // Load on every start for every script
-        // called by any user script
-        getSettings: function (defaultSettings) {
-            var id = document.currentScript.getAttribute('userscript_id');
-            var key = document.currentScript.getAttribute('userscript_key');
-            var settings = that.storage.getSettings({id: id, key: key});
-            if(!settings) {
-                that.log('Settings not found for userscript ' + key + ', using defaultSettings.');
-                settings = defaultSettings;
-            }
-            settings.__id = id;
-            return settings;
-        },
-
-        // Save settings to the cloud
-        // called by any user script
-        setSettings: function (settings) {
-            var lookup = that.storage.getLookupTable();
-            var entry = lookup[settings.__id];
-
-            // doing a shallow copy here to remove the __id
-            // without preventing further function calls
-            // where the __id would be gone because of delete
-            // tl;dr: do not remove
-            var data = $.extend({}, settings);
-            delete data.__id;
-
-            that.storage.setSettings(entry, data);
-            $.ajax({
-                url: encodeURI(that.root + 'api/settings/set/' + entry.id),
-                data: { settings: btoa(JSON.stringify(data)) },
-                dataType: 'jsonp'
-            }).done(function (e) {
-                if (e.success) {
-                    that.log(entry.key + ' saved settings to the database.');
-                } else {
-                    that.log(e.message);
-                }
-            }).fail(function (e, status) {
-                that.log(status);
-            });
         }
+
     });
 
     var that = elite_cloud;
+    window.elite_cloud = null;
+    window.elite_cloud_api = that.api;
     elite_cloud.init();
 
 })(jQuery);

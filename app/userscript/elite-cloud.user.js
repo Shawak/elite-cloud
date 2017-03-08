@@ -101,7 +101,7 @@
 
                 injectScript: function (script) {
                     var elem = document.createElement('script');
-                    elem.setAttribute('type', 'text/javascript');
+                    elem.type = 'text/javascript';
                     elem.innerHTML = script;
                     document.head.appendChild(elem);
                 },
@@ -142,8 +142,8 @@
     };
 
     var elem = document.createElement('script');
-    elem.setAttribute('id', 'elite-cloud_script');
-    elem.appendChild(document.createTextNode('(' + main + ')();'));
-    (document.head || document.body || document.documentElement).appendChild(elem);
+    elem.type = 'text/javascript';
+    elem.innerHTML = '(' + main + ')();';
+    document.head.appendChild(elem);
 
 })();
