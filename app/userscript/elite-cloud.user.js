@@ -1,13 +1,14 @@
 // ==UserScript==
-// @name         e*pvp elite-cloud
-// @namespace    http://elitepvpers.com/
-// @version      1.0
-// @description  Used to load userscripts from elite-cloud
-// @author       elite-cloud
-// @match        *://www.elitepvpers.com/*
-// @grant        none
+// @name        e*pvp elite-cloud
+// @namespace   Elitepvpers
+// @description Used to load userscripts from elite-cloud
+// @match       *//www.elitepvpers.com/*
+// @author      elite-cloud
+// @version     1.0.0
+// @downloadURL {URL_SITE}/userscript/elite-cloud.user.js
+// @updateURL   {URL_SITE}/userscript/elite-cloud.user.js
+// @grant       none
 // ==/UserScript==
-
 (function () {
 
     var main = function () {
